@@ -13,25 +13,20 @@ import com.android.volley.VolleyError;
  */
 public abstract  class VolleyInterface {
 
-    public Context mContext;
-    public static Listener<String> mListener;
-    public static ErrorListener mErrorListener;
+    private Context mContext;
+    private static Listener<String> mListener;
+    private static ErrorListener mErrorListener;
 
     public VolleyInterface(Context context, Listener<String> listener, ErrorListener errorListener) {
         this.mContext = context;
-        this.mListener = listener;
-        this.mErrorListener = errorListener;
+        mListener = listener;
+        mErrorListener = errorListener;
     }
-
     abstract void onSuccess(String result);
-
     abstract void onError(VolleyError error);
-
-
 
     Listener<String> loadingListener() {
         mListener = new Listener<String>() {
-
             @Override
             public void onResponse(String result) {
 
@@ -43,7 +38,6 @@ public abstract  class VolleyInterface {
 
     ErrorListener errorListener() {
         mErrorListener = new ErrorListener() {
-
             @Override
             public void onErrorResponse(VolleyError error) {
 
