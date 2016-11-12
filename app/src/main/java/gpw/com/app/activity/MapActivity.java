@@ -7,13 +7,16 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +48,7 @@ import gpw.com.app.R;
 import gpw.com.app.adapter.AddressNameAdapter;
 import gpw.com.app.base.BaseActivity;
 import gpw.com.app.bean.AddressMainInfo;
+import gpw.com.app.util.DensityUtil;
 
 public class MapActivity extends BaseActivity {
 
@@ -52,6 +56,7 @@ public class MapActivity extends BaseActivity {
     private EditText et_search;
     private TextView tv_address;
     private ListView lv_search;
+    private LinearLayout ll_search;
     private SuggestionSearch mSuggestionSearch;
     private AddressNameAdapter mAddressNameAdapter;
     private ArrayList<SuggestionResult.SuggestionInfo> mSuggestionInfos;
@@ -150,24 +155,20 @@ public class MapActivity extends BaseActivity {
 
     @Override
     protected void findById() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            int color = 0x11000000;
-            window.setStatusBarColor(color);
-        }
         mMapView = (MapView) findViewById(R.id.map_view);
         iv_left_black = (ImageView) findViewById(R.id.iv_left_black);
         et_search = (EditText) findViewById(R.id.et_search);
         tv_address = (TextView) findViewById(R.id.tv_address);
         lv_search = (ListView) findViewById(R.id.lv_search);
+        ll_search = (LinearLayout) findViewById(R.id.ll_search);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(MapActivity.this, 50.0f));
+            layoutParams.setMargins(DensityUtil.dip2px(MapActivity.this, 5.0f), DensityUtil.dip2px(MapActivity.this, 15.0f), DensityUtil.dip2px(MapActivity.this, 5.0f), 0);
+            ll_search.setLayoutParams(layoutParams);
+        }
+
+
     }
 
     @Override

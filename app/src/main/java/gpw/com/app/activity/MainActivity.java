@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -29,6 +30,7 @@ import gpw.com.app.adapter.AddressMainAdapter;
 import gpw.com.app.base.BaseActivity;
 import gpw.com.app.bean.ADInfo;
 import gpw.com.app.bean.AddressMainInfo;
+import gpw.com.app.util.DensityUtil;
 import gpw.com.app.view.ImageCycleView;
 import gpw.com.app.view.MainPopupWindow;
 
@@ -78,14 +80,6 @@ public class MainActivity extends BaseActivity implements AddressMainAdapter.OnI
 
     @Override
     protected void findById() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            int color = 0x11000000;
-            window.setStatusBarColor(color);
-        }
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         view_line = findViewById(R.id.view_line);
         rv_main_address = (RecyclerView) findViewById(R.id.rv_main_address);
@@ -109,7 +103,7 @@ public class MainActivity extends BaseActivity implements AddressMainAdapter.OnI
         tv_car_4 = (TextView) findViewById(R.id.tv_car_4);
         tv_car_5 = (TextView) findViewById(R.id.tv_car_5);
 
-        tv_tel = (TextView) findViewById(R.id.tv_tel);
+        tv_tel = (TextView)findViewById(R.id.tv_tel);
         tv_myOrder = (TextView) findViewById(R.id.tv_myOrder);
         tv_myWallet = (TextView) findViewById(R.id.tv_myWallet);
         tv_myConvoy = (TextView) findViewById(R.id.tv_myConvoy);
@@ -120,6 +114,12 @@ public class MainActivity extends BaseActivity implements AddressMainAdapter.OnI
         tv_benefit_activity = (TextView) findViewById(R.id.tv_benefit_activity);
         tv_setting = (TextView) findViewById(R.id.tv_setting);
         rl_head = (RelativeLayout) findViewById(R.id.rl_head);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(DensityUtil.dip2px(MainActivity.this,10.0f),DensityUtil.dip2px(MainActivity.this,15.0f),0,0);
+            iv_cir_head.setLayoutParams(layoutParams);
+        }
 
 
     }
@@ -340,7 +340,7 @@ public class MainActivity extends BaseActivity implements AddressMainAdapter.OnI
                 startActivity(intent);
                 break;
             case R.id.rl_head:
-                intent = new Intent(MainActivity.this, PersonalInfoActivity.class);
+                intent = new Intent(MainActivity.this,PersonalInfoActivity.class);
                 mDrawerLayout.closeDrawers();
                 startActivity(intent);
                 break;
