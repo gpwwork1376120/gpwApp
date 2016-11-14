@@ -107,7 +107,6 @@ public class MainPopupWindow extends PopupWindow implements OnClickListener {
         choiceCar(select_car);
 
         mMenuView.setOnTouchListener(new OnTouchListener() {
-
             @Override
             @SuppressLint("ClickableViewAccessibility")
             public boolean onTouch(View v, MotionEvent event) {

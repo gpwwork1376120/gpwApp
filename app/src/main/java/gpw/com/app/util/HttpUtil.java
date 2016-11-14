@@ -5,6 +5,9 @@ import android.content.Context;
 import android.util.Base64;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.JsonObject;
 
@@ -14,6 +17,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 import gpw.com.app.base.BaseApplication;
@@ -31,12 +35,20 @@ public class HttpUtil {
 
         //获取全局的请求队列并把基于Tag标签的请求全部取消，防止重复请求
         BaseApplication.getHttpQueues().cancelAll(tag);
-        stringRequest = new StringRequest(url, vif.loadingListener(), vif.errorListener()) {
+        stringRequest = new StringRequest(Request.Method.POST, url, vif.loadingListener(), vif.errorListener()) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 return params;
             }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                return headers;
+            }
         };
+
+
         // 设置标签
         stringRequest.setTag(tag);
         // 加入队列
@@ -44,5 +56,7 @@ public class HttpUtil {
         // 启动
         BaseApplication.getHttpQueues().start();
     }
+
+
 
 }

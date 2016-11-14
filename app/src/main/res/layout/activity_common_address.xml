@@ -31,8 +31,7 @@
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-
+            android:layout_marginTop="15dp"
             android:layout_marginRight="15dp"
             android:src="@mipmap/add_white"
             />
@@ -63,5 +62,12 @@
         android:background="#ffffff"
         android:layout_weight="1">
 
+        <gpw.com.app.view.XRecyclerView
+            android:id="@+id/rv_common_ad"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </gpw.com.app.view.XRecyclerView>
+
     </LinearLayout>
+
 </LinearLayout>

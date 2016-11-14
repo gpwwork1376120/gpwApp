@@ -1,18 +1,33 @@
 package gpw.com.app.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import java.util.Map;
+
 import gpw.com.app.R;
 import gpw.com.app.base.BaseActivity;
+import gpw.com.app.base.Contants;
+import gpw.com.app.bean.UserInfo;
+import gpw.com.app.util.DateUtil;
+import gpw.com.app.util.EncryptUtil;
+import gpw.com.app.util.HttpUtil;
+import gpw.com.app.util.LogUtil;
+import gpw.com.app.util.MD5Util;
+import gpw.com.app.util.VolleyInterface;
 import gpw.com.app.view.CustomProgressDialog;
 
 public class LoginActivity extends BaseActivity {
-
 
     private EditText et_account;
     private EditText et_password;
@@ -21,6 +36,13 @@ public class LoginActivity extends BaseActivity {
     private TextView tv_forget_psd;
     private TextView tv_register;
     private Button bt_login;
+
+    private SharedPreferences prefs;
+
+    private String password;
+    private String account;
+
+
     @Override
     protected int getLayout() {
         return R.layout.activity_login;
@@ -39,14 +61,15 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-
+        prefs = getSharedPreferences(Contants.SHARED_NAME, MODE_PRIVATE);
+        account = prefs.getString("account", "");
+        password = prefs.getString("password", "");
     }
 
     @Override
     protected void initView() {
-
-
-
+        et_password.setText(password);
+        et_account.setText(account);
         iv_close.setOnClickListener(this);
         iv_login_eye.setOnClickListener(this);
         tv_forget_psd.setOnClickListener(this);
@@ -57,52 +80,94 @@ public class LoginActivity extends BaseActivity {
     @Override
     public void onClick(View v) {
         Intent intent = new Intent();
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.bt_login:
-                final CustomProgressDialog customProgressDialog = new CustomProgressDialog(LoginActivity.this);
-                customProgressDialog.show();
-                customProgressDialog.setText("登录中..");
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            Thread.sleep(4000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                customProgressDialog.dismiss();
-                                Intent intent = new Intent();
-                                intent.setClass(LoginActivity.this,MainActivity.class);
-                                startActivity(intent);
-                            }
-                        });
-                    }
-                }).start();
-//                intent.setClass(LoginActivity.this,MainActivity.class);
-//                startActivity(intent);
+                login();
                 break;
             case R.id.iv_login_eye:
                 break;
             case R.id.iv_close:
-
                 break;
             case R.id.tv_forget_psd:
-               // Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                intent.setClass(LoginActivity.this,RebuildPsdActivity.class);
+                intent.setClass(LoginActivity.this, RebuildPsdActivity.class);
                 startActivity(intent);
                 break;
             case R.id.tv_register:
-                intent.setClass(LoginActivity.this,RegisterActivity.class);
-                startActivity(intent);
+                intent.setClass(LoginActivity.this, RegisterActivity.class);
+                startActivityForResult(intent, 0);
                 break;
-
 
 
         }
 
     }
+
+    private void login() {
+        final CustomProgressDialog customProgressDialog = new CustomProgressDialog(LoginActivity.this);
+        customProgressDialog.show();
+        customProgressDialog.setText("登录中..");
+        account = et_account.getText().toString();
+        String time = DateUtil.getCurrentDate();
+        password = et_password.getText().toString();
+        String finalPassword = MD5Util.encrypt(time + password);
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("LoginName", account);
+        jsonObject.addProperty("Time", time);
+        jsonObject.addProperty("Password", finalPassword);
+        jsonObject.addProperty("UserType", 1);
+        Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
+
+        HttpUtil.doPost(LoginActivity.this, Contants.url_userLogin, "login", map, new VolleyInterface(LoginActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
+            @Override
+            public void onSuccess(JsonElement result) {
+                LogUtil.i("hint", result.toString());
+                showShortToastByString("登录成功");
+                Gson gson = new Gson();
+                UserInfo userInfo = gson.fromJson(result,UserInfo.class);
+
+                customProgressDialog.dismiss();
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("account", account);
+                editor.putString("password", password);
+                editor.putString("UserId", userInfo.getUserId());
+                editor.putString("UserName", userInfo.getUserName());
+                editor.putString("Tel", userInfo.getTel());
+                editor.putString("HeadIco", userInfo.getHeadIco());
+                editor.putString("Sex", userInfo.getSex());
+                editor.putString("Address", userInfo.getAddress());
+                editor.apply();
+                Intent intent = new Intent();
+                intent.setClass(LoginActivity.this, MainActivity.class);
+                intent.putExtra("userInfo",userInfo);
+                startActivity(intent);
+                finish();
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                customProgressDialog.dismiss();
+                LogUtil.i("hint", error.networkResponse.headers.toString());
+                LogUtil.i("hint", error.networkResponse.statusCode + "");
+            }
+
+            @Override
+            public void onStateError() {
+                customProgressDialog.dismiss();
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0 && resultCode == RESULT_OK) {
+            String account = data.getStringExtra("account");
+            String password = data.getStringExtra("password");
+            et_account.setText(account);
+            et_password.setText(password);
+        }
+    }
+
+
 }

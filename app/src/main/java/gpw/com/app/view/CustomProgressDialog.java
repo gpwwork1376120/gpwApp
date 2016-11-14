@@ -24,6 +24,7 @@ public class CustomProgressDialog extends ProgressDialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_progress);
         mLoadingTv = (TextView) findViewById(R.id.loadingTv);
+        this.setCancelable(true);
 
     }
 
