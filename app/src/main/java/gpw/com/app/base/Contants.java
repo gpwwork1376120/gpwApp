@@ -13,5 +13,6 @@ public class Contants {
     public static String url_obtainCheckCode = localhost + "Visitors/ObtainCheckCode";
     public static String url_userLogin = localhost + "Register/UserLogin";
     public static String url_getUserAddress = localhost + "Consignor/GetUserAddress";
+    public static String url_getUserVehicleTeam = localhost + "Consignor/GetUserVehicleTeam";
 
 }

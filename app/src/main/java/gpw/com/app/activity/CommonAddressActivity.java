@@ -24,6 +24,7 @@ import gpw.com.app.adapter.CommonAdInfoAdapter;
 import gpw.com.app.base.BaseActivity;
 import gpw.com.app.base.Contants;
 import gpw.com.app.bean.CommonAdInfo;
+import gpw.com.app.util.DateUtil;
 import gpw.com.app.util.EncryptUtil;
 import gpw.com.app.util.HttpUtil;
 import gpw.com.app.util.LogUtil;
@@ -104,6 +105,7 @@ public class CommonAddressActivity extends BaseActivity {
         jsonObject.addProperty("UserId", userId);
         jsonObject.addProperty("PageIndex", PageIndex);
         jsonObject.addProperty("PageSize", 15);
+        jsonObject.addProperty("GetTime", DateUtil.getCurrentDate());
         Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
 
         HttpUtil.doPost(CommonAddressActivity.this, Contants.url_getUserAddress, "getUserAddress", map, new VolleyInterface(CommonAddressActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {

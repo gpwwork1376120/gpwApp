@@ -1,11 +1,14 @@
 package gpw.com.app.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Administrator on 2016/11/14.
  * ---个人专属
  */
 
-public class CommonAdInfo {
+public class CommonAdInfo implements Parcelable {
 
     /**
      * AddressId : 1
@@ -22,6 +25,7 @@ public class CommonAdInfo {
     private String ReceiptAddress;
     private double Lat;
     private double Lng;
+
 
     public int getAddressId() {
         return AddressId;
@@ -71,6 +75,7 @@ public class CommonAdInfo {
         this.Lng = Lng;
     }
 
+
     @Override
     public String toString() {
         return "CommonAdInfo{" +
@@ -82,4 +87,44 @@ public class CommonAdInfo {
                 ", Lng=" + Lng +
                 '}';
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.AddressId);
+        dest.writeString(this.Receipter);
+        dest.writeString(this.ReceiptTel);
+        dest.writeString(this.ReceiptAddress);
+        dest.writeDouble(this.Lat);
+        dest.writeDouble(this.Lng);
+    }
+
+    public CommonAdInfo() {
+    }
+
+    protected CommonAdInfo(Parcel in) {
+        this.AddressId = in.readInt();
+        this.Receipter = in.readString();
+        this.ReceiptTel = in.readString();
+        this.ReceiptAddress = in.readString();
+        this.Lat = in.readDouble();
+        this.Lng = in.readDouble();
+    }
+
+    public static final Parcelable.Creator<CommonAdInfo> CREATOR = new Parcelable.Creator<CommonAdInfo>() {
+        @Override
+        public CommonAdInfo createFromParcel(Parcel source) {
+            return new CommonAdInfo(source);
+        }
+
+        @Override
+        public CommonAdInfo[] newArray(int size) {
+            return new CommonAdInfo[size];
+        }
+    };
 }

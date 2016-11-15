@@ -103,7 +103,7 @@ public class MainActivity extends BaseActivity implements AddressMainAdapter.OnI
         tv_car_4 = (TextView) findViewById(R.id.tv_car_4);
         tv_car_5 = (TextView) findViewById(R.id.tv_car_5);
 
-        tv_tel = (TextView)findViewById(R.id.tv_tel);
+        tv_tel = (TextView) findViewById(R.id.tv_tel);
         tv_myOrder = (TextView) findViewById(R.id.tv_myOrder);
         tv_myWallet = (TextView) findViewById(R.id.tv_myWallet);
         tv_myConvoy = (TextView) findViewById(R.id.tv_myConvoy);
@@ -117,7 +117,7 @@ public class MainActivity extends BaseActivity implements AddressMainAdapter.OnI
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(DensityUtil.dip2px(MainActivity.this,10.0f),DensityUtil.dip2px(MainActivity.this,15.0f),0,0);
+            layoutParams.setMargins(DensityUtil.dip2px(MainActivity.this, 10.0f), DensityUtil.dip2px(MainActivity.this, 15.0f), 0, 0);
             iv_cir_head.setLayoutParams(layoutParams);
         }
 
@@ -131,7 +131,7 @@ public class MainActivity extends BaseActivity implements AddressMainAdapter.OnI
         addressMainInfo.setAction(0);
         addressMainInfo.setState(1);
         addressMainInfo.setAddress("start");
-        LatLng latLng2 = new LatLng(0,0);
+        LatLng latLng2 = new LatLng(0, 0);
         addressMainInfo.setLatLng(latLng2);
 
 
@@ -329,7 +329,7 @@ public class MainActivity extends BaseActivity implements AddressMainAdapter.OnI
                 startActivity(intent);
                 break;
             case R.id.rl_head:
-                intent = new Intent(MainActivity.this,PersonalInfoActivity.class);
+                intent = new Intent(MainActivity.this, PersonalInfoActivity.class);
                 mDrawerLayout.closeDrawers();
                 startActivity(intent);
                 break;
