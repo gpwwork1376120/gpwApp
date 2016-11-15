@@ -3,6 +3,7 @@ package gpw.com.app.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -26,6 +27,7 @@ import gpw.com.app.bean.CommonAdInfo;
 import gpw.com.app.util.EncryptUtil;
 import gpw.com.app.util.HttpUtil;
 import gpw.com.app.util.LogUtil;
+import gpw.com.app.util.NetworkUtil;
 import gpw.com.app.util.VolleyInterface;
 import gpw.com.app.view.XRecyclerView;
 
@@ -40,6 +42,7 @@ public class CommonAddressActivity extends BaseActivity {
     private XRecyclerView rv_common_ad;
     private CommonAdInfoAdapter commonAdInfoAdapter;
     private ArrayList<CommonAdInfo> commonAdInfos;
+    private int CurrentPage = 1;
 
     @Override
     protected int getLayout() {
@@ -51,7 +54,7 @@ public class CommonAddressActivity extends BaseActivity {
         tv_title = (TextView) findViewById(R.id.tv_title);
         iv_right = (ImageView) findViewById(R.id.iv_right);
         iv_left_white = (ImageView) findViewById(R.id.iv_left_white);
-        rv_common_ad = (XRecyclerView) findViewById(R.id.rv_main_address);
+        rv_common_ad = (XRecyclerView) findViewById(R.id.rv_common_ad);
     }
 
     @Override
@@ -64,31 +67,42 @@ public class CommonAddressActivity extends BaseActivity {
     @Override
     protected void initView() {
 
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        rv_common_ad.setLayoutManager(layoutManager);
         rv_common_ad.setAdapter(commonAdInfoAdapter);
-        getUserAddress(1,0);
+        getUserAddress(1, 0);
         rv_common_ad.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
-                getUserAddress(1,0);
+                getUserAddress(CurrentPage, 0);
             }
 
             @Override
             public void onLoadMore() {
-                getUserAddress(1,1);
+                CurrentPage++;
+                getUserAddress(CurrentPage, 1);
             }
         });
 
         tv_title.setText(R.string.common_address);
         iv_left_white.setOnClickListener(this);
         iv_right.setOnClickListener(this);
-
-
     }
 
     private void getUserAddress(int PageIndex, final int ways) {
+        if (!NetworkUtil.isConnected(CommonAddressActivity.this)) {
+            showShortToastByString(getString(R.string.Neterror));
+            if (ways == 0) {
+                rv_common_ad.refreshComplete("fail");
+            } else {
+                rv_common_ad.loadMoreComplete();
+            }
+            return;
+        }
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("UserId", userId);
-        jsonObject.addProperty("PageIndex", 1);
+        jsonObject.addProperty("PageIndex", PageIndex);
         jsonObject.addProperty("PageSize", 15);
         Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
 
@@ -102,6 +116,7 @@ public class CommonAddressActivity extends BaseActivity {
                 ArrayList<CommonAdInfo> newCommonAdInfos = gson.fromJson(result, listType);
                 if (ways == 0) {
                     rv_common_ad.refreshComplete("success");
+                    CurrentPage = 1;
                     commonAdInfos.clear();
                     commonAdInfos.addAll(newCommonAdInfos);
                 } else {
@@ -116,11 +131,11 @@ public class CommonAddressActivity extends BaseActivity {
 
             @Override
             public void onError(VolleyError error) {
-                LogUtil.i("register", error.networkResponse.headers.toString());
-                LogUtil.i("register", error.networkResponse.statusCode + "");
-
+                LogUtil.i("hint", error.networkResponse.headers.toString());
+                LogUtil.i("hint", error.networkResponse.statusCode + "");
                 if (ways == 0) {
                     rv_common_ad.refreshComplete("fail");
+
                 } else {
                     rv_common_ad.loadMoreComplete();
                 }

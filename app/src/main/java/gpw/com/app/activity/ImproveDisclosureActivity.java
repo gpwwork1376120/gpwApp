@@ -61,7 +61,7 @@ public class ImproveDisclosureActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        tv_address.setText(mAddressMainInfo.getAddress());
+        tv_address.setText(mAddressMainInfo.getName()+ " ("+mAddressMainInfo.getAddress()+")");
         switch (mAddressMainInfo.getState()) {
             case 1:
                 iv_address.setImageResource(R.mipmap.start);

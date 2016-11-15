@@ -22,6 +22,7 @@ import gpw.com.app.base.Contants;
 import gpw.com.app.util.EncryptUtil;
 import gpw.com.app.util.HttpUtil;
 import gpw.com.app.util.LogUtil;
+import gpw.com.app.util.NetworkUtil;
 import gpw.com.app.util.VolleyInterface;
 import gpw.com.app.view.CustomProgressDialog;
 
@@ -70,7 +71,11 @@ public class RegisterActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_ok:
-                register();
+                if (NetworkUtil.isConnected(RegisterActivity.this)) {
+                    register();
+                }else {
+                    showShortToastByString(getString(R.string.Neterror));
+                }
                 break;
             case R.id.iv_login_eye:
                 break;
@@ -103,8 +108,9 @@ public class RegisterActivity extends BaseActivity {
 
             @Override
             public void onError(VolleyError error) {
-                LogUtil.i("register",error.networkResponse.headers.toString());
-                LogUtil.i("register",error.networkResponse.statusCode+"");
+                LogUtil.i("hint", error.toString());
+//                LogUtil.i("register",error.networkResponse.headers.toString());
+//                LogUtil.i("register",error.networkResponse.statusCode+"");
             }
 
             @Override

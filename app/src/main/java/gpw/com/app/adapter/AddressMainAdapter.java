@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import gpw.com.app.R;
 import gpw.com.app.activity.MapActivity;
 import gpw.com.app.bean.AddressMainInfo;
+import gpw.com.app.util.LogUtil;
 
 import static android.view.View.GONE;
 
@@ -50,31 +51,32 @@ public class AddressMainAdapter extends RecyclerView.Adapter<AddressMainAdapter.
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
         final AddressMainInfo addressMainInfo = mAddressMainInfos.get(position);
-        if (addressMainInfo.isStart()) {
+        LogUtil.i("hint","aa"+addressMainInfo.getAddress());
+        if (addressMainInfo.getAddress().equals("start")) {
             viewHolder.tv_contact.setVisibility(GONE);
             viewHolder.tv_address.setText("点击添加地址");
-            viewHolder.tv_address.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(mActivity, MapActivity.class);
-                    intent.putExtra("position",position);
-                    intent.putExtra("addressMainInfo",addressMainInfo);
-                    intent.putExtra("type",1);
-                    mActivity.startActivityForResult(intent,1);
-                }
-            });
+//            viewHolder.tv_address.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Intent intent = new Intent(mActivity, MapActivity.class);
+//                    intent.putExtra("position",position);
+//                    intent.putExtra("addressMainInfo",addressMainInfo);
+//                    intent.putExtra("type",1);
+//                    mActivity.startActivityForResult(intent,1);
+//                }
+//            });
         } else {
             viewHolder.tv_contact.setVisibility(View.VISIBLE);
             viewHolder.tv_address.setText(addressMainInfo.getName()+"("+addressMainInfo.getAddress()+")");
             viewHolder.tv_contact.setText(addressMainInfo.getContact());
-            viewHolder.ll_address.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mOnItemClickListener.onItemClick(position);
-                }
-            });
-
         }
+
+        viewHolder.ll_address.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnItemClickListener.onItemClick(position);
+            }
+        });
 
 
         if (addressMainInfo.getState() == 1) {

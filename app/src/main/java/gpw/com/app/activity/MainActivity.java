@@ -130,30 +130,19 @@ public class MainActivity extends BaseActivity implements AddressMainAdapter.OnI
         AddressMainInfo addressMainInfo = new AddressMainInfo();
         addressMainInfo.setAction(0);
         addressMainInfo.setState(1);
-        LatLng latLng2 = new LatLng(22.54227041419383, 113.98041663238132);
+        addressMainInfo.setAddress("start");
+        LatLng latLng2 = new LatLng(0,0);
         addressMainInfo.setLatLng(latLng2);
-        addressMainInfo.setStart(true);
+
 
         AddressMainInfo addressMainInfo1 = new AddressMainInfo();
         addressMainInfo1.setAction(1);
         addressMainInfo1.setState(3);
-        LatLng latLng1 = new LatLng(22.54227041419383, 113.98041663238132);
+        LatLng latLng1 = new LatLng(0, 0);
         addressMainInfo1.setLatLng(latLng1);
-        addressMainInfo1.setStart(true);
-
-        AddressMainInfo addressMainInfo2 = new AddressMainInfo();
-        addressMainInfo2.setAction(2);
-        addressMainInfo2.setAddress("广东省深圳市南山区深南大道9037号");
-        addressMainInfo2.setName("世界之窗");
-        addressMainInfo2.setContact("龚xx 123456789");
-        addressMainInfo2.setState(2);
-        LatLng latLng = new LatLng(22.54227041419383, 113.98041663238132);
-        addressMainInfo2.setLatLng(latLng);
-        addressMainInfo2.setState(2);
-        addressMainInfo2.setStart(false);
+        addressMainInfo1.setAddress("start");
 
         mAddressMainInfos.add(addressMainInfo);
-        mAddressMainInfos.add(addressMainInfo2);
         mAddressMainInfos.add(addressMainInfo1);
 
         mAddressMainAdapter = new AddressMainAdapter(mAddressMainInfos, this);
@@ -390,8 +379,8 @@ public class MainActivity extends BaseActivity implements AddressMainAdapter.OnI
         intent.putExtra("addressMainInfo", mAddressMainInfos.get(position));
         intent.putExtra("type", 3);
         startActivityForResult(intent, 1);
-
     }
+
 
     @Override
     public void onActionClick(int position) {

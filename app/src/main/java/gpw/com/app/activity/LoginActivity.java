@@ -24,6 +24,7 @@ import gpw.com.app.util.EncryptUtil;
 import gpw.com.app.util.HttpUtil;
 import gpw.com.app.util.LogUtil;
 import gpw.com.app.util.MD5Util;
+import gpw.com.app.util.NetworkUtil;
 import gpw.com.app.util.VolleyInterface;
 import gpw.com.app.view.CustomProgressDialog;
 
@@ -82,7 +83,11 @@ public class LoginActivity extends BaseActivity {
         Intent intent = new Intent();
         switch (v.getId()) {
             case R.id.bt_login:
-                login();
+                if (NetworkUtil.isConnected(LoginActivity.this)) {
+                    login();
+                }else {
+                    showShortToastByString(getString(R.string.Neterror));
+                }
                 break;
             case R.id.iv_login_eye:
                 break;
@@ -109,8 +114,11 @@ public class LoginActivity extends BaseActivity {
         account = et_account.getText().toString();
         String time = DateUtil.getCurrentDate();
         password = et_password.getText().toString();
+        if (account.isEmpty()||password.isEmpty()){
+            showShortToastByString("信息不完整");
+            return;
+        }
         String finalPassword = MD5Util.encrypt(time + password);
-
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("LoginName", account);
         jsonObject.addProperty("Time", time);
@@ -125,7 +133,6 @@ public class LoginActivity extends BaseActivity {
                 showShortToastByString("登录成功");
                 Gson gson = new Gson();
                 UserInfo userInfo = gson.fromJson(result,UserInfo.class);
-
                 customProgressDialog.dismiss();
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString("account", account);
@@ -147,8 +154,9 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onError(VolleyError error) {
                 customProgressDialog.dismiss();
-                LogUtil.i("hint", error.networkResponse.headers.toString());
-                LogUtil.i("hint", error.networkResponse.statusCode + "");
+                LogUtil.i("hint", error.toString());
+        //      LogUtil.i("hint", error.networkResponse.headers.toString());
+       //       LogUtil.i("hint", error.networkResponse.statusCode + "");
             }
 
             @Override
