@@ -141,7 +141,7 @@ public class RegisterActivity extends BaseActivity {
         HttpUtil.doPost(RegisterActivity.this, Contants.url_register, "register", map, new VolleyInterface(RegisterActivity.this,VolleyInterface.mListener,VolleyInterface.mErrorListener) {
             @Override
             public void onSuccess(JsonElement result) {
-                LogUtil.i("register",result.toString());
+                LogUtil.i(result.toString());
                 showShortToastByString("注册成功");
                 getIntent().putExtra("Phone",account);
                 getIntent().putExtra("Password",password);
@@ -151,8 +151,9 @@ public class RegisterActivity extends BaseActivity {
 
             @Override
             public void onError(VolleyError error) {
-                LogUtil.i("register",error.networkResponse.headers.toString());
-                LogUtil.i("register",error.networkResponse.statusCode+"");
+                showShortToastByString(getString(R.string.timeoutError));
+//                LogUtil.i("hint",error.networkResponse.headers.toString());
+//                LogUtil.i("hint",error.networkResponse.statusCode+"");
             }
 
             @Override

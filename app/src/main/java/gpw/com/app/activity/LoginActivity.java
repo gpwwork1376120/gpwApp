@@ -112,7 +112,7 @@ public class LoginActivity extends BaseActivity {
         customProgressDialog.show();
         customProgressDialog.setText("登录中..");
         account = et_account.getText().toString();
-        String time = DateUtil.getCurrentDate();
+        String time = DateUtil.getPsdCurrentDate();
         password = et_password.getText().toString();
         if (account.isEmpty()||password.isEmpty()){
             showShortToastByString("信息不完整");
@@ -154,9 +154,8 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onError(VolleyError error) {
                 customProgressDialog.dismiss();
+                showShortToastByString(getString(R.string.timeoutError));
                 LogUtil.i("hint", error.toString());
-        //      LogUtil.i("hint", error.networkResponse.headers.toString());
-       //       LogUtil.i("hint", error.networkResponse.statusCode + "");
             }
 
             @Override

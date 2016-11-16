@@ -200,7 +200,7 @@ public class MapActivity extends BaseActivity {
         mAddressNameAdapter = new AddressNameAdapter(mSuggestionInfos, this);
 
         prefs = getSharedPreferences(Contants.SHARED_NAME, MODE_PRIVATE);
-        city = prefs.getString("account", "");
+        city = prefs.getString("city", "深圳市");
 
         pst = getIntent().getIntExtra("position", 0);
         type = getIntent().getIntExtra("type", 0);
@@ -219,6 +219,7 @@ public class MapActivity extends BaseActivity {
         mOption.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系，如果配合百度地图使用，建议设置为bd09ll;
         mOption.setScanSpan(0);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
         mOption.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
+        mOption.setOpenGps(true);
         mOption.setLocationNotify(false);//可选，默认false，设置是否当gps有效时按照1S1次频率输出GPS结果
         mOption.setIgnoreKillProcess(true);//可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
         mLocationClient.setLocOption(mOption);
@@ -255,7 +256,8 @@ public class MapActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                System.out.println("sadsad11" + s.toString());
+                System.out.println("sadsad" + s.toString());
+                System.out.println("city" + city);
                 mSuggestionSearch.requestSuggestion((new SuggestionSearchOption())
                         .keyword(s.toString())
                         .city(city));
@@ -344,11 +346,15 @@ public class MapActivity extends BaseActivity {
             if (city == null) {
                 mLocationClient.stop();
                 mLocationClient.start();
+                LogUtil.i("aaaaaa");
                 return;
             }
+            LogUtil.i("bbbbb");
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString("city", city);
             editor.apply();
+            LogUtil.i("city"+city);
+
             if (mAddressMainInfo.getName() == null) {
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 BitmapDescriptor bitmap = BitmapDescriptorFactory

@@ -56,7 +56,7 @@ public class MyConvoyActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        userId = getIntent().getStringExtra("userId");
+        userId = getIntent().getStringExtra("UserId");
         mConvoyInfos = new ArrayList<>();
         mConvoyAdapter = new ConvoyAdapter(mConvoyInfos,this);
     }

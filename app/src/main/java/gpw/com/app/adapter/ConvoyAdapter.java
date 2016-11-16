@@ -56,7 +56,6 @@ public class ConvoyAdapter extends BaseAdapter {
             viewHolder.tv_vehicleNo = (TextView) convertView.findViewById(R.id.tv_vehicleNo);
             viewHolder.rb_score = (RatingBar) convertView.findViewById(R.id.rb_score);
             viewHolder.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
-
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();

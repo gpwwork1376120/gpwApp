@@ -43,20 +43,8 @@
             android:paddingLeft="13dp"
             android:textSize="14sp" />
 
-        <View
-            android:layout_width="0.6dp"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="3dp"
-            android:layout_marginTop="3dp"
-            android:background="@color/color_line" />
 
-        <TextView
-            android:id="@+id/tv_address"
-            android:layout_width="80dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="常用地址"
-            android:textSize="14sp" />
+
     </LinearLayout>
 
     <ListView

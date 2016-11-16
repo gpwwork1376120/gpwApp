@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Base64;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -48,7 +49,7 @@ public class HttpUtil {
                 return headers;
             }
         };
-
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(5000, 1, 1.0f));
 
         // 设置标签
         stringRequest.setTag(tag);

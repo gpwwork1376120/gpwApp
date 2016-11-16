@@ -25,6 +25,8 @@ public class CommonAdInfo implements Parcelable {
     private String ReceiptAddress;
     private double Lat;
     private double Lng;
+    private int state;
+    private int action;
 
 
     public int getAddressId() {
@@ -76,16 +78,20 @@ public class CommonAdInfo implements Parcelable {
     }
 
 
-    @Override
-    public String toString() {
-        return "CommonAdInfo{" +
-                "AddressId=" + AddressId +
-                ", Receipter='" + Receipter + '\'' +
-                ", ReceiptTel='" + ReceiptTel + '\'' +
-                ", ReceiptAddress='" + ReceiptAddress + '\'' +
-                ", Lat=" + Lat +
-                ", Lng=" + Lng +
-                '}';
+    public int getAction() {
+        return action;
+    }
+
+    public void setAction(int action) {
+        this.action = action;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
     }
 
 
@@ -102,6 +108,8 @@ public class CommonAdInfo implements Parcelable {
         dest.writeString(this.ReceiptAddress);
         dest.writeDouble(this.Lat);
         dest.writeDouble(this.Lng);
+        dest.writeInt(this.state);
+        dest.writeInt(this.action);
     }
 
     public CommonAdInfo() {
@@ -114,9 +122,11 @@ public class CommonAdInfo implements Parcelable {
         this.ReceiptAddress = in.readString();
         this.Lat = in.readDouble();
         this.Lng = in.readDouble();
+        this.state = in.readInt();
+        this.action = in.readInt();
     }
 
-    public static final Parcelable.Creator<CommonAdInfo> CREATOR = new Parcelable.Creator<CommonAdInfo>() {
+    public static final Creator<CommonAdInfo> CREATOR = new Creator<CommonAdInfo>() {
         @Override
         public CommonAdInfo createFromParcel(Parcel source) {
             return new CommonAdInfo(source);

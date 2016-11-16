@@ -14,5 +14,7 @@ public class Contants {
     public static String url_userLogin = localhost + "Register/UserLogin";
     public static String url_getUserAddress = localhost + "Consignor/GetUserAddress";
     public static String url_getUserVehicleTeam = localhost + "Consignor/GetUserVehicleTeam";
+    public static String url_saveUserAddress = localhost + "Consignor/SaveUserAddress";
+    public static String url_editUserAddress = localhost + "Consignor/EditUserAddress";
 
 }

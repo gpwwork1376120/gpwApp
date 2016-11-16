@@ -58,7 +58,6 @@ public class AddMapActivity extends BaseActivity {
 
     private ImageView iv_left_black;
     private EditText et_search;
-    private TextView tv_address;
     private ListView lv_search;
     private LinearLayout ll_search;
     private SuggestionSearch mSuggestionSearch;
@@ -108,16 +107,21 @@ public class AddMapActivity extends BaseActivity {
 
 
             LatLng location = result.getLocation();
-            String name = mAddressMainInfo.getName();
+            // String name = mAddressMainInfo.getName();
             String address = result.getAddress();
             LinearLayout linearLayout = (LinearLayout) View.inflate(AddMapActivity.this, R.layout.view_map_bck, null);
             TextView tv_map_name = (TextView) linearLayout.findViewById(R.id.tv_map_name);
             TextView tv_map_detail = (TextView) linearLayout.findViewById(R.id.tv_map_detail);
-            tv_map_name.setText(name);
+            tv_map_name.setText(receiptAddress);
             tv_map_detail.setText(address);
             InfoWindow mInfoWindow = new InfoWindow(linearLayout, location, -85);
             mBaiduMap.showInfoWindow(mInfoWindow);
 
+            receiptAddress = receiptAddress + " " + "(" + address + ")";
+
+            commonAdInfo.setReceiptAddress(receiptAddress);
+            commonAdInfo.setLat(location.latitude);
+            commonAdInfo.setLng(location.longitude);
 
             BitmapDescriptor bitmap = BitmapDescriptorFactory
                     .fromResource(R.mipmap.location);
@@ -140,11 +144,12 @@ public class AddMapActivity extends BaseActivity {
             linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(AddMapActivity.this, ImproveDisclosureActivity.class);
+                    Intent intent = new Intent(AddMapActivity.this, EditAddressActivity.class);
                     intent.putExtra("position", pst);
-                    intent.putExtra("addressMainInfo", mAddressMainInfo);
+                    intent.putExtra("commonAdInfo", commonAdInfo);
+                    intent.putExtra("userId", getIntent().getStringExtra("userId"));
                     intent.putExtra("type", type);
-                    startActivityForResult(intent, 2);
+                    startActivityForResult(intent, 5);
                 }
             });
         }
@@ -152,7 +157,7 @@ public class AddMapActivity extends BaseActivity {
 
     @Override
     protected int getLayout() {
-        return R.layout.activity_map;
+        return R.layout.activity_add_map;
     }
 
     @Override
@@ -160,7 +165,6 @@ public class AddMapActivity extends BaseActivity {
         mMapView = (MapView) findViewById(R.id.map_view);
         iv_left_black = (ImageView) findViewById(R.id.iv_left_black);
         et_search = (EditText) findViewById(R.id.et_search);
-        tv_address = (TextView) findViewById(R.id.tv_address);
         lv_search = (ListView) findViewById(R.id.lv_search);
         ll_search = (LinearLayout) findViewById(R.id.ll_search);
 
@@ -181,13 +185,17 @@ public class AddMapActivity extends BaseActivity {
         mAddressNameAdapter = new AddressNameAdapter(mSuggestionInfos, this);
 
         prefs = getSharedPreferences(Contants.SHARED_NAME, MODE_PRIVATE);
-        city = prefs.getString("account", "");
-        pst = getIntent().getIntExtra("position", 0);
+        city = prefs.getString("city", "深圳市");
         type = getIntent().getIntExtra("type", 0);
         if (type == 1) {
             commonAdInfo = getIntent().getParcelableExtra("commonAdInfo");
             latLng = new LatLng(commonAdInfo.getLat(), commonAdInfo.getLng());
+            pst = getIntent().getIntExtra("position", 0);
+        } else {
+            commonAdInfo = new CommonAdInfo();
+            pst = -1;
         }
+
         mLocationClient = new LocationClient(AddMapActivity.this);     //声明LocationClient类
         mLocationClient.registerLocationListener(myListener);    //注册监听函数
         initLocation();
@@ -215,8 +223,7 @@ public class AddMapActivity extends BaseActivity {
         }
         mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
         lv_search.setAdapter(mAddressNameAdapter);
-//        mSearch.reverseGeoCode(new ReverseGeoCodeOption()
-//                .location(commonAdInfo.getLatLng()));
+
         if (type == 1) {
             BitmapDescriptor bitmap = BitmapDescriptorFactory
                     .fromResource(R.mipmap.location);
@@ -228,9 +235,11 @@ public class AddMapActivity extends BaseActivity {
             LinearLayout linearLayout = (LinearLayout) View.inflate(AddMapActivity.this, R.layout.view_map_bck, null);
             TextView tv_map_name = (TextView) linearLayout.findViewById(R.id.tv_map_name);
             TextView tv_map_detail = (TextView) linearLayout.findViewById(R.id.tv_map_detail);
+            receiptAddress = commonAdInfo.getReceiptAddress();
+            String[] nameAd = receiptAddress.split(" ");
 
-            tv_map_name.setText("当前位置");
-            tv_map_detail.setText(location.getAddress().address);
+            tv_map_name.setText(nameAd[0]);
+            tv_map_detail.setText(nameAd[1]);
 
             InfoWindow mInfoWindow = new InfoWindow(linearLayout, latLng, -85);
             mBaiduMap.showInfoWindow(mInfoWindow);
@@ -242,6 +251,18 @@ public class AddMapActivity extends BaseActivity {
             MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory
                     .newMapStatus(mapStatus);
             mBaiduMap.animateMapStatus(mapStatusUpdate);
+
+            linearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(AddMapActivity.this, EditAddressActivity.class);
+                    intent.putExtra("position", pst);
+                    intent.putExtra("commonAdInfo", commonAdInfo);
+                    intent.putExtra("type", type);
+                    intent.putExtra("userId", getIntent().getStringExtra("userId"));
+                    startActivityForResult(intent, 5);
+                }
+            });
         } else {
             mLocationClient.start();
         }
@@ -275,8 +296,7 @@ public class AddMapActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mBaiduMap.clear();
                 LatLng pt = mSuggestionInfos.get(position).pt;
-                String name = mSuggestionInfos.get(position).key;
-                commonAdInfo.setReceiptAddress(name);
+                receiptAddress = mSuggestionInfos.get(position).key;
                 mSearch.reverseGeoCode(new ReverseGeoCodeOption()
                         .location(pt));
 
@@ -284,7 +304,7 @@ public class AddMapActivity extends BaseActivity {
             }
         });
         iv_left_black.setOnClickListener(this);
-        tv_address.setOnClickListener(this);
+
 
     }
 
@@ -325,15 +345,16 @@ public class AddMapActivity extends BaseActivity {
     }
 
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == 2) {
+        if (resultCode == RESULT_OK && requestCode == 5) {
             int position = data.getIntExtra("position", 0);
             int type = data.getIntExtra("type", 0);
-            AddressMainInfo addressMainInfo = data.getParcelableExtra("addressMainInfo");
+            CommonAdInfo adInfo = data.getParcelableExtra("commonAdInfo");
             getIntent().putExtra("position", position);
-            getIntent().putExtra("addressMainInfo", addressMainInfo);
+            getIntent().putExtra("commonAdInfo", adInfo);
             getIntent().putExtra("type", type);
             setResult(RESULT_OK, getIntent());
             finish();
@@ -345,12 +366,12 @@ public class AddMapActivity extends BaseActivity {
         @Override
         public void onReceiveLocation(BDLocation location) {
             city = location.getCity();
-
             if (city == null) {
                 mLocationClient.stop();
                 mLocationClient.start();
                 return;
             }
+
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString("city", city);
             editor.apply();

@@ -133,12 +133,21 @@
         <TextView
             android:id="@+id/tv_name1"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/iv_right1"
+            android:layout_marginRight="5dp"
+            android:text="李先生"
+            android:textSize="@dimen/small_font"/>
+
+        <ImageView
+            android:id="@+id/iv_right1"
+            android:layout_width="23dp"
             android:layout_height="23dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:text="李先生"
-            android:textSize="@dimen/small_font"/>
+            android:src="@mipmap/right_gray"/>
     </RelativeLayout>
 
     <View
@@ -162,15 +171,25 @@
             android:textColor="#2d2d2d"
             android:textSize="@dimen/normal_font"/>
 
+
         <TextView
             android:id="@+id/tv_sex"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/iv_right2"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:text="男"
+            android:textSize="@dimen/small_font"/>
+
+        <ImageView
+            android:id="@+id/iv_right2"
+            android:layout_width="23dp"
             android:layout_height="23dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:text="男"
-            android:textSize="@dimen/small_font"/>
+            android:src="@mipmap/right_gray"/>
     </RelativeLayout>
 
     <View
@@ -233,6 +252,11 @@
             android:text="@string/address"
             android:textColor="#2d2d2d"
             android:textSize="@dimen/normal_font"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
 
         <ImageView
             android:layout_width="23dp"

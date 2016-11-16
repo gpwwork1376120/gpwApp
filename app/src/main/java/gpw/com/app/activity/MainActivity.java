@@ -30,6 +30,8 @@ import gpw.com.app.adapter.AddressMainAdapter;
 import gpw.com.app.base.BaseActivity;
 import gpw.com.app.bean.ADInfo;
 import gpw.com.app.bean.AddressMainInfo;
+import gpw.com.app.bean.CommonAdInfo;
+import gpw.com.app.bean.UserInfo;
 import gpw.com.app.util.DensityUtil;
 import gpw.com.app.view.ImageCycleView;
 import gpw.com.app.view.MainPopupWindow;
@@ -44,7 +46,7 @@ public class MainActivity extends BaseActivity implements AddressMainAdapter.OnI
     private ImageView iv_cir_head;
     private View view_line;
     private RecyclerView rv_main_address;
-    private ArrayList<AddressMainInfo> mAddressMainInfos;
+    private ArrayList<CommonAdInfo> mCommonAdInfos;
     private AddressMainAdapter mAddressMainAdapter;
     private LinearLayout ll_car_1;
     private LinearLayout ll_car_2;
@@ -71,6 +73,8 @@ public class MainActivity extends BaseActivity implements AddressMainAdapter.OnI
     private TextView tv_benefit_activity;
     private TextView tv_setting;
     private RelativeLayout rl_head;
+
+    private UserInfo userInfo;
 
 
     @Override
@@ -126,7 +130,10 @@ public class MainActivity extends BaseActivity implements AddressMainAdapter.OnI
 
     @Override
     protected void initData() {
-        mAddressMainInfos = new ArrayList<>();
+        userInfo = getIntent().getParcelableExtra("userInfo");
+        mCommonAdInfos = new ArrayList<>();
+        CommonAdInfo commonAdInfo = new CommonAdInfo();
+
         AddressMainInfo addressMainInfo = new AddressMainInfo();
         addressMainInfo.setAction(0);
         addressMainInfo.setState(1);
@@ -290,47 +297,44 @@ public class MainActivity extends BaseActivity implements AddressMainAdapter.OnI
                 break;
             case R.id.tv_myOrder:
                 intent = new Intent(MainActivity.this, MyOrderActivity.class);
-                mDrawerLayout.closeDrawers();
+                intent.putExtra("UserId",userInfo.getUserId());
                 startActivity(intent);
                 break;
             case R.id.tv_myWallet:
                 intent = new Intent(MainActivity.this, MyWalletActivity.class);
-                mDrawerLayout.closeDrawers();
                 startActivity(intent);
                 break;
             case R.id.tv_myConvoy:
                 intent = new Intent(MainActivity.this, MyConvoyActivity.class);
+                intent.putExtra("UserId",userInfo.getUserId());
                 startActivity(intent);
-                mDrawerLayout.closeDrawers();
+
                 break;
             case R.id.tv_common_address:
                 intent = new Intent(MainActivity.this, CommonAddressActivity.class);
+                intent.putExtra("UserId",userInfo.getUserId());
                 startActivity(intent);
-                mDrawerLayout.closeDrawers();
                 break;
             case R.id.tv_myInvoice:
                 intent = new Intent(MainActivity.this, MyInvoiceActivity.class);
-                mDrawerLayout.closeDrawers();
+
                 startActivity(intent);
                 break;
             case R.id.tv_news:
                 intent = new Intent(MainActivity.this, MyNewsActivity.class);
-                mDrawerLayout.closeDrawers();
+
                 startActivity(intent);
                 break;
             case R.id.tv_benefit_activity:
                 intent = new Intent(MainActivity.this, BenefitActivityActivity.class);
-                mDrawerLayout.closeDrawers();
                 startActivity(intent);
                 break;
             case R.id.tv_setting:
                 intent = new Intent(MainActivity.this, SettingActivity.class);
-                mDrawerLayout.closeDrawers();
                 startActivity(intent);
                 break;
             case R.id.rl_head:
                 intent = new Intent(MainActivity.this, PersonalInfoActivity.class);
-                mDrawerLayout.closeDrawers();
                 startActivity(intent);
                 break;
         }
@@ -406,8 +410,8 @@ public class MainActivity extends BaseActivity implements AddressMainAdapter.OnI
                 mAddressMainInfos.add(old);
                 mAddressMainAdapter.notifyDataSetChanged();
             } else {
-                mAddressMainInfos.set(position, mAddressMainInfo);
-                mAddressMainAdapter.notifyDataSetChanged();
+                //mAddressMainInfos.set(position, mAddressMainInfo);
+                mAddressMainAdapter.notifyItemChanged(position,mAddressMainInfo);
             }
 
         }

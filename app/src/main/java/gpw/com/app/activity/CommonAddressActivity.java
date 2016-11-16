@@ -23,6 +23,7 @@ import gpw.com.app.R;
 import gpw.com.app.adapter.CommonAdInfoAdapter;
 import gpw.com.app.base.BaseActivity;
 import gpw.com.app.base.Contants;
+import gpw.com.app.bean.AddressMainInfo;
 import gpw.com.app.bean.CommonAdInfo;
 import gpw.com.app.util.DateUtil;
 import gpw.com.app.util.EncryptUtil;
@@ -61,6 +62,7 @@ public class CommonAddressActivity extends BaseActivity {
     @Override
     protected void initData() {
         userId = getIntent().getStringExtra("UserId");
+        LogUtil.i(userId+"aaaa");
         commonAdInfos = new ArrayList<>();
         commonAdInfoAdapter = new CommonAdInfoAdapter(this, commonAdInfos);
     }
@@ -72,6 +74,17 @@ public class CommonAddressActivity extends BaseActivity {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_common_ad.setLayoutManager(layoutManager);
         rv_common_ad.setAdapter(commonAdInfoAdapter);
+        commonAdInfoAdapter.setOnItemClickListener(new CommonAdInfoAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent intent = new Intent(CommonAddressActivity.this,AddMapActivity.class);
+                intent.putExtra("userId",userId);
+                intent.putExtra("position",position);
+                intent.putExtra("commonAdInfo",commonAdInfos.get(position));
+                intent.putExtra("type",1);
+                startActivityForResult(intent,4);
+            }
+        });
         getUserAddress(1, 0);
         rv_common_ad.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
@@ -106,6 +119,7 @@ public class CommonAddressActivity extends BaseActivity {
         jsonObject.addProperty("PageIndex", PageIndex);
         jsonObject.addProperty("PageSize", 15);
         jsonObject.addProperty("GetTime", DateUtil.getCurrentDate());
+        LogUtil.i(jsonObject.toString());
         Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
 
         HttpUtil.doPost(CommonAddressActivity.this, Contants.url_getUserAddress, "getUserAddress", map, new VolleyInterface(CommonAddressActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
@@ -133,8 +147,7 @@ public class CommonAddressActivity extends BaseActivity {
 
             @Override
             public void onError(VolleyError error) {
-                LogUtil.i("hint", error.networkResponse.headers.toString());
-                LogUtil.i("hint", error.networkResponse.statusCode + "");
+
                 if (ways == 0) {
                     rv_common_ad.refreshComplete("fail");
 
@@ -161,9 +174,31 @@ public class CommonAddressActivity extends BaseActivity {
             case R.id.iv_left_white:
                 finish();
                 break;
-            case tv_right:
-
+            case R.id.iv_right:
+                Intent intent = new Intent(CommonAddressActivity.this,AddMapActivity.class);
+                intent.putExtra("userId",userId);
+                intent.putExtra("type",0);
+                startActivityForResult(intent,4);
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == 4) {
+            int position = data.getIntExtra("position", 0);
+            int type = data.getIntExtra("type", 0);
+            CommonAdInfo commonAdInfo = data.getParcelableExtra("commonAdInfo");
+            if (type==0){
+                commonAdInfos.add(commonAdInfo);
+            }else {
+                commonAdInfos.set(position,commonAdInfo);
+            }
+            commonAdInfoAdapter.notifyDataSetChanged();
+
+
+
         }
     }
 }
