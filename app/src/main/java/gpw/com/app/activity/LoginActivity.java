@@ -135,6 +135,7 @@ public class LoginActivity extends BaseActivity {
                 UserInfo userInfo = gson.fromJson(result,UserInfo.class);
                 customProgressDialog.dismiss();
                 SharedPreferences.Editor editor = prefs.edit();
+                Contants.userId = userInfo.getUserId();
                 editor.putString("account", account);
                 editor.putString("password", password);
                 editor.putString("UserId", userInfo.getUserId());
