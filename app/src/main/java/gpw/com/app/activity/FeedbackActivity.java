@@ -6,8 +6,19 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import java.util.Map;
+
 import gpw.com.app.R;
 import gpw.com.app.base.BaseActivity;
+import gpw.com.app.base.Contants;
+import gpw.com.app.util.EncryptUtil;
+import gpw.com.app.util.HttpUtil;
+import gpw.com.app.util.LogUtil;
+import gpw.com.app.util.VolleyInterface;
 
 public class FeedbackActivity extends BaseActivity {
 
@@ -41,8 +52,43 @@ public class FeedbackActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+
+        String title = et_account.getText().toString();
+        String SContent = et_comment.getText().toString();
         tv_title.setText(R.string.feed_back);
         tv_right.setText(R.string.propose);
+
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("UserId",Contants.userId);
+        jsonObject.addProperty("Title",title);
+        jsonObject.addProperty("Password",SContent);
+        jsonObject.addProperty("UserType",1);
+        Map<String,String> map = EncryptUtil.encryptDES(jsonObject.toString());
+
+        HttpUtil.doPost(FeedbackActivity.this, Contants.url_saveSuggest, "saveSuggest", map, new VolleyInterface(FeedbackActivity.this,VolleyInterface.mListener,VolleyInterface.mErrorListener) {
+            @Override
+            public void onSuccess(JsonElement result) {
+                LogUtil.i(result.toString());
+                showShortToastByString(result.toString());
+                et_account.setText("");
+                et_comment.setText("");
+                finish();
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                showShortToastByString(getString(R.string.timeoutError));
+//                LogUtil.i("hint",error.networkResponse.headers.toString());
+//                LogUtil.i("hint",error.networkResponse.statusCode+"");
+            }
+
+            @Override
+            public void onStateError() {
+
+            }
+        });
+
         iv_left_white.setOnClickListener(this);
     }
 

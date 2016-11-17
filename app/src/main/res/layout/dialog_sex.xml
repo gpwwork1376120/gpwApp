@@ -20,7 +20,7 @@
 
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:text="选择照片方式"
+            android:text="选择性别"
             android:gravity="center"
             android:textColor="@color/color_gary_font"
             android:textSize="13sp"
@@ -31,11 +31,11 @@
             android:layout_height="0.6dp"
             android:background="@color/color_line"/>
         <Button
-            android:id="@+id/takePhotoBtn"
+            android:id="@+id/manBtn"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:background="@drawable/layout_click_style"
-            android:text="拍照"
+            android:text="男"
             android:textColor="@color/color_gary_font"
             android:textSize="13sp"/>
 
@@ -44,11 +44,11 @@
             android:layout_height="0.6dp"
             android:background="@color/color_line"/>
         <Button
-            android:id="@+id/pickPhotoBtn"
+            android:id="@+id/womanBtn"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:background="@drawable/layout_click_style"
-            android:text="从相册选择"
+            android:text="女"
             android:textColor="@color/color_gary_font"
             android:textSize="13sp"
             />

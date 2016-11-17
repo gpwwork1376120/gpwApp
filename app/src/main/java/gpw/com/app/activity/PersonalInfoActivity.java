@@ -19,29 +19,43 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.io.File;
+import java.util.Map;
 
 import gpw.com.app.R;
 import gpw.com.app.base.BaseActivity;
+import gpw.com.app.base.Contants;
 import gpw.com.app.util.BitmapUtil;
+import gpw.com.app.util.EncryptUtil;
+import gpw.com.app.util.HttpUtil;
+import gpw.com.app.util.LogUtil;
+import gpw.com.app.util.VolleyInterface;
 import gpw.com.app.view.CircleImageView;
+import gpw.com.app.view.MyDialog;
 import gpw.com.app.view.SelectPicPopupWindow;
+import gpw.com.app.view.SelectSexPopupWindow;
 
 public class PersonalInfoActivity extends BaseActivity {
 
     private RelativeLayout rl_address;
     private RelativeLayout rl_head;
+    private RelativeLayout rl_name;
+    private RelativeLayout rl_sex;
     private CircleImageView civ_head;
     private CircleImageView civ_head1;
     private TextView tv_tel;
     private TextView tv_tel1;
     private TextView tv_name;
     private TextView tv_name1;
+    private MyDialog nickDialog;
     private TextView tv_sex;
     private ImageView iv_left_white;
     private SelectPicPopupWindow menuWindow;
+    private SelectSexPopupWindow sexWindow;
     private static final int REQUESTCODE_PICK = 0;        // 相册选图标记
     private static final int REQUESTCODE_TAKE = 1;        // 相机拍照标记
     private static final int REQUESTCODE_CUTTING = 2;    // 图片裁切标记
@@ -57,6 +71,8 @@ public class PersonalInfoActivity extends BaseActivity {
     protected void findById() {
         rl_address = (RelativeLayout) findViewById(R.id.rl_address);
         rl_head = (RelativeLayout) findViewById(R.id.rl_head);
+        rl_name = (RelativeLayout) findViewById(R.id.rl_name);
+        rl_sex = (RelativeLayout) findViewById(R.id.rl_sex);
         civ_head = (CircleImageView) findViewById(R.id.civ_head);
         civ_head1 = (CircleImageView) findViewById(R.id.civ_head1);
         tv_tel = (TextView) findViewById(R.id.tv_tel);
@@ -86,6 +102,25 @@ public class PersonalInfoActivity extends BaseActivity {
             case R.id.iv_left_white:
                 finish();
                 break;
+            case R.id.rl_name:
+                nickDialog = new MyDialog(PersonalInfoActivity.this);
+                nickDialog.show();
+                nickDialog.setOnSettingListener(new MyDialog.NickListener() {
+                    @Override
+                    public void onSetting(String name) {
+                        if (name.isEmpty()){
+                            showShortToastByString("名字不能为空");
+                            return;
+                        }
+                        EditUserInfo("name",name);
+                    }
+                });
+
+                break;
+            case R.id.rl_sex:
+                sexWindow = new SelectSexPopupWindow(PersonalInfoActivity.this, itemsOnClick);
+                sexWindow.showAtLocation(findViewById(R.id.activity_personal_info), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+                break;
             case R.id.rl_address:
                 break;
             case R.id.rl_head:
@@ -96,13 +131,13 @@ public class PersonalInfoActivity extends BaseActivity {
         }
     }
 
+
     private View.OnClickListener itemsOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            menuWindow.dismiss();
             switch (v.getId()) {
-                // 拍照
                 case R.id.takePhotoBtn:
+                    menuWindow.dismiss();
                     if (ContextCompat.checkSelfPermission(PersonalInfoActivity.this, Manifest.permission.CAMERA)
                             != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(PersonalInfoActivity.this,
@@ -120,6 +155,7 @@ public class PersonalInfoActivity extends BaseActivity {
                     break;
                 // 相册选择图片
                 case R.id.pickPhotoBtn:
+                    menuWindow.dismiss();
                     if (ContextCompat.checkSelfPermission(PersonalInfoActivity.this, Manifest.permission.CAMERA)
                             != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(PersonalInfoActivity.this,
@@ -132,11 +168,55 @@ public class PersonalInfoActivity extends BaseActivity {
                         startActivityForResult(pickIntent, REQUESTCODE_PICK);
                     }
                     break;
+                case R.id.manBtn:
+                    sexWindow.dismiss();
+                    EditUserInfo("sex","男");
+                    break;
+                case R.id.womanBtn:
+                    sexWindow.dismiss();
+                    EditUserInfo("sex","女");
+                    break;
                 default:
                     break;
             }
         }
     };
+
+
+    private void EditUserInfo(final String type, final String value) {
+        final JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("UserId", Contants.userId);
+        jsonObject.addProperty("UserType",1);
+        if (type.equals("sex")) {
+            jsonObject.addProperty("Sex", value);
+        }
+        if (type.equals("name")) {
+            jsonObject.addProperty("UserName", value);
+        }
+        Map<String,String> map = EncryptUtil.encryptDES(jsonObject.toString());
+
+        HttpUtil.doPost(PersonalInfoActivity.this, Contants.url_editUserInfo, "editUserInfo", map, new VolleyInterface(PersonalInfoActivity.this,VolleyInterface.mListener,VolleyInterface.mErrorListener) {
+            @Override
+            public void onSuccess(JsonElement result) {
+                LogUtil.i(result.toString());
+                showShortToastByString(result.toString());
+                if (type.equals("sex")) {
+                    tv_sex.setText(value);
+                }
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                showShortToastByString(getString(R.string.timeoutError));
+//                LogUtil.i("hint",error.networkResponse.headers.toString());
+//                LogUtil.i("hint",error.networkResponse.statusCode+"");
+            }
+
+            @Override
+            public void onStateError() {
+            }
+        });
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
