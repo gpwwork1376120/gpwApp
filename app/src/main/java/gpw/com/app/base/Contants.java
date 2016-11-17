@@ -22,5 +22,6 @@ public class Contants {
     public static String url_updateHeadPortrait = localhost + "Consignor/UpdateHeadPortrait";
     public static String url_getAdvertisings = localhost + "Visitors/GetAdvertisings";
     public static String url_getVehicleTypes = localhost + "Visitors/GetVehicleTypes";
+    public static String url_getNotInvoiceList = localhost + "Consignor/GetNotInvoiceList";
 
 }

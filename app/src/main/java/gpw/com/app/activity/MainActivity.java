@@ -10,11 +10,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -34,11 +33,8 @@ import gpw.com.app.adapter.OrderAddressAdapter;
 import gpw.com.app.base.BaseActivity;
 import gpw.com.app.base.Contants;
 import gpw.com.app.bean.ADInfo;
-import gpw.com.app.bean.AddressMainInfo;
 import gpw.com.app.bean.CarInfo;
-import gpw.com.app.bean.ConvoyInfo;
 import gpw.com.app.bean.OrderAddressInfo;
-import gpw.com.app.bean.UserInfo;
 import gpw.com.app.util.DensityUtil;
 import gpw.com.app.util.EncryptUtil;
 import gpw.com.app.util.HttpUtil;
@@ -46,7 +42,6 @@ import gpw.com.app.util.LogUtil;
 import gpw.com.app.util.VolleyInterface;
 import gpw.com.app.view.CircleImageView;
 import gpw.com.app.view.ImageCycleView;
-import gpw.com.app.view.MainPopupWindow;
 
 
 public class MainActivity extends BaseActivity implements OrderAddressAdapter.OnItemClickListener {
@@ -61,19 +56,10 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     private ArrayList<OrderAddressInfo> mOrderAddressInfos;
     private OrderAddressAdapter mOrderAddressAdapter;
     private LinearLayout ll_car_1;
-    //    private LinearLayout ll_car_2;
-//    private LinearLayout ll_car_3;
-//    private LinearLayout ll_car_4;
-//    private LinearLayout ll_car_5;
     private LinearLayout ll_my_order;
     private Button bt_query;
     private TextView tv_car_1;
-    //    private TextView tv_car_2;
-//    private TextView tv_car_3;
-//    private TextView tv_car_4;
-//    private TextView tv_car_5;
-    private int select_car = 1;
-
+    private int select_car = 5;
     private TextView tv_tel;
     private TextView tv_myOrder;
     private TextView tv_myWallet;
@@ -91,6 +77,23 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     private ArrayList<CarInfo> carInfos;
     private LinearLayout ll_total_car;
     private ArrayList<TextView> tvs_car;
+    private LinearLayout dialog_car;
+
+    private TextView tv_volume;
+    private TextView tv_start_money;
+    private TextView tv_kg;
+    private TextView tv_after;
+
+    private RelativeLayout rl_car;
+    private RelativeLayout rl_volume;
+    private RelativeLayout rl_kg;
+    private RelativeLayout rl_amount;
+    private LinearLayout ll_0;
+    private LinearLayout ll_1;
+    private LinearLayout ll_2;
+    private CheckBox cb_type;
+    private ImageView iv_above_gray;
+    private TextView tv_remark;
 
 
     @Override
@@ -106,12 +109,9 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         bt_query = (Button) findViewById(R.id.bt_query);
 
         ll_car_1 = (LinearLayout) findViewById(R.id.ll_car_1);
-//        ll_car_2 = (LinearLayout) findViewById(R.id.ll_car_2);
-//        ll_car_3 = (LinearLayout) findViewById(R.id.ll_car_3);
-//        ll_car_4 = (LinearLayout) findViewById(R.id.ll_car_4);
-//        ll_car_5 = (LinearLayout) findViewById(R.id.ll_car_5);
         ll_total_car = (LinearLayout) findViewById(R.id.ll_total_car);
         ll_my_order = (LinearLayout) findViewById(R.id.ll_my_order);
+        rl_car = (RelativeLayout) findViewById(R.id.rl_car);
 
         iv_confirm_order = (ImageView) findViewById(R.id.iv_confirm_order);
         iv_cir_head = (ImageView) findViewById(R.id.iv_cir_head);
@@ -119,10 +119,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         iv_below = (ImageView) findViewById(R.id.iv_below);
 
         tv_car_1 = (TextView) findViewById(R.id.tv_car_1);
-//        tv_car_2 = (TextView) findViewById(R.id.tv_car_2);
-//        tv_car_3 = (TextView) findViewById(R.id.tv_car_3);
-//        tv_car_4 = (TextView) findViewById(R.id.tv_car_4);
-//        tv_car_5 = (TextView) findViewById(R.id.tv_car_5);
+
 
         tv_tel = (TextView) findViewById(R.id.tv_tel);
         tv_myOrder = (TextView) findViewById(R.id.tv_myOrder);
@@ -137,6 +134,23 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
 
         rl_head = (RelativeLayout) findViewById(R.id.rl_head);
         civ_head = (CircleImageView) findViewById(R.id.civ_head);
+        
+        dialog_car = (LinearLayout) findViewById(R.id.dialog_car);
+        tv_volume = (TextView) dialog_car.findViewById(R.id.tv_volume);
+        tv_start_money = (TextView) dialog_car.findViewById(R.id.tv_start_money);
+        tv_kg = (TextView) dialog_car.findViewById(R.id.tv_kg);
+        tv_after = (TextView) dialog_car.findViewById(R.id.tv_after);
+        iv_above_gray = (ImageView) dialog_car.findViewById(R.id.iv_above_gray);
+
+        rl_volume = (RelativeLayout) dialog_car.findViewById(R.id.rl_volume);
+        rl_kg = (RelativeLayout) dialog_car.findViewById(R.id.rl_kg);
+        rl_amount = (RelativeLayout) dialog_car.findViewById(R.id.rl_amount);
+        ll_0 = (LinearLayout) dialog_car.findViewById(R.id.ll_0);
+        ll_1 = (LinearLayout) dialog_car.findViewById(R.id.ll_1);
+        ll_2 = (LinearLayout) dialog_car.findViewById(R.id.ll_2);
+        cb_type = (CheckBox) dialog_car.findViewById(R.id.cb_type);
+        tv_remark = (TextView) dialog_car.findViewById(R.id.tv_remark);
+
         tvs_car = new ArrayList<>();
 
 
@@ -153,6 +167,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     protected void initData() {
         userInfo = getIntent().getParcelableExtra("userInfo");
         adInfos = getIntent().getParcelableArrayListExtra("adInfos");
+
 
         mOrderAddressInfos = new ArrayList<>();
         OrderAddressInfo orderAddressInfo = new OrderAddressInfo();
@@ -244,10 +259,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         iv_cir_head.setOnClickListener(this);
         iv_below.setOnClickListener(this);
         ll_car_1.setOnClickListener(this);
-//        ll_car_2.setOnClickListener(this);
-//        ll_car_3.setOnClickListener(this);
-//        ll_car_4.setOnClickListener(this);
-//        ll_car_5.setOnClickListener(this);
         iv_confirm_order.setOnClickListener(this);
         tv_tel.setOnClickListener(this);
         tv_myOrder.setOnClickListener(this);
@@ -259,6 +270,10 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         tv_benefit_activity.setOnClickListener(this);
         tv_setting.setOnClickListener(this);
         rl_head.setOnClickListener(this);
+        iv_above_gray.setOnClickListener(this);
+        rl_volume.setOnClickListener(this);
+        rl_kg.setOnClickListener(this);
+        rl_amount.setOnClickListener(this);
 
 
 
@@ -297,12 +312,12 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                         @Override
                         public void onClick(View v) {
                             int type = Integer.valueOf(carInfo.getTypeCode());
-                            choiceCar(type);
+                            choiceCar(type-1);
                         }
                     });
 
                 }
-                choiceCar(5);
+                choiceCar(4);
             }
 
             @Override
@@ -326,7 +341,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         Intent intent = null;
         switch (v.getId()) {
             case R.id.ll_car_1:
-                choiceCar(5);
+                choiceCar(4);
                 break;
             case R.id.ll_my_order:
                 intent = new Intent(MainActivity.this, MyOrderActivity.class);
@@ -344,14 +359,22 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 startActivity(intent);
                 break;
             case R.id.iv_below:
-                MainPopupWindow selectPicPopupWindow = new MainPopupWindow(MainActivity.this, select_car);
-                backgroundAlpha(0.5f);
-
-                //添加pop窗口关闭事件
-                selectPicPopupWindow.setOnDismissListener(new popupDismissListener());
-                int[] location = new int[2];
-                view_line.getLocationOnScreen(location);
-                selectPicPopupWindow.showAsDropDown(view_line);
+                int gray = 0x77000000;
+                rl_car.setBackgroundColor(gray);
+                rl_car.setClickable(true);
+                dialog_car.setVisibility(View.VISIBLE);
+                break;
+            case R.id.iv_above_gray:
+                int white = 0x00000000;
+                rl_car.setBackgroundColor(white);
+                rl_car.setClickable(false);
+                dialog_car.setVisibility(View.GONE);
+                break;
+            case R.id.rl_volume:
+                break;
+            case R.id.rl_kg:
+                break;
+            case R.id.rl_amount:
                 break;
             case R.id.tv_myOrder:
                 intent = new Intent(MainActivity.this, MyOrderActivity.class);
@@ -411,29 +434,71 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
 
     private void choiceCar(int i) {
         initColor();
+        CarInfo carInfo = null;
+        if (i!=4) {
+            carInfo= carInfos.get(i);
+        }
         switch (i) {
-            case 5:
+            case 4:
                 tv_car_1.setTextColor(ContextCompat.getColor(this, R.color.color_red));
-                select_car = 1;
+                Visiblity1();
+                break;
+            case 0:
+                tvs_car.get(0).setTextColor(ContextCompat.getColor(this, R.color.color_red));
+                Visiblity();
+                cb_type.setText("全拆座");
+                tv_volume.setText("运输体积:"+carInfo.getVolume()+"m³");
+                tv_kg.setText("载重:"+carInfo.getLoadWeight()+"kg");
+                tv_after.setText("后续:"+carInfo.getFollowPrice()+"元/Km");
+                tv_start_money.setText("起步价:"+carInfo.getStartingPrice()+"元/5Km");
+                tv_remark.setText("注:"+carInfo.getRemark());
                 break;
             case 1:
-                tvs_car.get(0).setTextColor(ContextCompat.getColor(this, R.color.color_red));
-                select_car = 2;
-
+                tvs_car.get(1).setTextColor(ContextCompat.getColor(this, R.color.color_red));
+                Visiblity();
+                tv_volume.setText("运输体积:"+carInfo.getVolume()+"m³");
+                tv_kg.setText("载重:"+carInfo.getLoadWeight()+"kg");
+                tv_after.setText("后续:"+carInfo.getFollowPrice()+"元/Km");
+                tv_start_money.setText("起步价:"+carInfo.getStartingPrice()+"元/5Km");
+                cb_type.setText("全拆座");
+                tv_remark.setText("注:"+carInfo.getRemark());
                 break;
             case 2:
-                tvs_car.get(1).setTextColor(ContextCompat.getColor(this, R.color.color_red));
-                select_car = 3;
+                tvs_car.get(2).setTextColor(ContextCompat.getColor(this, R.color.color_red));
+                Visiblity();
+                cb_type.setText("开顶");
+                tv_volume.setText("运输体积:"+carInfo.getVolume()+"m³");
+                tv_kg.setText("载重:"+carInfo.getLoadWeight()+"kg");
+                tv_after.setText("后续:"+carInfo.getFollowPrice()+"元/Km");
+                tv_start_money.setText("起步价:"+carInfo.getStartingPrice()+"元/5Km");
+                tv_remark.setText("注:"+carInfo.getRemark());
                 break;
             case 3:
-                tvs_car.get(2).setTextColor(ContextCompat.getColor(this, R.color.color_red));
-                select_car = 4;
-                break;
-            case 4:
                 tvs_car.get(3).setTextColor(ContextCompat.getColor(this, R.color.color_red));
-                select_car = 5;
+                Visiblity();
+                tv_volume.setText("运输体积:"+carInfo.getVolume()+"m³");
+                tv_kg.setText("载重:"+carInfo.getLoadWeight()+"kg");
+                tv_after.setText("后续:"+carInfo.getFollowPrice()+"元/Km");
+                tv_start_money.setText("起步价:"+carInfo.getStartingPrice()+"元/5Km");
+                cb_type.setText("开顶");
+                tv_remark.setText("注:"+carInfo.getRemark());
                 break;
         }
+    }
+
+    private void Visiblity() {
+        ll_0.setVisibility(View.GONE);
+        ll_1.setVisibility(View.VISIBLE);
+        ll_2.setVisibility(View.VISIBLE);
+        cb_type.setVisibility(View.VISIBLE);
+
+    }
+
+    private void Visiblity1() {
+        ll_0.setVisibility(View.VISIBLE);
+        ll_1.setVisibility(View.GONE);
+        ll_2.setVisibility(View.GONE);
+        cb_type.setVisibility(View.GONE);
     }
 
     @Override
@@ -480,23 +545,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             HttpUtil.setImageLoader(Contants.imagehost + userInfo.getHeadIco(), civ_head, R.mipmap.cir_head, R.mipmap.cir_head);
         }
 
-    }
-
-    class popupDismissListener implements PopupWindow.OnDismissListener {
-
-        @Override
-        public void onDismiss() {
-            // TODO Auto-generated method stub
-            //Log.v("List_noteTypeActivity:", "我是关闭事件");
-            backgroundAlpha(1f);
-        }
-
-    }
-
-    public void backgroundAlpha(float bgAlpha) {
-        WindowManager.LayoutParams lp = getWindow().getAttributes();
-        lp.alpha = bgAlpha;
-        getWindow().setAttributes(lp);
     }
 
 }

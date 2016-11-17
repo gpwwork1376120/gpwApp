@@ -65,7 +65,6 @@ public class CommonAddressActivity extends BaseActivity {
     protected void initData() {
         userId = getIntent().getStringExtra("userId");
         type = getIntent().getIntExtra("type",0);
-        LogUtil.i(userId+"aaaa");
         commonAdInfos = new ArrayList<>();
         commonAdInfoAdapter = new CommonAdInfoAdapter(this, commonAdInfos);
     }

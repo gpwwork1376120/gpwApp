@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/pop_layout"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/color_white"
@@ -14,160 +13,10 @@
         />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:orientation="horizontal"
-        >
-
-        <LinearLayout
-            android:id="@+id/ll_car_1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="35dp"
-                android:src="@mipmap/car_1"/>
-
-            <TextView
-                android:id="@+id/tv_car_1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/car_1"/>
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/color_line"/>
-
-        <LinearLayout
-            android:id="@+id/ll_car_2"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="50dp"
-                android:layout_height="35dp"
-                android:src="@mipmap/car_2"/>
-
-            <TextView
-                android:id="@+id/tv_car_2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/car_2"/>
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/color_line"/>
-
-        <LinearLayout
-            android:id="@+id/ll_car_3"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="62dp"
-                android:layout_height="35dp"
-                android:src="@mipmap/car_3"/>
-
-            <TextView
-                android:id="@+id/tv_car_3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/car_3"/>
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/color_line"/>
-
-        <LinearLayout
-            android:id="@+id/ll_car_4"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="35dp"
-                android:src="@mipmap/car_4"/>
-
-            <TextView
-                android:id="@+id/tv_car_4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/car_4"/>
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/color_line"/>
-
-        <LinearLayout
-            android:id="@+id/ll_car_5"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:scaleType="center"
-                android:src="@mipmap/car_5"/>
-
-            <TextView
-                android:id="@+id/tv_car_5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/car_5"/>
-
-        </LinearLayout>
-
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/color_line"
-        />
-
-    <LinearLayout
         android:id="@+id/ll_0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/color_white"
         android:orientation="vertical"
         >
 
@@ -327,15 +176,16 @@
         android:id="@+id/ll_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/color_white"
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/tv_remark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="30dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
-            android:text="注：上货卸货免费等候时间：40分钟，后每分钟加收5元，不足10分钟，按10分钟计算，以上价格包含路费和邮费，高速/停车费另计。"
             />
 
         <View
@@ -352,17 +202,20 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="5dp"
+
+        android:background="@color/color_white"
         android:orientation="horizontal">
 
         <TextView
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="额外要求"/>
 
         <LinearLayout
+            android:layout_marginTop="5dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
@@ -410,7 +263,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="8dp"
                 >
 
                 <CheckBox
@@ -441,11 +294,10 @@
                     android:button="@drawable/check1_style"
                     android:paddingLeft="5dp"
                     android:text="代收付款"
+                    android:layout_marginTop="8dp"
                     android:textColor="@color/color_gary_font"
                     android:textSize="14sp"
                     />
-
-
 
 
             <CheckBox
@@ -463,19 +315,31 @@
     </LinearLayout>
 
 
-    <EditText
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/button_red_style"/>
+        android:layout_height="wrap_content"
+        android:background="@color/color_white">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="left"
+            android:hint="请输入留言"
+            android:padding="5dp"
+            android:textSize="@dimen/small_font"
+            android:textColor="@color/color_gary_font"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/button_red_style"/>
+
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp">
+        android:background="@color/color_white"
+        android:layout_marginBottom="10dp">
 
         <Button
             android:layout_width="80dp"
