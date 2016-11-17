@@ -22,7 +22,6 @@ import gpw.com.app.R;
 import gpw.com.app.base.BaseActivity;
 import gpw.com.app.base.Contants;
 import gpw.com.app.bean.ADInfo;
-import gpw.com.app.bean.UserInfo;
 import gpw.com.app.util.DateUtil;
 import gpw.com.app.util.EncryptUtil;
 import gpw.com.app.util.HttpUtil;

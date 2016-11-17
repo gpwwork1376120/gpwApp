@@ -29,7 +29,6 @@ import java.util.Map;
 import gpw.com.app.R;
 import gpw.com.app.base.BaseActivity;
 import gpw.com.app.base.Contants;
-import gpw.com.app.bean.UserInfo;
 import gpw.com.app.util.BitmapUtil;
 import gpw.com.app.util.EncryptUtil;
 import gpw.com.app.util.HttpUtil;

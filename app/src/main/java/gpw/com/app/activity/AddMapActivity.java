@@ -49,11 +49,8 @@ import gpw.com.app.R;
 import gpw.com.app.adapter.AddressNameAdapter;
 import gpw.com.app.base.BaseActivity;
 import gpw.com.app.base.Contants;
-import gpw.com.app.bean.AddressMainInfo;
 import gpw.com.app.bean.CommonAdInfo;
-import gpw.com.app.bean.UserInfo;
 import gpw.com.app.util.DensityUtil;
-import gpw.com.app.util.LogUtil;
 
 public class AddMapActivity extends BaseActivity {
 
