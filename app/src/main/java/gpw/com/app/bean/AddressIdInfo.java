@@ -5,7 +5,7 @@ package gpw.com.app.bean;
  * ---个人专属
  */
 
-public class AddressID {
+public class AddressIdInfo {
 
     /**
      * AddressId : 7

@@ -24,6 +24,7 @@ import gpw.com.app.adapter.CommonAdInfoAdapter;
 import gpw.com.app.base.BaseActivity;
 import gpw.com.app.base.Contants;
 import gpw.com.app.bean.AddressMainInfo;
+import gpw.com.app.bean.CommAdTimeInfo;
 import gpw.com.app.bean.CommonAdInfo;
 import gpw.com.app.util.DateUtil;
 import gpw.com.app.util.EncryptUtil;
@@ -45,6 +46,7 @@ public class CommonAddressActivity extends BaseActivity {
     private CommonAdInfoAdapter commonAdInfoAdapter;
     private ArrayList<CommonAdInfo> commonAdInfos;
     private int CurrentPage = 1;
+    private int type;
 
     @Override
     protected int getLayout() {
@@ -61,7 +63,8 @@ public class CommonAddressActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        userId = getIntent().getStringExtra("UserId");
+        userId = getIntent().getStringExtra("userId");
+        type = getIntent().getIntExtra("type",0);
         LogUtil.i(userId+"aaaa");
         commonAdInfos = new ArrayList<>();
         commonAdInfoAdapter = new CommonAdInfoAdapter(this, commonAdInfos);
@@ -77,12 +80,18 @@ public class CommonAddressActivity extends BaseActivity {
         commonAdInfoAdapter.setOnItemClickListener(new CommonAdInfoAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Intent intent = new Intent(CommonAddressActivity.this,AddMapActivity.class);
-                intent.putExtra("userId",userId);
-                intent.putExtra("position",position);
-                intent.putExtra("commonAdInfo",commonAdInfos.get(position));
-                intent.putExtra("type",1);
-                startActivityForResult(intent,4);
+                if (type==2) {
+                    Intent intent = new Intent(CommonAddressActivity.this, AddMapActivity.class);
+                    intent.putExtra("userId", userId);
+                    intent.putExtra("position", position);
+                    intent.putExtra("commonAdInfo", commonAdInfos.get(position));
+                    intent.putExtra("type", 1);
+                    startActivityForResult(intent, 4);
+                }else if (type==1){
+                    getIntent().putExtra("commonAdInfo",commonAdInfos.get(position));
+                    setResult(RESULT_OK, getIntent());
+                    finish();
+                }
             }
         });
         getUserAddress(1, 0);
@@ -125,11 +134,12 @@ public class CommonAddressActivity extends BaseActivity {
         HttpUtil.doPost(CommonAddressActivity.this, Contants.url_getUserAddress, "getUserAddress", map, new VolleyInterface(CommonAddressActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
             @Override
             public void onSuccess(JsonElement result) {
-
+                LogUtil.i("result"+result.toString());
                 Gson gson = new Gson();
-                Type listType = new TypeToken<ArrayList<CommonAdInfo>>() {
-                }.getType();
-                ArrayList<CommonAdInfo> newCommonAdInfos = gson.fromJson(result, listType);
+                CommAdTimeInfo commAdTimeInfo =  gson.fromJson(result,CommAdTimeInfo.class);
+//                Type listType = new TypeToken<ArrayList<CommonAdInfo>>() {
+//                }.getType();
+                ArrayList<CommonAdInfo> newCommonAdInfos = (ArrayList<CommonAdInfo>) commAdTimeInfo.getList();
                 if (ways == 0) {
                     rv_common_ad.refreshComplete("success");
                     CurrentPage = 1;
@@ -196,9 +206,6 @@ public class CommonAddressActivity extends BaseActivity {
                 commonAdInfos.set(position,commonAdInfo);
             }
             commonAdInfoAdapter.notifyDataSetChanged();
-
-
-
         }
     }
 }

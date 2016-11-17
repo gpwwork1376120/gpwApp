@@ -117,7 +117,7 @@ public class AddMapActivity extends BaseActivity {
             InfoWindow mInfoWindow = new InfoWindow(linearLayout, location, -85);
             mBaiduMap.showInfoWindow(mInfoWindow);
 
-            receiptAddress = receiptAddress + " " + "(" + address + ")";
+            receiptAddress = receiptAddress + "  " + "(" + address + ")";
 
             commonAdInfo.setReceiptAddress(receiptAddress);
             commonAdInfo.setLat(location.latitude);
@@ -236,7 +236,7 @@ public class AddMapActivity extends BaseActivity {
             TextView tv_map_name = (TextView) linearLayout.findViewById(R.id.tv_map_name);
             TextView tv_map_detail = (TextView) linearLayout.findViewById(R.id.tv_map_detail);
             receiptAddress = commonAdInfo.getReceiptAddress();
-            String[] nameAd = receiptAddress.split(" ");
+            String[] nameAd = receiptAddress.split("  ");
 
             tv_map_name.setText(nameAd[0]);
             tv_map_detail.setText(nameAd[1]);

@@ -1,10 +1,7 @@
 package gpw.com.app.adapter;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,7 +15,7 @@ import java.util.ArrayList;
 
 import gpw.com.app.R;
 import gpw.com.app.activity.MapActivity;
-import gpw.com.app.bean.AddressMainInfo;
+import gpw.com.app.bean.OrderAddressInfo;
 import gpw.com.app.util.LogUtil;
 
 import static android.view.View.GONE;
@@ -28,47 +25,37 @@ import static android.view.View.GONE;
  * --加油
  */
 
-public class AddressMainAdapter extends RecyclerView.Adapter<AddressMainAdapter.ViewHolder> {
+public class OrderAddressAdapter extends RecyclerView.Adapter<OrderAddressAdapter.ViewHolder> {
 
-    private ArrayList<AddressMainInfo> mAddressMainInfos;
+    private ArrayList<OrderAddressInfo> mOrderAddressInfos;
 
     private Activity mActivity;
 
 
-    public AddressMainAdapter(ArrayList<AddressMainInfo> mAddressMainInfos, Activity activity) {
+    public OrderAddressAdapter(ArrayList<OrderAddressInfo> mOrderAddressInfos, Activity activity) {
         super();
-        this.mAddressMainInfos = mAddressMainInfos;
+        this.mOrderAddressInfos = mOrderAddressInfos;
         mActivity = activity;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_address_main_info, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_order_address, viewGroup, false);
         return new ViewHolder(view);
     }
 
     //将数据与界面进行绑定的操作
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
-        final AddressMainInfo addressMainInfo = mAddressMainInfos.get(position);
-        LogUtil.i("hint","aa"+addressMainInfo.getAddress());
-        if (addressMainInfo.getAddress().equals("start")) {
+        final OrderAddressInfo orderAddressInfo = mOrderAddressInfos.get(position);
+        LogUtil.i("hint","aa"+orderAddressInfo.getReceiptAddress());
+        if (orderAddressInfo.getReceiptAddress().equals("start")) {
             viewHolder.tv_contact.setVisibility(GONE);
             viewHolder.tv_address.setText("点击添加地址");
-//            viewHolder.tv_address.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent intent = new Intent(mActivity, MapActivity.class);
-//                    intent.putExtra("position",position);
-//                    intent.putExtra("addressMainInfo",addressMainInfo);
-//                    intent.putExtra("type",1);
-//                    mActivity.startActivityForResult(intent,1);
-//                }
-//            });
         } else {
             viewHolder.tv_contact.setVisibility(View.VISIBLE);
-            viewHolder.tv_address.setText(addressMainInfo.getName()+"("+addressMainInfo.getAddress()+")");
-            viewHolder.tv_contact.setText(addressMainInfo.getContact());
+            viewHolder.tv_address.setText(orderAddressInfo.getReceiptAddress());
+            viewHolder.tv_contact.setText(orderAddressInfo.getReceipter()+" "+orderAddressInfo.getReceiptTel());
         }
 
         viewHolder.ll_address.setOnClickListener(new View.OnClickListener() {
@@ -79,10 +66,10 @@ public class AddressMainAdapter extends RecyclerView.Adapter<AddressMainAdapter.
         });
 
 
-        if (addressMainInfo.getState() == 1) {
+        if (orderAddressInfo.getState() == 1) {
             viewHolder.iv_state.setImageResource(R.mipmap.start);
             viewHolder.view_line.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.color_line));
-        } else if (addressMainInfo.getState() == 2) {
+        } else if (orderAddressInfo.getState() == 2) {
             viewHolder.iv_state.setImageResource(R.mipmap.pass);
             viewHolder.view_line.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.color_line));
         } else {
@@ -91,19 +78,19 @@ public class AddressMainAdapter extends RecyclerView.Adapter<AddressMainAdapter.
         }
 
 
-        if (addressMainInfo.getAction() == 1) {
+        if (orderAddressInfo.getAction() == 1) {
             viewHolder.iv_action.setImageResource(R.mipmap.add);
             viewHolder.iv_action.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mActivity, MapActivity.class);
                     intent.putExtra("position",position);
-                    intent.putExtra("addressMainInfo",addressMainInfo);
+                    intent.putExtra("orderAddressInfo",orderAddressInfo);
                     intent.putExtra("type",2);
                     mActivity.startActivityForResult(intent,1);
                 }
             });
-        } else if (addressMainInfo.getState() == 2) {
+        } else if (orderAddressInfo.getState() == 2) {
             viewHolder.iv_action.setImageResource(R.mipmap.close);
             viewHolder.iv_action.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -122,7 +109,7 @@ public class AddressMainAdapter extends RecyclerView.Adapter<AddressMainAdapter.
     //获取数据的数量
     @Override
     public int getItemCount() {
-        return mAddressMainInfos.size();
+        return mOrderAddressInfos.size();
     }
 
 

@@ -10,8 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,24 +18,24 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.baidu.mapapi.model.LatLng;
 import com.nineoldandroids.view.ViewHelper;
 
 import java.util.ArrayList;
 
 import gpw.com.app.R;
-import gpw.com.app.adapter.AddressMainAdapter;
+import gpw.com.app.adapter.OrderAddressAdapter;
 import gpw.com.app.base.BaseActivity;
 import gpw.com.app.bean.ADInfo;
 import gpw.com.app.bean.AddressMainInfo;
-import gpw.com.app.bean.CommonAdInfo;
+import gpw.com.app.bean.OrderAddressInfo;
 import gpw.com.app.bean.UserInfo;
 import gpw.com.app.util.DensityUtil;
+import gpw.com.app.util.LogUtil;
 import gpw.com.app.view.ImageCycleView;
 import gpw.com.app.view.MainPopupWindow;
 
 
-public class MainActivity extends BaseActivity implements AddressMainAdapter.OnItemClickListener {
+public class MainActivity extends BaseActivity implements OrderAddressAdapter.OnItemClickListener {
 
     private DrawerLayout mDrawerLayout;
     private ImageCycleView icv_banner;
@@ -46,8 +44,8 @@ public class MainActivity extends BaseActivity implements AddressMainAdapter.OnI
     private ImageView iv_cir_head;
     private View view_line;
     private RecyclerView rv_main_address;
-    private ArrayList<CommonAdInfo> mCommonAdInfos;
-    private AddressMainAdapter mAddressMainAdapter;
+    private ArrayList<OrderAddressInfo> mOrderAddressInfos;
+    private OrderAddressAdapter mOrderAddressAdapter;
     private LinearLayout ll_car_1;
     private LinearLayout ll_car_2;
     private LinearLayout ll_car_3;
@@ -131,28 +129,36 @@ public class MainActivity extends BaseActivity implements AddressMainAdapter.OnI
     @Override
     protected void initData() {
         userInfo = getIntent().getParcelableExtra("userInfo");
-        mCommonAdInfos = new ArrayList<>();
-        CommonAdInfo commonAdInfo = new CommonAdInfo();
+        mOrderAddressInfos = new ArrayList<>();
+        OrderAddressInfo orderAddressInfo = new OrderAddressInfo();
+        orderAddressInfo.setAction(0);
+        orderAddressInfo.setState(1);
+        orderAddressInfo.setReceiptAddress("start");
 
-        AddressMainInfo addressMainInfo = new AddressMainInfo();
-        addressMainInfo.setAction(0);
-        addressMainInfo.setState(1);
-        addressMainInfo.setAddress("start");
-        LatLng latLng2 = new LatLng(0, 0);
-        addressMainInfo.setLatLng(latLng2);
+        OrderAddressInfo orderAddressInfo1 = new OrderAddressInfo();
+        orderAddressInfo1.setAction(1);
+        orderAddressInfo1.setState(3);
+        orderAddressInfo1.setReceiptAddress("start");
 
+        mOrderAddressInfos.add(orderAddressInfo);
+        mOrderAddressInfos.add(orderAddressInfo1);
 
-        AddressMainInfo addressMainInfo1 = new AddressMainInfo();
-        addressMainInfo1.setAction(1);
-        addressMainInfo1.setState(3);
-        LatLng latLng1 = new LatLng(0, 0);
-        addressMainInfo1.setLatLng(latLng1);
-        addressMainInfo1.setAddress("start");
+//        AddressMainInfo addressMainInfo = new AddressMainInfo();
+//        LatLng latLng2 = new LatLng(0, 0);
+//        addressMainInfo.setLatLng(latLng2);
+//
+//
+//        AddressMainInfo addressMainInfo1 = new AddressMainInfo();
+//        addressMainInfo1.setAction(1);
+//        addressMainInfo1.setState(3);
+//        LatLng latLng1 = new LatLng(0, 0);
+//        addressMainInfo1.setLatLng(latLng1);
+//        addressMainInfo1.setAddress("start");
+//
+//        mAddressMainInfos.add(addressMainInfo);
+//        mAddressMainInfos.add(addressMainInfo1);
 
-        mAddressMainInfos.add(addressMainInfo);
-        mAddressMainInfos.add(addressMainInfo1);
-
-        mAddressMainAdapter = new AddressMainAdapter(mAddressMainInfos, this);
+        mOrderAddressAdapter = new OrderAddressAdapter(mOrderAddressInfos, this);
 
     }
 
@@ -164,7 +170,7 @@ public class MainActivity extends BaseActivity implements AddressMainAdapter.OnI
         layoutManager.setAutoMeasureEnabled(true);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_main_address.setLayoutManager(layoutManager);
-        rv_main_address.setAdapter(mAddressMainAdapter);
+        rv_main_address.setAdapter(mOrderAddressAdapter);
 
         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED,
                 Gravity.LEFT);
@@ -225,7 +231,7 @@ public class MainActivity extends BaseActivity implements AddressMainAdapter.OnI
         });
 
 
-        mAddressMainAdapter.setOnItemClickListener(this);
+        mOrderAddressAdapter.setOnItemClickListener(this);
         ll_my_order.setOnClickListener(this);
         bt_query.setOnClickListener(this);
         iv_cir_head.setOnClickListener(this);
@@ -297,7 +303,7 @@ public class MainActivity extends BaseActivity implements AddressMainAdapter.OnI
                 break;
             case R.id.tv_myOrder:
                 intent = new Intent(MainActivity.this, MyOrderActivity.class);
-                intent.putExtra("UserId",userInfo.getUserId());
+                intent.putExtra("UserId", userInfo.getUserId());
                 startActivity(intent);
                 break;
             case R.id.tv_myWallet:
@@ -306,13 +312,14 @@ public class MainActivity extends BaseActivity implements AddressMainAdapter.OnI
                 break;
             case R.id.tv_myConvoy:
                 intent = new Intent(MainActivity.this, MyConvoyActivity.class);
-                intent.putExtra("UserId",userInfo.getUserId());
+                intent.putExtra("UserId", userInfo.getUserId());
                 startActivity(intent);
 
                 break;
             case R.id.tv_common_address:
                 intent = new Intent(MainActivity.this, CommonAddressActivity.class);
-                intent.putExtra("UserId",userInfo.getUserId());
+                intent.putExtra("userId", userInfo.getUserId());
+                intent.putExtra("type",2);
                 startActivity(intent);
                 break;
             case R.id.tv_myInvoice:
@@ -380,7 +387,7 @@ public class MainActivity extends BaseActivity implements AddressMainAdapter.OnI
     public void onItemClick(int position) {
         Intent intent = new Intent(MainActivity.this, MapActivity.class);
         intent.putExtra("position", position);
-        intent.putExtra("addressMainInfo", mAddressMainInfos.get(position));
+        intent.putExtra("orderAddressInfo", mOrderAddressInfos.get(position));
         intent.putExtra("type", 3);
         startActivityForResult(intent, 1);
     }
@@ -388,8 +395,8 @@ public class MainActivity extends BaseActivity implements AddressMainAdapter.OnI
 
     @Override
     public void onActionClick(int position) {
-        mAddressMainInfos.remove(position);
-        mAddressMainAdapter.notifyDataSetChanged();
+        mOrderAddressInfos.remove(position);
+        mOrderAddressAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -399,21 +406,23 @@ public class MainActivity extends BaseActivity implements AddressMainAdapter.OnI
 
             int position = data.getIntExtra("position", 0);
             int type = data.getIntExtra("type", 0);
-            AddressMainInfo mAddressMainInfo = data.getParcelableExtra("addressMainInfo");
+            OrderAddressInfo orderAddressInfo = data.getParcelableExtra("orderAddressInfo");
+
 
             System.out.println("type" + type);
             System.out.println("position" + position);
-            System.out.println("mAddressMainInfo" + mAddressMainInfo);
+            System.out.println("orderAddressInfo" + orderAddressInfo);
             if (type == 2) {
-                AddressMainInfo old = mAddressMainInfos.get(position);
-                mAddressMainInfos.set(position, mAddressMainInfo);
-                mAddressMainInfos.add(old);
-                mAddressMainAdapter.notifyDataSetChanged();
+                OrderAddressInfo old = mOrderAddressInfos.get(position);
+                mOrderAddressInfos.set(position, orderAddressInfo);
+                mOrderAddressInfos.add(old);
+                mOrderAddressAdapter.notifyDataSetChanged();
             } else {
-                //mAddressMainInfos.set(position, mAddressMainInfo);
-                mAddressMainAdapter.notifyItemChanged(position,mAddressMainInfo);
+                mOrderAddressInfos.set(position, orderAddressInfo);
             }
+            mOrderAddressAdapter.notifyDataSetChanged();
 
+            LogUtil.i(mOrderAddressInfos.toString());
         }
     }
 

@@ -49,8 +49,8 @@ public class CommonAdInfoAdapter extends RecyclerView.Adapter<CommonAdInfoAdapte
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
         final CommonAdInfo commonAdInfo = commonAdInfos.get(position);
-        String  address = commonAdInfo.getReceiptAddress()+"  "+commonAdInfo.getReceipter()+"   "+commonAdInfo.getReceiptTel();
-        viewHolder.tv_address.setText(address);
+        viewHolder.tv_address.setText(commonAdInfo.getReceiptAddress());
+        viewHolder.tv_contact.setText(commonAdInfo.getReceipter()+" "+commonAdInfo.getReceiptTel());
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,10 +70,12 @@ public class CommonAdInfoAdapter extends RecyclerView.Adapter<CommonAdInfoAdapte
     //自定义的ViewHolder，持有每个Item的的所有界面元素
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tv_address;
+        TextView tv_contact;
 
         public ViewHolder(View view) {
             super(view);
             tv_address = (TextView) view.findViewById(R.id.tv_address);
+            tv_contact = (TextView) view.findViewById(R.id.tv_contact);
 
         }
     }

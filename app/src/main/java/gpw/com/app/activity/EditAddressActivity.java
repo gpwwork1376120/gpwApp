@@ -1,9 +1,7 @@
 package gpw.com.app.activity;
 
-import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,8 +18,7 @@ import java.util.Map;
 import gpw.com.app.R;
 import gpw.com.app.base.BaseActivity;
 import gpw.com.app.base.Contants;
-import gpw.com.app.bean.AddressID;
-import gpw.com.app.bean.AddressMainInfo;
+import gpw.com.app.bean.AddressIdInfo;
 import gpw.com.app.bean.CommonAdInfo;
 import gpw.com.app.util.EncryptUtil;
 import gpw.com.app.util.HttpUtil;
@@ -114,8 +111,8 @@ public class EditAddressActivity extends BaseActivity {
                             LogUtil.i(result.toString());
                             showShortToastByString("添加成功");
                             Gson gson = new Gson();
-                            AddressID addressID = gson.fromJson(result, AddressID.class);
-                            commonAdInfo.setAddressId(addressID.getAddressId());
+                            AddressIdInfo addressIdInfo = gson.fromJson(result, AddressIdInfo.class);
+                            commonAdInfo.setAddressId(addressIdInfo.getAddressId());
                         }
 
                         @Override
