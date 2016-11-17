@@ -30,7 +30,12 @@ public class SelectPicPopupWindow extends PopupWindow {
         pickPhotoBtn = (Button) mMenuView.findViewById(R.id.pickPhotoBtn);
         cancelBtn = (Button) mMenuView.findViewById(R.id.cancelBtn);
 
-        cancelBtn.setOnClickListener(itemsOnClick);
+        cancelBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
         pickPhotoBtn.setOnClickListener(itemsOnClick);
         takePhotoBtn.setOnClickListener(itemsOnClick);
 
@@ -45,7 +50,7 @@ public class SelectPicPopupWindow extends PopupWindow {
 
         this.setAnimationStyle(R.style.PopupAnimation);
 
-        ColorDrawable dw = new ColorDrawable(0x00000000);
+        ColorDrawable dw = new ColorDrawable(0x22000000);
 
         this.setBackgroundDrawable(dw);
 

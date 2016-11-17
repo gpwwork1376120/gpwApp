@@ -3,6 +3,7 @@ package gpw.com.app.util;
 
 import android.content.Context;
 import android.util.Base64;
+import android.widget.ImageView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -10,6 +11,7 @@ import com.android.volley.NetworkError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.JsonObject;
 
@@ -56,8 +58,15 @@ public class HttpUtil {
         // 加入队列
         BaseApplication.getHttpQueues().add(stringRequest);
         // 启动
-        BaseApplication.getHttpQueues().start();
+       // BaseApplication.getHttpQueues().start();
     }
+
+    public static void setImageLoader(String url, ImageView imageView, int defaultImageResId, int errorImageResId) {
+        ImageLoader loader = new ImageLoader(BaseApplication.getHttpQueues(), new BitmapCache());
+        ImageLoader.ImageListener imageListener = ImageLoader.getImageListener(imageView, defaultImageResId, errorImageResId);
+        loader.get(url, imageListener);
+    }
+
 
 
 

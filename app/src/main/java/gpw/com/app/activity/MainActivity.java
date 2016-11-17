@@ -18,19 +18,33 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.nineoldandroids.view.ViewHelper;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Map;
 
 import gpw.com.app.R;
 import gpw.com.app.adapter.OrderAddressAdapter;
 import gpw.com.app.base.BaseActivity;
+import gpw.com.app.base.Contants;
 import gpw.com.app.bean.ADInfo;
 import gpw.com.app.bean.AddressMainInfo;
+import gpw.com.app.bean.CarInfo;
+import gpw.com.app.bean.ConvoyInfo;
 import gpw.com.app.bean.OrderAddressInfo;
 import gpw.com.app.bean.UserInfo;
 import gpw.com.app.util.DensityUtil;
+import gpw.com.app.util.EncryptUtil;
+import gpw.com.app.util.HttpUtil;
 import gpw.com.app.util.LogUtil;
+import gpw.com.app.util.VolleyInterface;
+import gpw.com.app.view.CircleImageView;
 import gpw.com.app.view.ImageCycleView;
 import gpw.com.app.view.MainPopupWindow;
 
@@ -47,17 +61,17 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     private ArrayList<OrderAddressInfo> mOrderAddressInfos;
     private OrderAddressAdapter mOrderAddressAdapter;
     private LinearLayout ll_car_1;
-    private LinearLayout ll_car_2;
-    private LinearLayout ll_car_3;
-    private LinearLayout ll_car_4;
-    private LinearLayout ll_car_5;
+    //    private LinearLayout ll_car_2;
+//    private LinearLayout ll_car_3;
+//    private LinearLayout ll_car_4;
+//    private LinearLayout ll_car_5;
     private LinearLayout ll_my_order;
     private Button bt_query;
     private TextView tv_car_1;
-    private TextView tv_car_2;
-    private TextView tv_car_3;
-    private TextView tv_car_4;
-    private TextView tv_car_5;
+    //    private TextView tv_car_2;
+//    private TextView tv_car_3;
+//    private TextView tv_car_4;
+//    private TextView tv_car_5;
     private int select_car = 1;
 
     private TextView tv_tel;
@@ -71,8 +85,12 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     private TextView tv_benefit_activity;
     private TextView tv_setting;
     private RelativeLayout rl_head;
-
     private UserInfo userInfo;
+    private CircleImageView civ_head;
+    private ArrayList<ADInfo> adInfos;
+    private ArrayList<CarInfo> carInfos;
+    private LinearLayout ll_total_car;
+    private ArrayList<TextView> tvs_car;
 
 
     @Override
@@ -88,10 +106,11 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         bt_query = (Button) findViewById(R.id.bt_query);
 
         ll_car_1 = (LinearLayout) findViewById(R.id.ll_car_1);
-        ll_car_2 = (LinearLayout) findViewById(R.id.ll_car_2);
-        ll_car_3 = (LinearLayout) findViewById(R.id.ll_car_3);
-        ll_car_4 = (LinearLayout) findViewById(R.id.ll_car_4);
-        ll_car_5 = (LinearLayout) findViewById(R.id.ll_car_5);
+//        ll_car_2 = (LinearLayout) findViewById(R.id.ll_car_2);
+//        ll_car_3 = (LinearLayout) findViewById(R.id.ll_car_3);
+//        ll_car_4 = (LinearLayout) findViewById(R.id.ll_car_4);
+//        ll_car_5 = (LinearLayout) findViewById(R.id.ll_car_5);
+        ll_total_car = (LinearLayout) findViewById(R.id.ll_total_car);
         ll_my_order = (LinearLayout) findViewById(R.id.ll_my_order);
 
         iv_confirm_order = (ImageView) findViewById(R.id.iv_confirm_order);
@@ -100,10 +119,10 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         iv_below = (ImageView) findViewById(R.id.iv_below);
 
         tv_car_1 = (TextView) findViewById(R.id.tv_car_1);
-        tv_car_2 = (TextView) findViewById(R.id.tv_car_2);
-        tv_car_3 = (TextView) findViewById(R.id.tv_car_3);
-        tv_car_4 = (TextView) findViewById(R.id.tv_car_4);
-        tv_car_5 = (TextView) findViewById(R.id.tv_car_5);
+//        tv_car_2 = (TextView) findViewById(R.id.tv_car_2);
+//        tv_car_3 = (TextView) findViewById(R.id.tv_car_3);
+//        tv_car_4 = (TextView) findViewById(R.id.tv_car_4);
+//        tv_car_5 = (TextView) findViewById(R.id.tv_car_5);
 
         tv_tel = (TextView) findViewById(R.id.tv_tel);
         tv_myOrder = (TextView) findViewById(R.id.tv_myOrder);
@@ -115,7 +134,11 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         tv_news_num = (TextView) findViewById(R.id.tv_news_num);
         tv_benefit_activity = (TextView) findViewById(R.id.tv_benefit_activity);
         tv_setting = (TextView) findViewById(R.id.tv_setting);
+
         rl_head = (RelativeLayout) findViewById(R.id.rl_head);
+        civ_head = (CircleImageView) findViewById(R.id.civ_head);
+        tvs_car = new ArrayList<>();
+
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -129,6 +152,8 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     @Override
     protected void initData() {
         userInfo = getIntent().getParcelableExtra("userInfo");
+        adInfos = getIntent().getParcelableArrayListExtra("adInfos");
+
         mOrderAddressInfos = new ArrayList<>();
         OrderAddressInfo orderAddressInfo = new OrderAddressInfo();
         orderAddressInfo.setAction(0);
@@ -139,42 +164,30 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         orderAddressInfo1.setAction(1);
         orderAddressInfo1.setState(3);
         orderAddressInfo1.setReceiptAddress("start");
-
         mOrderAddressInfos.add(orderAddressInfo);
         mOrderAddressInfos.add(orderAddressInfo1);
 
-//        AddressMainInfo addressMainInfo = new AddressMainInfo();
-//        LatLng latLng2 = new LatLng(0, 0);
-//        addressMainInfo.setLatLng(latLng2);
-//
-//
-//        AddressMainInfo addressMainInfo1 = new AddressMainInfo();
-//        addressMainInfo1.setAction(1);
-//        addressMainInfo1.setState(3);
-//        LatLng latLng1 = new LatLng(0, 0);
-//        addressMainInfo1.setLatLng(latLng1);
-//        addressMainInfo1.setAddress("start");
-//
-//        mAddressMainInfos.add(addressMainInfo);
-//        mAddressMainInfos.add(addressMainInfo1);
-
         mOrderAddressAdapter = new OrderAddressAdapter(mOrderAddressInfos, this);
 
+
+
     }
+
 
     @Override
     protected void initView() {
 
-
+        tv_tel.setText(userInfo.getUserName());
+        HttpUtil.setImageLoader(Contants.imagehost + userInfo.getHeadIco(), civ_head, R.mipmap.cir_head, R.mipmap.cir_head);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setAutoMeasureEnabled(true);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_main_address.setLayoutManager(layoutManager);
         rv_main_address.setAdapter(mOrderAddressAdapter);
 
+
         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED,
                 Gravity.LEFT);
-
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerStateChanged(int newState) {
@@ -185,7 +198,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 View mContent = mDrawerLayout.getChildAt(0);
                 View mMenu = drawerView;
                 float scale = 1 - slideOffset;
-
                 if (drawerView.getTag().equals("LEFT")) {
                     ViewHelper.setAlpha(mMenu, 0.6f + 0.4f * (1 - scale));
                     ViewHelper.setTranslationX(mContent, mMenu.getMeasuredWidth() * (1 - scale));
@@ -210,18 +222,13 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         });
 
 
-        ArrayList<ADInfo> adInfos = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            ADInfo adInfo = new ADInfo();
-            adInfo.setUrl("http://image.baidu.com/search/detail?ct=503316480&z=undefined&tn=baiduimagedetail&ipn=d&word=tup&step_word=&ie=utf-8&in=&cl=2&lm=-1&st=undefined&cs=2749032785,4112802673&os=1033870515,2661805642&simid=4214987411,843537031&pn=1&rn=1&di=105759005000&ln=1977&fr=&fmq=1477123249698_R&fm=&ic=undefined&s=undefined&se=&sme=&tab=0&width=&height=&face=undefined&is=0,0&istype=0&ist=&jit=&bdtype=0&adpicid=0&pi=0&gsm=0&objurl=http%3A%2F%2F77fkxu.com1.z0.glb.clouddn.com%2F20130427%2F1367044809_48720.jpg&rpstart=0&rpnum=0&adpicid=0");
-            adInfo.setId(i + "");
-            adInfo.setContent("aaa" + i);
-            adInfos.add(adInfo);
-        }
         icv_banner.setImageResources(adInfos, new ImageCycleView.ImageCycleViewListener() {
             @Override
             public void displayImage(String imageURL, ImageView imageView) {
-                imageView.setImageResource(R.mipmap.ic_default);
+                // imageView.setImageResource(R.mipmap.ic_default);
+                imageURL = Contants.imagehost + imageURL;
+
+                HttpUtil.setImageLoader(imageURL, imageView, R.mipmap.ic_default, R.mipmap.ic_default);
             }
 
             @Override
@@ -237,10 +244,10 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         iv_cir_head.setOnClickListener(this);
         iv_below.setOnClickListener(this);
         ll_car_1.setOnClickListener(this);
-        ll_car_2.setOnClickListener(this);
-        ll_car_3.setOnClickListener(this);
-        ll_car_4.setOnClickListener(this);
-        ll_car_5.setOnClickListener(this);
+//        ll_car_2.setOnClickListener(this);
+//        ll_car_3.setOnClickListener(this);
+//        ll_car_4.setOnClickListener(this);
+//        ll_car_5.setOnClickListener(this);
         iv_confirm_order.setOnClickListener(this);
         tv_tel.setOnClickListener(this);
         tv_myOrder.setOnClickListener(this);
@@ -254,7 +261,64 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         rl_head.setOnClickListener(this);
 
 
-        choiceCar(1);
+
+
+        JsonObject jsonObject = new JsonObject();
+        Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
+        HttpUtil.doPost(MainActivity.this, Contants.url_getVehicleTypes, "getVehicleTypes", map, new VolleyInterface(MainActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
+            @Override
+            public void onSuccess(JsonElement result) {
+                LogUtil.i(result.toString());
+                Gson gson = new Gson();
+                Type listType = new TypeToken<ArrayList<CarInfo>>() {
+                }.getType();
+                carInfos = gson.fromJson(result, listType);
+                int size = carInfos.size();
+                for (int i = 0; i < size; i++) {
+                    LinearLayout.LayoutParams car_params = new LinearLayout.LayoutParams(
+                            0, LinearLayout.LayoutParams.MATCH_PARENT, 1);
+                    LinearLayout.LayoutParams view_params = new LinearLayout.LayoutParams(
+                            DensityUtil.dip2px(MainActivity.this, 0.5f), LinearLayout.LayoutParams.MATCH_PARENT);
+                    view_params.setMargins(0, DensityUtil.dip2px(MainActivity.this, 5.0f), 0, DensityUtil.dip2px(MainActivity.this, 5.0f));
+                    final CarInfo carInfo = carInfos.get(i);
+                    LinearLayout linearLayout = (LinearLayout) View.inflate(MainActivity.this, R.layout.view_ll_car, null);
+                    ImageView iv_car = (ImageView) linearLayout.findViewById(R.id.iv_car);
+                    TextView tv_car = (TextView) linearLayout.findViewById(R.id.tv_car);
+                    tv_car.setText(carInfo.getVehicleTypeName());
+                    tvs_car.add(tv_car);
+                    String imgUrl = Contants.imagehost + carInfo.getImg();
+                    LogUtil.i(imgUrl);
+                    HttpUtil.setImageLoader(imgUrl, iv_car, 0, 0);
+                    View view = View.inflate(MainActivity.this, R.layout.view_line, null);
+                    ll_total_car.addView(view,view_params);
+                    ll_total_car.addView(linearLayout, car_params);
+
+                    linearLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            int type = Integer.valueOf(carInfo.getTypeCode());
+                            choiceCar(type);
+                        }
+                    });
+
+                }
+                choiceCar(5);
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                showShortToastByString(getString(R.string.timeoutError));
+//                       LogUtil.i("hint",error.networkResponse.headers.toString());
+//                       LogUtil.i("hint",error.networkResponse.statusCode+"");
+            }
+
+            @Override
+            public void onStateError() {
+            }
+        });
+
+
+
     }
 
     @Override
@@ -262,18 +326,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         Intent intent = null;
         switch (v.getId()) {
             case R.id.ll_car_1:
-                choiceCar(1);
-                break;
-            case R.id.ll_car_2:
-                choiceCar(2);
-                break;
-            case R.id.ll_car_3:
-                choiceCar(3);
-                break;
-            case R.id.ll_car_4:
-                choiceCar(4);
-                break;
-            case R.id.ll_car_5:
                 choiceCar(5);
                 break;
             case R.id.ll_my_order:
@@ -319,13 +371,13 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             case R.id.tv_common_address:
                 intent = new Intent(MainActivity.this, CommonAddressActivity.class);
                 intent.putExtra("userId", userInfo.getUserId());
-                intent.putExtra("type",2);
+                intent.putExtra("type", 2);
                 startActivity(intent);
                 break;
             case R.id.tv_myInvoice:
                 intent = new Intent(MainActivity.this, MyInvoiceActivity.class);
-
                 startActivity(intent);
+
                 break;
             case R.id.tv_news:
                 intent = new Intent(MainActivity.this, MyNewsActivity.class);
@@ -342,7 +394,8 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 break;
             case R.id.rl_head:
                 intent = new Intent(MainActivity.this, PersonalInfoActivity.class);
-                startActivity(intent);
+                intent.putExtra("userInfo", userInfo);
+                startActivityForResult(intent, 3);
                 break;
         }
     }
@@ -350,34 +403,34 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
 
     private void initColor() {
         tv_car_1.setTextColor(ContextCompat.getColor(this, R.color.color_gary_font));
-        tv_car_2.setTextColor(ContextCompat.getColor(this, R.color.color_gary_font));
-        tv_car_3.setTextColor(ContextCompat.getColor(this, R.color.color_gary_font));
-        tv_car_4.setTextColor(ContextCompat.getColor(this, R.color.color_gary_font));
-        tv_car_5.setTextColor(ContextCompat.getColor(this, R.color.color_gary_font));
+        int size = tvs_car.size();
+        for(int i = 0;i<size;i++){
+            tvs_car.get(i).setTextColor(ContextCompat.getColor(this, R.color.color_gary_font));
+        }
     }
 
     private void choiceCar(int i) {
         initColor();
         switch (i) {
-            case 1:
+            case 5:
                 tv_car_1.setTextColor(ContextCompat.getColor(this, R.color.color_red));
                 select_car = 1;
                 break;
-            case 2:
-                tv_car_2.setTextColor(ContextCompat.getColor(this, R.color.color_red));
+            case 1:
+                tvs_car.get(0).setTextColor(ContextCompat.getColor(this, R.color.color_red));
                 select_car = 2;
 
                 break;
-            case 3:
-                tv_car_3.setTextColor(ContextCompat.getColor(this, R.color.color_red));
+            case 2:
+                tvs_car.get(1).setTextColor(ContextCompat.getColor(this, R.color.color_red));
                 select_car = 3;
                 break;
-            case 4:
-                tv_car_4.setTextColor(ContextCompat.getColor(this, R.color.color_red));
+            case 3:
+                tvs_car.get(2).setTextColor(ContextCompat.getColor(this, R.color.color_red));
                 select_car = 4;
                 break;
-            case 5:
-                tv_car_5.setTextColor(ContextCompat.getColor(this, R.color.color_red));
+            case 4:
+                tvs_car.get(3).setTextColor(ContextCompat.getColor(this, R.color.color_red));
                 select_car = 5;
                 break;
         }
@@ -408,10 +461,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             int type = data.getIntExtra("type", 0);
             OrderAddressInfo orderAddressInfo = data.getParcelableExtra("orderAddressInfo");
 
-
-            System.out.println("type" + type);
-            System.out.println("position" + position);
-            System.out.println("orderAddressInfo" + orderAddressInfo);
             if (type == 2) {
                 OrderAddressInfo old = mOrderAddressInfos.get(position);
                 mOrderAddressInfos.set(position, orderAddressInfo);
@@ -424,6 +473,13 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
 
             LogUtil.i(mOrderAddressInfos.toString());
         }
+        if (resultCode == RESULT_OK && requestCode == 3) {
+
+            userInfo = data.getParcelableExtra("userInfo");
+            tv_tel.setText(userInfo.getUserName());
+            HttpUtil.setImageLoader(Contants.imagehost + userInfo.getHeadIco(), civ_head, R.mipmap.cir_head, R.mipmap.cir_head);
+        }
+
     }
 
     class popupDismissListener implements PopupWindow.OnDismissListener {

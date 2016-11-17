@@ -29,6 +29,7 @@ import java.util.Map;
 import gpw.com.app.R;
 import gpw.com.app.base.BaseActivity;
 import gpw.com.app.base.Contants;
+import gpw.com.app.bean.UserInfo;
 import gpw.com.app.util.BitmapUtil;
 import gpw.com.app.util.EncryptUtil;
 import gpw.com.app.util.HttpUtil;
@@ -51,16 +52,22 @@ public class PersonalInfoActivity extends BaseActivity {
     private TextView tv_tel1;
     private TextView tv_name;
     private TextView tv_name1;
+    private TextView tv_address;
     private MyDialog nickDialog;
     private TextView tv_sex;
     private ImageView iv_left_white;
     private SelectPicPopupWindow menuWindow;
     private SelectSexPopupWindow sexWindow;
+    private UserInfo userInfo;
+    private boolean isChange;
     private static final int REQUESTCODE_PICK = 0;        // 相册选图标记
     private static final int REQUESTCODE_TAKE = 1;        // 相机拍照标记
     private static final int REQUESTCODE_CUTTING = 2;    // 图片裁切标记
-
     private static final String IMAGE_FILE_NAME = "head.jpg";// 头像文件名称
+    private String city;
+    private String province;
+    private String address;
+
 
     @Override
     protected int getLayout() {
@@ -80,39 +87,63 @@ public class PersonalInfoActivity extends BaseActivity {
         tv_name = (TextView) findViewById(R.id.tv_name);
         tv_name1 = (TextView) findViewById(R.id.tv_name1);
         tv_sex = (TextView) findViewById(R.id.tv_sex);
+        tv_address = (TextView) findViewById(R.id.tv_address);
         iv_left_white = (ImageView) findViewById(R.id.iv_left_white);
 
     }
 
     @Override
     protected void initData() {
+        userInfo = getIntent().getParcelableExtra("userInfo");
 
     }
 
     @Override
     protected void initView() {
+
+        tv_tel.setText(userInfo.getTel());
+        tv_tel1.setText(userInfo.getTel());
+        tv_name.setText(userInfo.getUserName());
+        tv_name1.setText(userInfo.getUserName());
+        tv_sex.setText(userInfo.getSex());
+        tv_address.setText(userInfo.getAddress());
+
+        HttpUtil.setImageLoader(Contants.imagehost + userInfo.getHeadIco(), civ_head, R.mipmap.cir_head, R.mipmap.cir_head);
+        HttpUtil.setImageLoader(Contants.imagehost + userInfo.getHeadIco(), civ_head1, R.mipmap.cir_head, R.mipmap.cir_head);
+
         iv_left_white.setOnClickListener(this);
         rl_address.setOnClickListener(this);
         rl_head.setOnClickListener(this);
+        rl_name.setOnClickListener(this);
+        rl_sex.setOnClickListener(this);
+
     }
+
+
+
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_left_white:
+                if (isChange) {
+                    getIntent().putExtra("userInfo", userInfo);
+                    setResult(RESULT_OK, getIntent());
+                }
                 finish();
                 break;
             case R.id.rl_name:
-                nickDialog = new MyDialog(PersonalInfoActivity.this);
+                nickDialog = MyDialog.nickDialog(PersonalInfoActivity.this);
                 nickDialog.show();
+
                 nickDialog.setOnSettingListener(new MyDialog.NickListener() {
                     @Override
                     public void onSetting(String name) {
-                        if (name.isEmpty()){
+                        if (name.isEmpty()) {
                             showShortToastByString("名字不能为空");
                             return;
                         }
-                        EditUserInfo("name",name);
+                        EditUserInfo("name", name);
                     }
                 });
 
@@ -122,6 +153,10 @@ public class PersonalInfoActivity extends BaseActivity {
                 sexWindow.showAtLocation(findViewById(R.id.activity_personal_info), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
                 break;
             case R.id.rl_address:
+                Intent intent = new Intent(PersonalInfoActivity.this, AddMapActivity.class);
+                intent.putExtra("type", 3);
+                startActivityForResult(intent, 44);
+
                 break;
             case R.id.rl_head:
                 menuWindow = new SelectPicPopupWindow(PersonalInfoActivity.this, itemsOnClick);
@@ -170,11 +205,11 @@ public class PersonalInfoActivity extends BaseActivity {
                     break;
                 case R.id.manBtn:
                     sexWindow.dismiss();
-                    EditUserInfo("sex","男");
+                    EditUserInfo("sex", "男");
                     break;
                 case R.id.womanBtn:
                     sexWindow.dismiss();
-                    EditUserInfo("sex","女");
+                    EditUserInfo("sex", "女");
                     break;
                 default:
                     break;
@@ -186,23 +221,41 @@ public class PersonalInfoActivity extends BaseActivity {
     private void EditUserInfo(final String type, final String value) {
         final JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("UserId", Contants.userId);
-        jsonObject.addProperty("UserType",1);
+        jsonObject.addProperty("UserType", 1);
         if (type.equals("sex")) {
             jsonObject.addProperty("Sex", value);
         }
         if (type.equals("name")) {
             jsonObject.addProperty("UserName", value);
         }
-        Map<String,String> map = EncryptUtil.encryptDES(jsonObject.toString());
+        if (type.equals("address")) {
+            jsonObject.addProperty("Province", province);
+            jsonObject.addProperty("City", city);
+            jsonObject.addProperty("Address", address);
+        }
+        LogUtil.i(jsonObject.toString());
+        Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
 
-        HttpUtil.doPost(PersonalInfoActivity.this, Contants.url_editUserInfo, "editUserInfo", map, new VolleyInterface(PersonalInfoActivity.this,VolleyInterface.mListener,VolleyInterface.mErrorListener) {
+        HttpUtil.doPost(PersonalInfoActivity.this, Contants.url_editUserInfo, "editUserInfo", map, new VolleyInterface(PersonalInfoActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
             @Override
             public void onSuccess(JsonElement result) {
                 LogUtil.i(result.toString());
                 showShortToastByString(result.toString());
                 if (type.equals("sex")) {
                     tv_sex.setText(value);
+                    userInfo.setSex(value);
                 }
+                if (type.equals("name")) {
+                    tv_name.setText(value);
+                    tv_name1.setText(value);
+                    userInfo.setUserName(value);
+                    nickDialog.dismiss();
+                }
+                if (type.equals("address")) {
+                    tv_address.setText(address);
+                    userInfo.setAddress(address);
+                }
+                isChange = true;
             }
 
             @Override
@@ -323,6 +376,14 @@ public class PersonalInfoActivity extends BaseActivity {
                 }
 
                 break;
+            case 44:
+                if (resultCode==RESULT_OK) {
+                    city = data.getStringExtra("City");
+                    province = data.getStringExtra("Province");
+                    address = data.getStringExtra("Address");
+                    EditUserInfo("address", null);
+                }
+                break;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -335,7 +396,48 @@ public class PersonalInfoActivity extends BaseActivity {
             Bitmap bitmap = extras.getParcelable("data");
             Drawable drawable = new BitmapDrawable(null, bitmap);
             civ_head.setImageDrawable(drawable);
+            civ_head1.setImageDrawable(drawable);
+            String HeadPortrait = BitmapUtil.getImgStr(bitmap);
+            final JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("UserId", Contants.userId);
+            jsonObject.addProperty("Suffix", "JPEG");
+            jsonObject.addProperty("HeadPortrait", HeadPortrait);
+            LogUtil.i(jsonObject.toString());
+            Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
+
+            HttpUtil.doPost(PersonalInfoActivity.this, Contants.url_updateHeadPortrait, "updateHeadPortrait", map, new VolleyInterface(PersonalInfoActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
+                @Override
+                public void onSuccess(JsonElement result) {
+                    isChange = true;
+                    LogUtil.i(result.toString());
+                    String url = result.toString();
+                    url = url.substring(1);
+                    url = url.substring(0, url.length() - 1);
+                    userInfo.setHeadIco(url);
+                    showShortToastByString(result.toString());
+                }
+
+                @Override
+                public void onError(VolleyError error) {
+                    showShortToastByString(getString(R.string.timeoutError));
+//                LogUtil.i("hint",error.networkResponse.headers.toString());
+//                LogUtil.i("hint",error.networkResponse.statusCode+"");
+                }
+
+                @Override
+                public void onStateError() {
+                }
+            });
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isChange) {
+            getIntent().putExtra("userInfo", userInfo);
+            setResult(RESULT_OK, getIntent());
+        }
+        super.onBackPressed();
     }
 }

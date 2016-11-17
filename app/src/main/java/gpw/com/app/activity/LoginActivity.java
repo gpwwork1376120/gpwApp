@@ -12,12 +12,16 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Map;
 
 import gpw.com.app.R;
 import gpw.com.app.base.BaseActivity;
 import gpw.com.app.base.Contants;
+import gpw.com.app.bean.ADInfo;
 import gpw.com.app.bean.UserInfo;
 import gpw.com.app.util.DateUtil;
 import gpw.com.app.util.EncryptUtil;
@@ -85,7 +89,7 @@ public class LoginActivity extends BaseActivity {
             case R.id.bt_login:
                 if (NetworkUtil.isConnected(LoginActivity.this)) {
                     login();
-                }else {
+                } else {
                     showShortToastByString(getString(R.string.Neterror));
                 }
                 break;
@@ -114,7 +118,7 @@ public class LoginActivity extends BaseActivity {
         account = et_account.getText().toString();
         String time = DateUtil.getPsdCurrentDate();
         password = et_password.getText().toString();
-        if (account.isEmpty()||password.isEmpty()){
+        if (account.isEmpty() || password.isEmpty()) {
             showShortToastByString("信息不完整");
             return;
         }
@@ -132,24 +136,44 @@ public class LoginActivity extends BaseActivity {
                 LogUtil.i("hint", result.toString());
                 showShortToastByString("登录成功");
                 Gson gson = new Gson();
-                UserInfo userInfo = gson.fromJson(result,UserInfo.class);
-                customProgressDialog.dismiss();
+                final UserInfo userInfo = gson.fromJson(result, UserInfo.class);
                 SharedPreferences.Editor editor = prefs.edit();
                 Contants.userId = userInfo.getUserId();
                 editor.putString("account", account);
                 editor.putString("password", password);
                 editor.putString("UserId", userInfo.getUserId());
-                editor.putString("UserName", userInfo.getUserName());
-                editor.putString("Tel", userInfo.getTel());
-                editor.putString("HeadIco", userInfo.getHeadIco());
-                editor.putString("Sex", userInfo.getSex());
-                editor.putString("Address", userInfo.getAddress());
                 editor.apply();
-                Intent intent = new Intent();
-                intent.setClass(LoginActivity.this, MainActivity.class);
-                intent.putExtra("userInfo",userInfo);
-                startActivity(intent);
-                finish();
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("AdvertisingType", 1);
+                Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
+                HttpUtil.doPost(LoginActivity.this, Contants.url_getAdvertisings, "getAdvertisings", map, new VolleyInterface(LoginActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
+                    @Override
+                    public void onSuccess(JsonElement result) {
+                        customProgressDialog.dismiss();
+                        LogUtil.i("tupian111" + result.toString());
+                        Gson gson = new Gson();
+                        Type listType = new TypeToken<ArrayList<ADInfo>>() {
+                        }.getType();
+                        ArrayList<ADInfo> adInfos = gson.fromJson(result, listType);
+                        Intent intent = new Intent();
+                        intent.setClass(LoginActivity.this, MainActivity.class);
+                        intent.putExtra("userInfo", userInfo);
+                        intent.putParcelableArrayListExtra("adInfos", adInfos);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(VolleyError error) {
+                        showShortToastByString(getString(R.string.timeoutError));
+//                LogUtil.i("hint",error.networkResponse.headers.toString());
+//                LogUtil.i("hint",error.networkResponse.statusCode+"");
+                    }
+
+                    @Override
+                    public void onStateError() {
+                    }
+                });
             }
 
             @Override

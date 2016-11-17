@@ -385,6 +385,8 @@ public class MapActivity extends BaseActivity {
             CommonAdInfo commonAdInfo = data.getParcelableExtra("commonAdInfo");
             System.out.println(commonAdInfo.toString());
             LatLng latLng = new LatLng(commonAdInfo.getLat(), commonAdInfo.getLng());
+
+            mBaiduMap.clear();
             BitmapDescriptor bitmap = BitmapDescriptorFactory
                     .fromResource(R.mipmap.location);
             OverlayOptions option = new MarkerOptions()
@@ -431,6 +433,17 @@ public class MapActivity extends BaseActivity {
             intent.putExtra("orderAddressInfo", mOrderAddressInfo);
             intent.putExtra("type", type);
             startActivityForResult(intent, 4);
+
+            linearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MapActivity.this, ImproveDisclosureActivity.class);
+                    intent.putExtra("position", pst);
+                    intent.putExtra("orderAddressInfo", mOrderAddressInfo);
+                    intent.putExtra("type", type);
+                    startActivityForResult(intent, 4);
+                }
+            });
         }
 
     }
@@ -475,6 +488,7 @@ public class MapActivity extends BaseActivity {
             MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory
                     .newMapStatus(mapStatus);
             mBaiduMap.animateMapStatus(mapStatusUpdate);
+
         }
     }
 

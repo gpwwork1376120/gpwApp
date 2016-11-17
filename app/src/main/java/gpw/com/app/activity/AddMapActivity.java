@@ -51,6 +51,7 @@ import gpw.com.app.base.BaseActivity;
 import gpw.com.app.base.Contants;
 import gpw.com.app.bean.AddressMainInfo;
 import gpw.com.app.bean.CommonAdInfo;
+import gpw.com.app.bean.UserInfo;
 import gpw.com.app.util.DensityUtil;
 import gpw.com.app.util.LogUtil;
 
@@ -108,7 +109,7 @@ public class AddMapActivity extends BaseActivity {
 
             LatLng location = result.getLocation();
             // String name = mAddressMainInfo.getName();
-            String address = result.getAddress();
+            final String address = result.getAddress();
             LinearLayout linearLayout = (LinearLayout) View.inflate(AddMapActivity.this, R.layout.view_map_bck, null);
             TextView tv_map_name = (TextView) linearLayout.findViewById(R.id.tv_map_name);
             TextView tv_map_detail = (TextView) linearLayout.findViewById(R.id.tv_map_detail);
@@ -141,19 +142,32 @@ public class AddMapActivity extends BaseActivity {
 
             lv_search.setVisibility(View.GONE);
 
+           city = result.getAddressDetail().city;
+           final String province =  result.getAddressDetail().province;
+
             linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(AddMapActivity.this, EditAddressActivity.class);
-                    intent.putExtra("position", pst);
-                    intent.putExtra("commonAdInfo", commonAdInfo);
-                    intent.putExtra("userId", getIntent().getStringExtra("userId"));
-                    intent.putExtra("type", type);
-                    startActivityForResult(intent, 5);
+                    if (type == 3) {
+                        getIntent().putExtra("City",city);
+                        getIntent().putExtra("Province",province);
+                        getIntent().putExtra("Address",address);
+                        setResult(RESULT_OK,getIntent());
+                        finish();
+                    } else {
+                        Intent intent = new Intent(AddMapActivity.this, EditAddressActivity.class);
+                        intent.putExtra("position", pst);
+                        intent.putExtra("commonAdInfo", commonAdInfo);
+                        intent.putExtra("userId", getIntent().getStringExtra("userId"));
+                        intent.putExtra("type", type);
+                        startActivityForResult(intent, 5);
+                    }
+
                 }
             });
         }
     };
+
 
     @Override
     protected int getLayout() {
@@ -343,7 +357,6 @@ public class AddMapActivity extends BaseActivity {
         mSuggestionSearch.destroy();
         mLocationClient.unRegisterLocationListener(myListener);
     }
-
 
 
     @Override

@@ -69,7 +69,7 @@ public class EditAddressActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        if (type==1){
+        if (type == 1) {
             et_contact_name.setText(commonAdInfo.getReceipter());
             et_contact_tel.setText(commonAdInfo.getReceiptTel());
         }
@@ -113,6 +113,11 @@ public class EditAddressActivity extends BaseActivity {
                             Gson gson = new Gson();
                             AddressIdInfo addressIdInfo = gson.fromJson(result, AddressIdInfo.class);
                             commonAdInfo.setAddressId(addressIdInfo.getAddressId());
+                            getIntent().putExtra("position", pst);
+                            getIntent().putExtra("commonAdInfo", commonAdInfo);
+                            getIntent().putExtra("type", type);
+                            setResult(RESULT_OK, getIntent());
+                            finish();
                         }
 
                         @Override
@@ -129,7 +134,7 @@ public class EditAddressActivity extends BaseActivity {
                     });
 
                 } else {
-                    jsonObject.addProperty("AddressId",commonAdInfo.getAddressId());
+                    jsonObject.addProperty("AddressId", commonAdInfo.getAddressId());
                     LogUtil.i(jsonObject.toString());
                     Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
                     HttpUtil.doPost(EditAddressActivity.this, Contants.url_editUserAddress, "editUserAddress", map, new VolleyInterface(EditAddressActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
@@ -137,6 +142,11 @@ public class EditAddressActivity extends BaseActivity {
                         public void onSuccess(JsonElement result) {
                             LogUtil.i(result.toString());
                             showShortToastByString("编辑成功");
+                            getIntent().putExtra("position", pst);
+                            getIntent().putExtra("commonAdInfo", commonAdInfo);
+                            getIntent().putExtra("type", type);
+                            setResult(RESULT_OK, getIntent());
+                            finish();
                         }
 
                         @Override
@@ -152,11 +162,7 @@ public class EditAddressActivity extends BaseActivity {
                         }
                     });
                 }
-                getIntent().putExtra("position", pst);
-                getIntent().putExtra("commonAdInfo", commonAdInfo);
-                getIntent().putExtra("type", type);
-                setResult(RESULT_OK, getIntent());
-                finish();
+
                 break;
         }
     }

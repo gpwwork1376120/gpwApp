@@ -21,18 +21,8 @@ import gpw.com.app.R;
  */
 public class MyDialog extends Dialog {
 
-    private static MyDialog nickDialog;
-
-//    private static MyDialog psdDialog;
-//
-//    private static MyDialog endDialog;
-
+    private static MyDialog nickDialog;;
     public static NickListener nickListener;
-
-//    public static PsdListener psdListener;
-//
-//    public static EndListener endListener;
-
 
     public MyDialog(Activity activity) {
         super(activity, R.style.MyDialog);
@@ -48,8 +38,8 @@ public class MyDialog extends Dialog {
 
         Point size = new Point();
         activity.getWindowManager().getDefaultDisplay().getSize(size);
-        int width = (int) (size.x * 0.9);
-        int height = (int) (size.y * 0.35);
+        int width = (int) (size.x * 0.8);
+        int height = (int) (size.y * 0.3);
         nickDialog.setContentView(v);
         nickDialog.setCancelable(true);
         Window dialogWindow = nickDialog.getWindow();

@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.Objects;
+
 import gpw.com.app.R;
 import gpw.com.app.base.BaseActivity;
 import gpw.com.app.base.Contants;
@@ -106,10 +108,15 @@ public class ImproveDisclosureActivity extends BaseActivity {
             case R.id.bt_ok:
                 String name = et_contact_name.getText().toString();
                 String tel = et_contact_tel.getText().toString();
-                double money = Double.valueOf(et_loan_money.getText().toString());
+                String loan_money = et_loan_money.getText().toString();
+                System.out.println("loan_money"+loan_money);
+                if (!loan_money.equals("")){
+                    System.out.println("aaaaa");
+                    double money = Double.valueOf(loan_money);
+                    mOrderAddressInfo.setMoney(money);
+                }
                 mOrderAddressInfo.setReceipter(name);
                 mOrderAddressInfo.setReceiptTel(tel);
-                mOrderAddressInfo.setMoney(money);
                 LogUtil.i(mOrderAddressInfo.toString());
                 getIntent().putExtra("position", pst);
                 getIntent().putExtra("orderAddressInfo", mOrderAddressInfo);

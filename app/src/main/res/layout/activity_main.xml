@@ -14,7 +14,6 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:id="@+id/rl_head"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:background="@color/color_white">
@@ -48,6 +47,7 @@
             android:background="@color/color_line" />
 
         <LinearLayout
+            android:id="@+id/ll_total_car"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:background="@color/color_white"
@@ -62,7 +62,7 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="50dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="35dp"
                     android:src="@mipmap/car_1" />
 
@@ -74,124 +74,7 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="0.5dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/color_line" />
 
-            <LinearLayout
-                android:id="@+id/ll_car_2"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/imageView2"
-                    android:layout_width="50dp"
-                    android:layout_height="35dp"
-                    android:src="@mipmap/car_2" />
-
-                <TextView
-                    android:id="@+id/tv_car_2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/car_2" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="0.5dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/color_line" />
-
-            <LinearLayout
-                android:id="@+id/ll_car_3"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/imageView3"
-                    android:layout_width="60dp"
-                    android:layout_height="35dp"
-                    android:src="@mipmap/car_3" />
-
-                <TextView
-                    android:id="@+id/tv_car_3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/car_3" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="0.5dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/color_line" />
-
-            <LinearLayout
-                android:id="@+id/ll_car_4"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="70dp"
-                    android:layout_height="35dp"
-                    android:scaleX="0.82"
-                    android:scaleY="0.82"
-                    android:src="@mipmap/car_4" />
-
-                <TextView
-                    android:id="@+id/tv_car_4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/car_4" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="0.5dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/color_line" />
-
-            <LinearLayout
-                android:id="@+id/ll_car_5"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="70dp"
-                    android:layout_height="35dp"
-                    android:scaleType="center"
-                    android:scaleX="0.90"
-                    android:scaleY="0.90"
-                    android:src="@mipmap/car_5" />
-
-                <TextView
-                    android:id="@+id/tv_car_5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/car_5" />
-
-            </LinearLayout>
 
 
         </LinearLayout>
@@ -254,7 +137,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="15dp"
-                    android:paddingTop="10dp"></android.support.v7.widget.RecyclerView>
+                    android:paddingTop="10dp">
+
+                </android.support.v7.widget.RecyclerView>
 
 
                 <View
@@ -529,21 +414,21 @@
         android:tag="LEFT">
 
         <RelativeLayout
-            android:id="@+id/rl_head1"
+            android:id="@+id/rl_head"
             android:layout_width="match_parent"
             android:layout_height="140dp"
             android:background="@color/color_white">
 
             <gpw.com.app.view.CircleImageView
                 android:id="@+id/civ_head"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="30dp"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/ic_launcher"
+                android:src="@mipmap/cir_head"
                 app:border_color="#ff0000"
-                app:border_width="2dp" />
+                app:border_width="1.5dp" />
 
             <TextView
                 android:id="@+id/tv_tel"

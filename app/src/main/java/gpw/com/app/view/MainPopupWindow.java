@@ -68,6 +68,7 @@ public class MainPopupWindow extends PopupWindow implements OnClickListener {
         this.setContentView(mMenuView);
         this.setWidth(LayoutParams.MATCH_PARENT);
         this.setHeight(LayoutParams.WRAP_CONTENT);
+        this.setAnimationStyle(R.style.AnimationFade);
         this.setFocusable(true);
         ColorDrawable dw = new ColorDrawable(0x00000000);
         this.setBackgroundDrawable(dw);

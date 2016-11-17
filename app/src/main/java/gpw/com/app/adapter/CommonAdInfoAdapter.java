@@ -41,7 +41,7 @@ public class CommonAdInfoAdapter extends RecyclerView.Adapter<CommonAdInfoAdapte
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_address_name, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_common_address, viewGroup, false);
         return new ViewHolder(view);
     }
 
