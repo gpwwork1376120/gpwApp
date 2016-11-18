@@ -87,9 +87,11 @@ public class EditAddressActivity extends BaseActivity {
             case R.id.iv_left_black:
                 finish();
                 break;
+
             case R.id.ll_address:
                 finish();
                 break;
+
             case R.id.bt_ok:
                 String name = et_contact_name.getText().toString();
                 String tel = et_contact_tel.getText().toString();
@@ -113,6 +115,7 @@ public class EditAddressActivity extends BaseActivity {
                             Gson gson = new Gson();
                             AddressIdInfo addressIdInfo = gson.fromJson(result, AddressIdInfo.class);
                             commonAdInfo.setAddressId(addressIdInfo.getAddressId());
+
                             getIntent().putExtra("position", pst);
                             getIntent().putExtra("commonAdInfo", commonAdInfo);
                             getIntent().putExtra("type", type);

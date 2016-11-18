@@ -1,21 +1,16 @@
 package gpw.com.app.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -23,7 +18,6 @@ import gpw.com.app.R;
 import gpw.com.app.adapter.CommonAdInfoAdapter;
 import gpw.com.app.base.BaseActivity;
 import gpw.com.app.base.Contants;
-import gpw.com.app.bean.AddressMainInfo;
 import gpw.com.app.bean.CommAdTimeInfo;
 import gpw.com.app.bean.CommonAdInfo;
 import gpw.com.app.util.DateUtil;
@@ -33,8 +27,6 @@ import gpw.com.app.util.LogUtil;
 import gpw.com.app.util.NetworkUtil;
 import gpw.com.app.util.VolleyInterface;
 import gpw.com.app.view.XRecyclerView;
-
-import static gpw.com.app.R.id.tv_right;
 
 public class CommonAddressActivity extends BaseActivity {
 
@@ -64,7 +56,7 @@ public class CommonAddressActivity extends BaseActivity {
     @Override
     protected void initData() {
         userId = getIntent().getStringExtra("userId");
-        type = getIntent().getIntExtra("type",0);
+        type = getIntent().getIntExtra("type", 0);
         commonAdInfos = new ArrayList<>();
         commonAdInfoAdapter = new CommonAdInfoAdapter(this, commonAdInfos);
     }
@@ -79,15 +71,15 @@ public class CommonAddressActivity extends BaseActivity {
         commonAdInfoAdapter.setOnItemClickListener(new CommonAdInfoAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                if (type==2) {
+                if (type == 2) {
                     Intent intent = new Intent(CommonAddressActivity.this, AddMapActivity.class);
                     intent.putExtra("userId", userId);
                     intent.putExtra("position", position);
                     intent.putExtra("commonAdInfo", commonAdInfos.get(position));
                     intent.putExtra("type", 1);
                     startActivityForResult(intent, 4);
-                }else if (type==1){
-                    getIntent().putExtra("commonAdInfo",commonAdInfos.get(position));
+                } else if (type == 1) {
+                    getIntent().putExtra("commonAdInfo", commonAdInfos.get(position));
                     setResult(RESULT_OK, getIntent());
                     finish();
                 }
@@ -97,6 +89,7 @@ public class CommonAddressActivity extends BaseActivity {
         rv_common_ad.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
+                CurrentPage = 1;
                 getUserAddress(CurrentPage, 0);
             }
 
@@ -124,7 +117,7 @@ public class CommonAddressActivity extends BaseActivity {
         }
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("UserId", userId);
-        jsonObject.addProperty("PageIndex", PageIndex);
+        jsonObject.addProperty("DataIndex", PageIndex);
         jsonObject.addProperty("PageSize", 15);
         jsonObject.addProperty("GetTime", DateUtil.getCurrentDate());
         LogUtil.i(jsonObject.toString());
@@ -133,11 +126,10 @@ public class CommonAddressActivity extends BaseActivity {
         HttpUtil.doPost(CommonAddressActivity.this, Contants.url_getUserAddress, "getUserAddress", map, new VolleyInterface(CommonAddressActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
             @Override
             public void onSuccess(JsonElement result) {
-                LogUtil.i("result"+result.toString());
+                LogUtil.i("result" + result.toString());
                 Gson gson = new Gson();
-                CommAdTimeInfo commAdTimeInfo =  gson.fromJson(result,CommAdTimeInfo.class);
-//                Type listType = new TypeToken<ArrayList<CommonAdInfo>>() {
-//                }.getType();
+                CommAdTimeInfo commAdTimeInfo = gson.fromJson(result, CommAdTimeInfo.class);
+
                 ArrayList<CommonAdInfo> newCommonAdInfos = (ArrayList<CommonAdInfo>) commAdTimeInfo.getList();
                 if (ways == 0) {
                     rv_common_ad.refreshComplete("success");
@@ -184,10 +176,10 @@ public class CommonAddressActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.iv_right:
-                Intent intent = new Intent(CommonAddressActivity.this,AddMapActivity.class);
-                intent.putExtra("userId",userId);
-                intent.putExtra("type",0);
-                startActivityForResult(intent,4);
+                Intent intent = new Intent(CommonAddressActivity.this, AddMapActivity.class);
+                intent.putExtra("userId", userId);
+                intent.putExtra("type", 0);
+                startActivityForResult(intent, 4);
                 break;
         }
     }
@@ -199,10 +191,10 @@ public class CommonAddressActivity extends BaseActivity {
             int position = data.getIntExtra("position", 0);
             int type = data.getIntExtra("type", 0);
             CommonAdInfo commonAdInfo = data.getParcelableExtra("commonAdInfo");
-            if (type==0){
+            if (type == 0) {
                 commonAdInfos.add(commonAdInfo);
-            }else {
-                commonAdInfos.set(position,commonAdInfo);
+            } else {
+                commonAdInfos.set(position, commonAdInfo);
             }
             commonAdInfoAdapter.notifyDataSetChanged();
         }

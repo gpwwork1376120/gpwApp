@@ -1,9 +1,6 @@
 package gpw.com.app.activity;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -13,12 +10,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.Objects;
-
 import gpw.com.app.R;
 import gpw.com.app.base.BaseActivity;
 import gpw.com.app.base.Contants;
-import gpw.com.app.bean.AddressMainInfo;
 import gpw.com.app.bean.OrderAddressInfo;
 import gpw.com.app.util.LogUtil;
 

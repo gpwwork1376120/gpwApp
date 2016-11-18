@@ -19,6 +19,7 @@ public class InvoiceInfo {
     private String CreateTime;
     private String StartAddress;
     private String EndAddress;
+    private boolean ischeck = false;
 
     public String getOrderNo() {
         return OrderNo;
@@ -58,5 +59,13 @@ public class InvoiceInfo {
 
     public void setEndAddress(String EndAddress) {
         this.EndAddress = EndAddress;
+    }
+
+    public boolean ischeck() {
+        return ischeck;
+    }
+
+    public void setIscheck(boolean ischeck) {
+        this.ischeck = ischeck;
     }
 }

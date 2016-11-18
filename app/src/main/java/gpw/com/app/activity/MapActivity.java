@@ -3,19 +3,11 @@ package gpw.com.app.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,7 +21,6 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.baidu.location.Poi;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
@@ -53,19 +44,15 @@ import com.baidu.mapapi.search.sug.SuggestionSearch;
 import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import gpw.com.app.R;
 import gpw.com.app.adapter.AddressNameAdapter;
 import gpw.com.app.base.BaseActivity;
 import gpw.com.app.base.Contants;
-import gpw.com.app.bean.AddressMainInfo;
 import gpw.com.app.bean.CommonAdInfo;
 import gpw.com.app.bean.OrderAddressInfo;
 import gpw.com.app.util.DensityUtil;
 import gpw.com.app.util.LogUtil;
-
-import static gpw.com.app.R.mipmap.location;
 
 public class MapActivity extends BaseActivity {
 

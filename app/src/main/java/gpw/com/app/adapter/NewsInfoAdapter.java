@@ -5,68 +5,73 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import gpw.com.app.R;
-import gpw.com.app.bean.CommonAdInfo;
+import gpw.com.app.bean.InvoiceInfo;
+import gpw.com.app.bean.NewsInfo;
 
 /**
  * Created by gpw on 2016/11/5.
  * --加油
  */
 
-public class CommonAdInfoAdapter extends RecyclerView.Adapter<CommonAdInfoAdapter.ViewHolder> {
+public class NewsInfoAdapter extends RecyclerView.Adapter<NewsInfoAdapter.ViewHolder> {
 
-    private ArrayList<CommonAdInfo> commonAdInfos;
+    private ArrayList<NewsInfo> newsInfos;
 
     private Context context;
 
 
-    public CommonAdInfoAdapter(Context context,ArrayList<CommonAdInfo> commonAdInfos) {
+    public NewsInfoAdapter(Context context, ArrayList<NewsInfo> newsInfos) {
         super();
-        this.commonAdInfos = commonAdInfos;
+        this.newsInfos = newsInfos;
         this.context = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_common_address, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_my_news, viewGroup, false);
         return new ViewHolder(view);
     }
 
     //将数据与界面进行绑定的操作
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
-        final CommonAdInfo commonAdInfo = commonAdInfos.get(position);
-        viewHolder.tv_address.setText(commonAdInfo.getReceiptAddress());
-        viewHolder.tv_contact.setText(commonAdInfo.getReceipter()+" "+commonAdInfo.getReceiptTel());
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mOnItemClickListener.onItemClick(position);
-            }
-        });
+        final NewsInfo newsInfo = newsInfos.get(position);
+        viewHolder.tv_news_content.setText(newsInfo.getMsgContent());
+        viewHolder.tv_news_content.setText(newsInfo.getCreateTime());
+
+//        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
 
     }
 
     //获取数据的数量
     @Override
     public int getItemCount() {
-        return commonAdInfos.size();
+        return newsInfos.size();
     }
 
 
     //自定义的ViewHolder，持有每个Item的的所有界面元素
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_address;
-        TextView tv_contact;
+
+        TextView tv_news_content;
+        TextView tv_news_time;
+
 
         public ViewHolder(View view) {
             super(view);
-            tv_address = (TextView) view.findViewById(R.id.tv_address);
-            tv_contact = (TextView) view.findViewById(R.id.tv_contact);
+            tv_news_content = (TextView) view.findViewById(R.id.tv_news_content);
+            tv_news_time = (TextView) view.findViewById(R.id.tv_news_time);
 
         }
     }

@@ -23,5 +23,10 @@ public class Contants {
     public static String url_getAdvertisings = localhost + "Visitors/GetAdvertisings";
     public static String url_getVehicleTypes = localhost + "Visitors/GetVehicleTypes";
     public static String url_getNotInvoiceList = localhost + "Consignor/GetNotInvoiceList";
+    public static String url_applayInvoice = localhost + "Consignor/ApplayInvoice";
+    public static String url_getUserMessages = localhost + "Users/GetUserMessages";
+    public static String url_obtainMessage = localhost + "Visitors/ObtainMessage";
+    public static String url_getUserBalanceList = localhost + "Finance/GetUserBalanceList";
+    public static String url_getUserBalance = localhost + "Finance/GetUserBalance";
 
 }

@@ -47,11 +47,21 @@ public class InvoiceInfoAdapter extends RecyclerView.Adapter<InvoiceInfoAdapter.
         viewHolder.tv_start.setText(String.format("从 %s", invoiceInfo.getStartAddress()));
         viewHolder.tv_time.setText(invoiceInfo.getCreateTime());
         viewHolder.cb_order.setText(String.format("订单号:%s", invoiceInfo.getOrderNo()));
-
+        if (invoiceInfo.ischeck()) {
+            viewHolder.cb_order.setChecked(true);
+        } else {
+            viewHolder.cb_order.setChecked(false);
+        }
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnItemClickListener.onItemClick(position);
+                if (invoiceInfo.ischeck()) {
+                    invoiceInfo.setIscheck(false);
+                    viewHolder.cb_order.setChecked(false);
+                } else {
+                    invoiceInfo.setIscheck(true);
+                    viewHolder.cb_order.setChecked(true);
+                }
             }
         });
 

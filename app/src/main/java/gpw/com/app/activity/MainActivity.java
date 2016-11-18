@@ -35,6 +35,7 @@ import gpw.com.app.base.Contants;
 import gpw.com.app.bean.ADInfo;
 import gpw.com.app.bean.CarInfo;
 import gpw.com.app.bean.OrderAddressInfo;
+import gpw.com.app.bean.UserInfo;
 import gpw.com.app.util.DensityUtil;
 import gpw.com.app.util.EncryptUtil;
 import gpw.com.app.util.HttpUtil;

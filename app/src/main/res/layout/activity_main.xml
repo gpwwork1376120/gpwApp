@@ -494,7 +494,7 @@
             android:paddingLeft="30dp"
             android:text="@string/myOrder"
             android:textColor="#3d3d3d"
-            android:textSize="@dimen/big_font1" />
+            android:textSize="@dimen/bigest_font" />
 
         <TextView
             android:id="@+id/tv_myWallet"
@@ -505,7 +505,7 @@
             android:paddingLeft="30dp"
             android:text="@string/myWallet"
             android:textColor="#3d3d3d"
-            android:textSize="@dimen/big_font1" />
+            android:textSize="@dimen/bigest_font" />
 
         <TextView
             android:id="@+id/tv_myConvoy"
@@ -516,7 +516,7 @@
             android:paddingLeft="30dp"
             android:text="@string/myConvoy"
             android:textColor="#3d3d3d"
-            android:textSize="@dimen/big_font1" />
+            android:textSize="@dimen/bigest_font" />
 
         <TextView
             android:id="@+id/tv_common_address"
@@ -527,7 +527,7 @@
             android:paddingLeft="30dp"
             android:text="@string/common_address"
             android:textColor="#3d3d3d"
-            android:textSize="@dimen/big_font1" />
+            android:textSize="@dimen/bigest_font" />
 
         <TextView
             android:id="@+id/tv_myInvoice"
@@ -538,7 +538,7 @@
             android:paddingLeft="30dp"
             android:text="@string/myInvoice"
             android:textColor="#3d3d3d"
-            android:textSize="@dimen/big_font1" />
+            android:textSize="@dimen/bigest_font" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -553,7 +553,7 @@
                 android:paddingLeft="30dp"
                 android:text="@string/news"
                 android:textColor="#3d3d3d"
-                android:textSize="@dimen/big_font1" />
+                android:textSize="@dimen/bigest_font" />
 
             <TextView
                 android:id="@+id/tv_news_num"
@@ -579,7 +579,7 @@
             android:paddingLeft="30dp"
             android:text="@string/benefit_activity"
             android:textColor="#3d3d3d"
-            android:textSize="@dimen/big_font1" />
+            android:textSize="@dimen/bigest_font" />
 
         <TextView
             android:id="@+id/tv_setting"
@@ -590,7 +590,7 @@
             android:paddingLeft="30dp"
             android:text="@string/setting"
             android:textColor="#3d3d3d"
-            android:textSize="@dimen/big_font1" />
+            android:textSize="@dimen/bigest_font" />
 
         <View
             android:layout_width="match_parent"

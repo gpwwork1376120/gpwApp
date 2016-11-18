@@ -111,7 +111,6 @@ public class MyInvoiceActivity extends BaseActivity {
         jsonObject.addProperty("UserId", Contants.userId);
         jsonObject.addProperty("PageIndex", PageIndex);
         jsonObject.addProperty("PageSize", 15);
-        jsonObject.addProperty("GetTime", DateUtil.getCurrentDate());
         LogUtil.i(jsonObject.toString());
         Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
 
@@ -174,7 +173,17 @@ public class MyInvoiceActivity extends BaseActivity {
                 break;
             case R.id.bt_ok:
                 intent.setClass(MyInvoiceActivity.this, ApplyInvoiceActivity.class);
-                startActivity(intent);
+                String orders = null;
+                int size = invoiceInfos.size();
+                for (int i = 0; i < size; i++) {
+                    String orderId = invoiceInfos.get(i).getOrderNo();
+                    boolean state = invoiceInfos.get(i).ischeck();
+                    if (state) {
+                        orders = orderId + ",";
+                    }
+                }
+                intent.putExtra("orders",orders);
+                startActivityForResult(intent,1);
                 break;
 
         }

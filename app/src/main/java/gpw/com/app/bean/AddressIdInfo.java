@@ -1,14 +1,14 @@
 package gpw.com.app.bean;
 
 /**
- * Created by Administrator on 2016/11/16.
+ * Created by Administrator on 2016/11/18.
  * ---个人专属
  */
 
 public class AddressIdInfo {
 
     /**
-     * AddressId : 7
+     * AddressId : 49
      */
 
     private int AddressId;

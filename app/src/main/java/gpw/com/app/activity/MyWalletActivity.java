@@ -8,8 +8,22 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import java.util.Map;
+
 import gpw.com.app.R;
 import gpw.com.app.base.BaseActivity;
+import gpw.com.app.base.Contants;
+import gpw.com.app.bean.MessageInfo;
+import gpw.com.app.bean.MoneyInfo;
+import gpw.com.app.util.EncryptUtil;
+import gpw.com.app.util.HttpUtil;
+import gpw.com.app.util.LogUtil;
+import gpw.com.app.util.VolleyInterface;
 
 public class MyWalletActivity extends BaseActivity {
 
@@ -50,6 +64,31 @@ public class MyWalletActivity extends BaseActivity {
         tv_right.setVisibility(View.GONE);
         tv_title.setText(R.string.myWallet);
 
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("UserId", Contants.userId);
+        jsonObject.addProperty("UserType", 1);
+        Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
+        HttpUtil.doPost(MyWalletActivity.this, Contants.url_getUserBalance, "getUserBalance", map, new VolleyInterface(MyWalletActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
+            @Override
+            public void onSuccess(JsonElement result) {
+                LogUtil.i(result.toString());
+                Gson gson = new Gson();
+                MoneyInfo moneyInfo = gson.fromJson(result, MoneyInfo.class);
+                tv_balance_money.setText(String.format("¥%s", moneyInfo.getBalance()));
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                showShortToastByString(getString(R.string.timeoutError));
+//                LogUtil.i("hint",error.networkResponse.headers.toString());
+//                LogUtil.i("hint",error.networkResponse.statusCode+"");
+            }
+
+            @Override
+            public void onStateError() {
+            }
+        });
 
         iv_left_white.setOnClickListener(this);
         bt_charge_situation.setOnClickListener(this);
