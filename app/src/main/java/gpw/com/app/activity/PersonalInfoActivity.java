@@ -95,7 +95,6 @@ public class PersonalInfoActivity extends BaseActivity {
     @Override
     protected void initData() {
         userInfo = getIntent().getParcelableExtra("userInfo");
-
     }
 
     @Override

@@ -5,12 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import gpw.com.app.R;
+
 import gpw.com.app.bean.InvoiceInfo;
 import gpw.com.app.bean.NewsInfo;
 
@@ -23,13 +23,11 @@ public class NewsInfoAdapter extends RecyclerView.Adapter<NewsInfoAdapter.ViewHo
 
     private ArrayList<NewsInfo> newsInfos;
 
-    private Context context;
 
 
-    public NewsInfoAdapter(Context context, ArrayList<NewsInfo> newsInfos) {
+    public NewsInfoAdapter(ArrayList<NewsInfo> newsInfos) {
         super();
         this.newsInfos = newsInfos;
-        this.context = context;
     }
 
     @Override
@@ -43,7 +41,7 @@ public class NewsInfoAdapter extends RecyclerView.Adapter<NewsInfoAdapter.ViewHo
     public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
         final NewsInfo newsInfo = newsInfos.get(position);
         viewHolder.tv_news_content.setText(newsInfo.getMsgContent());
-        viewHolder.tv_news_content.setText(newsInfo.getCreateTime());
+        viewHolder.tv_news_time.setText(newsInfo.getCreateTime());
 
 //        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
 //            @Override

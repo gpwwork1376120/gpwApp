@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import gpw.com.app.R;
 import gpw.com.app.base.BaseActivity;
+import gpw.com.app.bean.UserInfo;
 
 public class SettingActivity extends BaseActivity {
 
@@ -23,6 +24,8 @@ public class SettingActivity extends BaseActivity {
     private TextView tv_title;
     private TextView tv_right;
     private ImageView iv_left_white;
+    private UserInfo userInfo;
+    private boolean isChange;
 
     @Override
     protected int getLayout() {
@@ -47,7 +50,8 @@ public class SettingActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-
+        isChange = false;
+        userInfo = getIntent().getParcelableExtra("userInfo");
     }
 
     @Override
@@ -65,31 +69,55 @@ public class SettingActivity extends BaseActivity {
     @Override
     public void onClick(View v) {
         Intent intent = new Intent();
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.iv_left_white:
+                if (isChange) {
+                    getIntent().putExtra("userInfo", userInfo);
+                    setResult(RESULT_OK, getIntent());
+                }
                 finish();
                 break;
             case R.id.rl_account_management:
-                intent.setClass(SettingActivity.this,PersonalInfoActivity.class);
-                startActivity(intent);
+                intent.setClass(SettingActivity.this, PersonalInfoActivity.class);
+                intent.putExtra("userInfo", userInfo);
+                startActivityForResult(intent, 1);
                 break;
             case R.id.rl_fee_scale:
-                intent.setClass(SettingActivity.this,FeeScaleActivity.class);
+                intent.setClass(SettingActivity.this, FeeScaleActivity.class);
                 startActivity(intent);
                 break;
             case R.id.rl_faq:
-                intent.setClass(SettingActivity.this,FAQActivity.class);
+                intent.setClass(SettingActivity.this, FAQActivity.class);
                 startActivity(intent);
                 break;
             case R.id.rl_feed_back:
-                intent.setClass(SettingActivity.this,FeedbackActivity.class);
+                intent.setClass(SettingActivity.this, FeedbackActivity.class);
                 startActivity(intent);
                 break;
             case R.id.rl_about_us:
-                intent.setClass(SettingActivity.this,AboutUsActivity.class);
+                intent.setClass(SettingActivity.this, AboutUsActivity.class);
                 startActivity(intent);
                 break;
 
+        }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (isChange) {
+            getIntent().putExtra("userInfo", userInfo);
+            setResult(RESULT_OK, getIntent());
+        }
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            isChange = true;
+            userInfo = data.getParcelableExtra("userInfo");
         }
     }
 }

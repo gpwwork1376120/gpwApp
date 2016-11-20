@@ -22,9 +22,9 @@
         android:gravity="right"
         android:text="2016-10-10"/>
 
-    <view
+    <View
         android:layout_width="match_parent"
-        android:layout_height="0.6dp"
+        android:layout_height="0.5dp"
         android:background="@color/color_line"
         />
 </LinearLayout>

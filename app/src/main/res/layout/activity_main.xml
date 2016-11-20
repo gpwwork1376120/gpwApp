@@ -18,17 +18,8 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="160dp"
                 android:background="@color/color_white">
-
-
-                <ImageView
-                    android:id="@+id/iv_cir_head"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="35dp"
-                    android:src="@mipmap/cir_head" />
 
                 <gpw.com.app.view.ImageCycleView
                     android:id="@+id/icv_banner"
@@ -38,6 +29,13 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true" />
 
+                <ImageView
+                    android:id="@+id/iv_cir_head"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="35dp"
+                    android:src="@mipmap/cir_head" />
             </RelativeLayout>
 
             <View
@@ -151,7 +149,7 @@
                             android:layout_alignBottom="@+id/tv_cargo_insurance"
                             android:layout_marginLeft="5dp"
                             android:layout_toRightOf="@+id/tv_cargo_insurance"
-                            android:text="紫金保险"
+                            android:text="@string/insurance"
                             android:textColor="#b9b9b9"
                             android:textSize="12sp" />
 
@@ -202,7 +200,7 @@
                             android:layout_alignParentLeft="true"
                             android:layout_alignParentStart="true"
                             android:layout_alignParentTop="true"
-                            android:text="货物价值(元)" />
+                            android:text="@string/goods_money" />
                     </RelativeLayout>
 
                     <View
@@ -226,7 +224,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:layout_toLeftOf="@+id/tv_money"
-                            android:text="约" />
+                            android:text="@string/yue" />
 
                         <TextView
                             android:id="@+id/textView4"
@@ -263,7 +261,7 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginLeft="8dp"
                             android:layout_marginTop="4dp"
-                            android:text="实际费用可能因实际因实际行驶里程、等候时间等因素而异"
+                            android:text="@string/hint_calculate"
                             android:textSize="@dimen/smallest_font" />
 
                         <TextView
@@ -273,7 +271,7 @@
                             android:layout_below="@+id/tv_hint"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="2dp"
-                            android:text="您也可以"
+                            android:text="@string/youCan"
                             android:textSize="@dimen/smallest_font" />
 
                         <Button
@@ -283,7 +281,7 @@
                             android:layout_below="@+id/tv_hint1"
                             android:layout_centerHorizontal="true"
                             android:background="@drawable/button_gray_style"
-                            android:text="询价"
+                            android:text="@string/query"
                             android:textSize="@dimen/smallest_font" />
 
                         <ImageView
@@ -367,6 +365,7 @@
                             android:text="@string/booking_delivery"
                             android:textColor="@color/color_red"
                             android:textSize="@dimen/smallest_font" />
+
                     </LinearLayout>
                 </LinearLayout>
 
@@ -445,7 +444,7 @@
         <RelativeLayout
             android:id="@+id/rl_head"
             android:layout_width="match_parent"
-            android:layout_height="140dp"
+            android:layout_height="150dp"
             android:background="@color/color_white">
 
             <gpw.com.app.view.CircleImageView
@@ -466,7 +465,6 @@
                 android:layout_below="@+id/civ_head"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="6dp"
-                android:text="13312344321"
                 android:textSize="15sp" />
 
             <View

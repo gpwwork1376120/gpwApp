@@ -113,8 +113,6 @@ public class LoginActivity extends BaseActivity {
 
     private void login() {
         final CustomProgressDialog customProgressDialog = new CustomProgressDialog(LoginActivity.this);
-        customProgressDialog.show();
-        customProgressDialog.setText("登录中..");
         account = et_account.getText().toString();
         String time = DateUtil.getPsdCurrentDate();
         password = et_password.getText().toString();
@@ -122,6 +120,8 @@ public class LoginActivity extends BaseActivity {
             showShortToastByString("信息不完整");
             return;
         }
+        customProgressDialog.show();
+        customProgressDialog.setText("登录中..");
         String finalPassword = MD5Util.encrypt(time + password);
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("LoginName", account);
@@ -133,6 +133,7 @@ public class LoginActivity extends BaseActivity {
         HttpUtil.doPost(LoginActivity.this, Contants.url_userLogin, "login", map, new VolleyInterface(LoginActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
             @Override
             public void onSuccess(JsonElement result) {
+                customProgressDialog.dismiss();
                 LogUtil.i("hint", result.toString());
                 showShortToastByString("登录成功");
                 Gson gson = new Gson();
@@ -143,37 +144,11 @@ public class LoginActivity extends BaseActivity {
                 editor.putString("password", password);
                 editor.putString("UserId", userInfo.getUserId());
                 editor.apply();
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("AdvertisingType", 1);
-                Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
-                HttpUtil.doPost(LoginActivity.this, Contants.url_getAdvertisings, "getAdvertisings", map, new VolleyInterface(LoginActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
-                    @Override
-                    public void onSuccess(JsonElement result) {
-                        customProgressDialog.dismiss();
-                        LogUtil.i("tupian111" + result.toString());
-                        Gson gson = new Gson();
-                        Type listType = new TypeToken<ArrayList<ADInfo>>() {
-                        }.getType();
-                        ArrayList<ADInfo> adInfos = gson.fromJson(result, listType);
-                        Intent intent = new Intent();
-                        intent.setClass(LoginActivity.this, MainActivity.class);
-                        intent.putExtra("userInfo", userInfo);
-                        intent.putParcelableArrayListExtra("adInfos", adInfos);
-                        startActivity(intent);
-                        finish();
-                    }
-
-                    @Override
-                    public void onError(VolleyError error) {
-                        showShortToastByString(getString(R.string.timeoutError));
-//                LogUtil.i("hint",error.networkResponse.headers.toString());
-//                LogUtil.i("hint",error.networkResponse.statusCode+"");
-                    }
-
-                    @Override
-                    public void onStateError() {
-                    }
-                });
+                Intent intent = new Intent();
+                intent.setClass(LoginActivity.this, MainActivity.class);
+                intent.putExtra("userInfo", userInfo);
+                startActivity(intent);
+                finish();
             }
 
             @Override

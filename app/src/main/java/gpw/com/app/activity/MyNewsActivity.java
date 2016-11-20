@@ -1,7 +1,7 @@
 package gpw.com.app.activity;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -58,15 +58,20 @@ public class MyNewsActivity extends BaseActivity {
     @Override
     protected void initData() {
         newsInfos = new ArrayList<>();
-        newsInfoAdapter = new NewsInfoAdapter(this, newsInfos);
+        newsInfoAdapter = new NewsInfoAdapter(newsInfos);
     }
 
     @Override
     protected void initView() {
         tv_title.setText(R.string.myNews);
         tv_right.setVisibility(View.GONE);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        rv_news.setLayoutManager(layoutManager);
+        rv_news.setAdapter(newsInfoAdapter);
 
         getNews(CurrentPage, 0);
+
         rv_news.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
@@ -80,7 +85,7 @@ public class MyNewsActivity extends BaseActivity {
                 getNews(CurrentPage, 1);
             }
         });
-
+        iv_left_white.setOnClickListener(this);
     }
 
     private void getNews(int PageIndex, final int ways) {
@@ -106,7 +111,7 @@ public class MyNewsActivity extends BaseActivity {
             public void onSuccess(JsonElement result) {
                 LogUtil.i("result" + result.toString());
                 Gson gson = new Gson();
-                Type listType = new TypeToken<ArrayList<InvoiceInfo>>() {
+                Type listType = new TypeToken<ArrayList<NewsInfo>>() {
                 }.getType();
                 ArrayList<NewsInfo> newNewsInfo = gson.fromJson(result, listType);
                 if (ways == 0) {

@@ -73,4 +73,21 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Neterror">网络错误，连接网络</string>
     <string name="timeoutError">连接超时，请检查网络</string>
+    <string name="hint_MyFleet">优先发送给我的车队</string>
+    <string name="hint_isCollectionPayment">代收贷款</string>
+    <string name="hint_isToPayFreight">运费到付</string>
+    <string name="hint_isSurcharge">回单(附加30%运费)</string>
+    <string name="hint_isRemove">全拆座</string>
+    <string name="hint_isMove">搬运</string>
+    <string name="hint_volume">请输入货物体积</string>
+    <string name="hint_kg">请输入货物重量</string>
+    <string name="hint_amount">请输入货物件数</string>
+    <string name="hint_request">额外要求</string>
+    <string name="insurance">紫金保险</string>
+    <string name="goods_money">货物价值(元)</string>
+    <string name="yue">约</string>
+    <string name="hint_calculate">实际费用可能因实际因实际行驶里程、等候时间等因素而异</string>
+    <string name="query">询价</string>
+    <string name="youCan">您也可以</string>
+    <string name="hint_remark">请输入留言</string>
 </resources>

@@ -1,31 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/color_white"
-              android:gravity="center_horizontal"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/color_line"
-        />
+        android:background="@color/color_line" />
 
     <LinearLayout
         android:id="@+id/ll_0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/color_white"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/rl_volume"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:background="@drawable/layout_click_style"
-            >
+            android:background="@color/color_white">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -34,15 +31,19 @@
                 android:layout_marginLeft="15dp"
                 android:text="@string/volume"
                 android:textColor="@color/color_gary_font"
-                android:textSize="@dimen/normal_font"/>
+                android:textSize="@dimen/normal_font" />
 
-            <ImageView
-                android:layout_width="23dp"
-                android:layout_height="23dp"
+            <EditText
+                android:id="@+id/et_volume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="15dp"
-                android:src="@mipmap/right_gray"/>
+                android:background="@null"
+                android:hint="@string/hint_volume"
+                android:textColor="@color/color_gary_font"
+                android:textSize="13sp" />
         </RelativeLayout>
 
         <View
@@ -50,15 +51,13 @@
             android:layout_height="0.6dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="@color/color_line"
-            />
+            android:background="@color/color_line" />
 
         <RelativeLayout
             android:id="@+id/rl_kg"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:background="@drawable/layout_click_style"
-            >
+            android:background="@color/color_white">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -67,15 +66,19 @@
                 android:layout_marginLeft="15dp"
                 android:text="@string/kg"
                 android:textColor="@color/color_gary_font"
-                android:textSize="@dimen/normal_font"/>
+                android:textSize="@dimen/normal_font" />
 
-            <ImageView
-                android:layout_width="23dp"
-                android:layout_height="23dp"
+            <EditText
+                android:id="@+id/et_kg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="15dp"
-                android:src="@mipmap/right_gray"/>
+                android:background="@null"
+                android:hint="@string/hint_kg"
+                android:textColor="@color/color_gary_font"
+                android:textSize="13sp" />
         </RelativeLayout>
 
         <View
@@ -83,15 +86,13 @@
             android:layout_height="0.6dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="@color/color_line"
-            />
+            android:background="@color/color_line" />
 
         <RelativeLayout
             android:id="@+id/rl_amount"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:background="@drawable/layout_click_style"
-            >
+            android:background="@color/color_white">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -100,15 +101,19 @@
                 android:layout_marginLeft="15dp"
                 android:text="@string/amount"
                 android:textColor="@color/color_gary_font"
-                android:textSize="@dimen/normal_font"/>
+                android:textSize="@dimen/normal_font" />
 
-            <ImageView
-                android:layout_width="23dp"
-                android:layout_height="23dp"
+            <EditText
+                android:id="@+id/et_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="15dp"
-                android:src="@mipmap/right_gray"/>
+                android:background="@null"
+                android:hint="@string/hint_amount"
+                android:textColor="@color/color_gary_font"
+                android:textSize="13sp" />
         </RelativeLayout>
 
         <View
@@ -116,8 +121,7 @@
             android:layout_height="0.6dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="@color/color_line"
-            />
+            android:background="@color/color_line" />
     </LinearLayout>
 
 
@@ -139,14 +143,14 @@
                 android:id="@+id/tv_volume"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/transport_volume"/>
+                android:text="@string/transport_volume" />
 
             <TextView
                 android:id="@+id/tv_start_money"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="起步价:55元/6Km"/>
+                android:text="起步价:55元/6Km" />
         </LinearLayout>
 
 
@@ -160,14 +164,14 @@
                 android:id="@+id/tv_kg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="载重:1000kg"/>
+                android:text="载重:1000kg" />
 
             <TextView
                 android:id="@+id/tv_after"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="后续:4元/Km"/>
+                android:text="后续:4元/Km" />
         </LinearLayout>
 
     </LinearLayout>
@@ -185,8 +189,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            />
+            android:layout_marginTop="10dp" />
 
         <View
             android:layout_width="match_parent"
@@ -194,8 +197,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="7dp"
-            android:background="@color/color_line"
-            />
+            android:background="@color/color_line" />
 
     </LinearLayout>
 
@@ -207,17 +209,17 @@
         android:orientation="horizontal">
 
         <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="5dp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="额外要求"/>
+            android:text="@string/hint_request" />
 
         <LinearLayout
-            android:layout_marginTop="5dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:layout_weight="3"
             android:orientation="vertical">
 
@@ -226,90 +228,88 @@
                 android:layout_height="wrap_content">
 
                 <CheckBox
-                    android:id="@+id/cb_type"
+                    android:id="@+id/cb_isRemove"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:button="@drawable/check1_style"
                     android:paddingLeft="5dp"
-                    android:text="全拆座"
+                    android:text="@string/hint_isRemove"
                     android:textColor="@color/color_gary_font"
-                    android:textSize="14sp"
-                    />
+                    android:textSize="14sp" />
 
                 <CheckBox
+                    android:id="@+id/cb_isMove"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:button="@drawable/check1_style"
                     android:paddingLeft="5dp"
-                    android:text="搬运"
+                    android:text="@string/hint_isMove"
                     android:textColor="@color/color_gary_font"
-                    android:textSize="14sp"
-                    />
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <CheckBox
+                android:id="@+id/cb_isSurcharge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:button="@drawable/check1_style"
                 android:paddingLeft="5dp"
-                android:text="回单(附加30%运费)"
+                android:text="@string/hint_isSurcharge"
                 android:textColor="@color/color_gary_font"
-                android:textSize="14sp"
-                />
+                android:textSize="14sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                >
+                android:layout_marginTop="8dp">
 
                 <CheckBox
+                    android:id="@+id/cb_isToPayFreight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:button="@drawable/check1_style"
                     android:paddingLeft="5dp"
-                    android:text="货到付款"
+                    android:text="@string/hint_isToPayFreight"
                     android:textColor="@color/color_gary_font"
-                    android:textSize="14sp"
-                    />
+                    android:textSize="14sp" />
 
                 <EditText
+                    android:id="@+id/et_toPayFreightTel"
                     android:layout_width="150dp"
-                    android:layout_height="25dp"
-                    android:paddingLeft="5dp"
+                    android:layout_height="23dp"
                     android:layout_marginLeft="10dp"
                     android:background="@drawable/edit_black_style"
                     android:hint="请输入对方手机号码"
-                    android:textSize="12sp"/>
+                    android:paddingLeft="5dp"
+                    android:textSize="12sp" />
             </LinearLayout>
 
 
-
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:button="@drawable/check1_style"
-                    android:paddingLeft="5dp"
-                    android:text="代收付款"
-                    android:layout_marginTop="8dp"
-                    android:textColor="@color/color_gary_font"
-                    android:textSize="14sp"
-                    />
-
-
             <CheckBox
+                android:id="@+id/cb_isCollectionPayment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:button="@drawable/check1_style"
                 android:paddingLeft="5dp"
-                android:text="优先发送给我的车队"
+                android:text="@string/hint_isCollectionPayment"
                 android:textColor="@color/color_gary_font"
-                android:textSize="14sp"
-                />
+                android:textSize="14sp" />
+
+
+            <CheckBox
+                android:id="@+id/cb_isMyFleet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:button="@drawable/check1_style"
+                android:paddingLeft="5dp"
+                android:text="@string/hint_MyFleet"
+                android:textColor="@color/color_gary_font"
+                android:textSize="14sp" />
         </LinearLayout>
 
     </LinearLayout>
@@ -319,34 +319,36 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/color_white">
+
         <EditText
+            android:id="@+id/et_remark"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:gravity="left"
-            android:hint="请输入留言"
-            android:padding="5dp"
-            android:textSize="@dimen/small_font"
-            android:textColor="@color/color_gary_font"
+            android:layout_marginBottom="10dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/button_red_style"/>
+            android:background="@drawable/button_red_style"
+            android:gravity="left"
+            android:hint="@string/hint_remark"
+            android:padding="5dp"
+            android:textColor="@color/color_gary_font"
+            android:textSize="@dimen/small_font" />
 
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:background="@color/color_white"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:background="@color/color_white">
 
         <Button
             android:layout_width="80dp"
             android:layout_height="30dp"
             android:layout_centerInParent="true"
             android:background="@drawable/button_red_style"
-            android:text="确定"/>
+            android:text="@string/ok" />
 
         <ImageView
             android:id="@+id/iv_above_gray"
@@ -355,8 +357,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
-            android:src="@mipmap/above_gray"
-            />
+            android:src="@mipmap/above_gray" />
     </RelativeLayout>
 
 
