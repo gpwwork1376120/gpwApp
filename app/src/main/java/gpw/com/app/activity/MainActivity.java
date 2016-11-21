@@ -3,6 +3,7 @@ package gpw.com.app.activity;
 
 import android.content.Intent;
 import android.os.Build;
+import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -20,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.bigkoo.pickerview.TimePickerView;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -28,6 +30,7 @@ import com.nineoldandroids.view.ViewHelper;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 import gpw.com.app.R;
@@ -41,6 +44,7 @@ import gpw.com.app.bean.OrderAddressInfo;
 import gpw.com.app.bean.OrderInfo;
 import gpw.com.app.bean.PremiumInfo;
 import gpw.com.app.bean.UserInfo;
+import gpw.com.app.util.DateUtil;
 import gpw.com.app.util.DensityUtil;
 import gpw.com.app.util.EncryptUtil;
 import gpw.com.app.util.HttpUtil;
@@ -101,6 +105,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     private EditText et_remark;
 
     private LinearLayout ll_total_car;
+    private LinearLayout ll_booking_delivery;
     private LinearLayout dialog_car;
     private LinearLayout ll_car_1;
     private LinearLayout ll_my_order;
@@ -119,6 +124,16 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     private String endLngLat;
     private double premiums;
     private double freight;
+    private String volume;
+    private String kg;
+    private String quantity;
+
+    private boolean isRemove;
+    private boolean isMove;
+    private boolean isToPayFreight;
+    private boolean isCollectionPayment;
+    private boolean isMyFleet;
+    private boolean isSurcharge;
 
     private CheckBox cb_isRemove;
     private CheckBox cb_isMove;
@@ -127,6 +142,12 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     private CheckBox cb_isCollectionPayment;
     private CheckBox cb_isMyFleet;
     private CheckBox cb_insurance;
+    private Button bt_ok;
+    private int cofirmTypeId;
+    private String payFreightTel;
+    private String remark;
+    private String mapJson;
+    private TimePickerView timePickerView;
 
 
     @Override
@@ -143,6 +164,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         ll_car_1 = (LinearLayout) findViewById(R.id.ll_car_1);
         ll_total_car = (LinearLayout) findViewById(R.id.ll_total_car);
         ll_my_order = (LinearLayout) findViewById(R.id.ll_my_order);
+        ll_booking_delivery = (LinearLayout) findViewById(R.id.ll_booking_delivery);
         rl_car = (RelativeLayout) findViewById(R.id.rl_car);
         rl_insurance = (RelativeLayout) findViewById(R.id.rl_insurance);
 
@@ -201,9 +223,8 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         cb_isCollectionPayment = (CheckBox) dialog_car.findViewById(R.id.cb_isCollectionPayment);
         cb_isMyFleet = (CheckBox) dialog_car.findViewById(R.id.cb_isMyFleet);
         cb_isSurcharge = (CheckBox) dialog_car.findViewById(R.id.cb_isSurcharge);
-
-        tvs_car = new ArrayList<>();
-
+        bt_ok = (Button) dialog_car.findViewById(R.id.bt_ok);
+        timePickerView = new TimePickerView(this, TimePickerView.Type.ALL);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -219,7 +240,9 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         userInfo = getIntent().getParcelableExtra("userInfo");
         adInfos = getIntent().getParcelableArrayListExtra("adInfos");
         orderInfo = new OrderInfo();
+        tvs_car = new ArrayList<>();
         premiums = 20;
+        cofirmTypeId = -1;
 
         mOrderAddressInfos = new ArrayList<>();
         OrderAddressInfo orderAddressInfo = new OrderAddressInfo();
@@ -311,6 +334,8 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         rl_amount.setOnClickListener(this);
         rl_insurance.setOnClickListener(this);
         tv_money_detail.setOnClickListener(this);
+        bt_ok.setOnClickListener(this);
+        ll_booking_delivery.setOnClickListener(this);
         cb_insurance.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -412,7 +437,20 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             }
         });
 
-
+        timePickerView.setTime(new Date());
+        timePickerView.setCancelable(false);
+        timePickerView.setTitle("asd");
+        timePickerView.setOnTimeSelectListener(new TimePickerView.OnTimeSelectListener() {
+            @Override
+            public void onTimeSelect(Date date) {
+                String time = DateUtil.getDate(date);
+                if (vehideTypeId == 1) {
+                    publishCarpool(2, time);
+                } else {
+                    sendOrder(2, time);
+                }
+            }
+        });
     }
 
     @Override
@@ -428,11 +466,10 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 break;
             case R.id.bt_query:
                 if (vehideTypeId == 1) {
-                    publishCarpool(3, null);
+                    publishCarpool(3, DateUtil.getCurrentDate());
                 } else {
-                    sendOrder(3, null);
+                    sendOrder(3, DateUtil.getCurrentDate());
                 }
-
                 break;
             case R.id.rl_insurance:
                 intent = new Intent(MainActivity.this, CargoInsuranceActivity.class);
@@ -441,6 +478,39 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             case R.id.iv_cir_head:
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 break;
+            case R.id.bt_ok:
+                if (vehideTypeId == 0) {
+                    volume = et_volume.getText().toString();
+                    kg = et_kg.getText().toString();
+                    quantity = et_amount.getText().toString();
+
+                    if (volume.isEmpty()) {
+                        showShortToastByString("货物的体积不能为空");
+                        return;
+                    }
+                    if (kg.isEmpty()) {
+                        showShortToastByString("货物的重量不能为空");
+                        return;
+                    }
+                    cb_isRemove.setChecked(false);
+
+                }
+                payFreightTel = et_toPayFreightTel.getText().toString();
+                isRemove = cb_isRemove.isChecked();
+                isMove = cb_isMove.isChecked();
+                isToPayFreight = cb_isToPayFreight.isChecked();
+                isCollectionPayment = cb_isCollectionPayment.isChecked();
+                isMyFleet = cb_isMyFleet.isChecked();
+                isSurcharge = cb_isSurcharge.isChecked();
+                remark = et_remark.getText().toString();
+
+                if (isToPayFreight && payFreightTel.isEmpty()) {
+                    showShortToastByString("号码不能为空");
+                    return;
+                }
+                cofirmTypeId = vehideTypeId;
+                calculateFreight();
+                break;
             case R.id.tv_money_detail:
                 intent = new Intent(MainActivity.this, MoneyDetailActivity.class);
                 intent.putExtra("freight", freight);
@@ -448,8 +518,14 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 startActivity(intent);
                 break;
             case R.id.iv_confirm_order:
-                intent = new Intent(MainActivity.this, ConfirmOrderActivity.class);
-                startActivity(intent);
+                if (vehideTypeId == 1) {
+                    publishCarpool(1, DateUtil.getCurrentDate());
+                } else {
+                    sendOrder(1, DateUtil.getCurrentDate());
+                }
+                break;
+            case R.id.ll_booking_delivery:
+                timePickerView.show();
                 break;
             case R.id.iv_below:
                 int gray = 0x77000000;
@@ -555,7 +631,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 cb_isRemove.setText("开顶");
                 break;
         }
-        calculateFreight();
+
     }
 
     private void Visible(CarInfo carInfo) {
@@ -563,6 +639,26 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         ll_1.setVisibility(View.VISIBLE);
         ll_2.setVisibility(View.VISIBLE);
         cb_isRemove.setVisibility(View.VISIBLE);
+
+        if (vehideTypeId == 0) {
+            cb_isRemove.setChecked(false);
+            cb_isMove.setChecked(false);
+            cb_isToPayFreight.setChecked(false);
+            cb_isCollectionPayment.setChecked(false);
+            cb_isMyFleet.setChecked(false);
+            cb_isSurcharge.setChecked(false);
+            et_remark.setText("");
+            et_toPayFreightTel.setText("");
+        } else {
+            cb_isRemove.setChecked(isRemove);
+            cb_isMove.setChecked(isMove);
+            cb_isToPayFreight.setChecked(isToPayFreight);
+            cb_isCollectionPayment.setChecked(isCollectionPayment);
+            cb_isMyFleet.setChecked(isMyFleet);
+            cb_isSurcharge.setChecked(isSurcharge);
+            et_remark.setText(remark);
+            et_toPayFreightTel.setText(payFreightTel);
+        }
 
         tv_volume.setText(String.format("运输体积:%sm³", carInfo.getVolume()));
         tv_kg.setText(String.format("载重:%skg", carInfo.getLoadWeight()));
@@ -576,125 +672,131 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         ll_1.setVisibility(View.GONE);
         ll_2.setVisibility(View.GONE);
         cb_isRemove.setVisibility(View.GONE);
+        if (vehideTypeId != 0) {
+            cb_isRemove.setChecked(false);
+            cb_isMove.setChecked(false);
+            cb_isToPayFreight.setChecked(false);
+            cb_isCollectionPayment.setChecked(false);
+            cb_isMyFleet.setChecked(false);
+            cb_isSurcharge.setChecked(false);
+            et_remark.setText("");
+            et_toPayFreightTel.setText("");
+        }
     }
 
 
     private void sendOrder(int type, String time) {
-        boolean isRemove = cb_isRemove.isChecked();
-        boolean isMove = cb_isMove.isChecked();
-        boolean isToPayFreight = cb_isToPayFreight.isChecked();
-        boolean isCollectionPayment = cb_isCollectionPayment.isChecked();
-        boolean isMyFleet = cb_isMyFleet.isChecked();
-        boolean isSurcharge = cb_isSurcharge.isChecked();
 
         if (!isPublish) {
             showShortToastByString("地址信息不完整");
             return;
         }
-
+        if (cofirmTypeId == -1) {
+            showShortToastByString("未确定规格");
+            return;
+        }
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("SendUserId", userInfo.getUserId());
-        jsonObject.addProperty("VehideTypeId", vehideTypeId);
+        jsonObject.addProperty("VehideTypeId", cofirmTypeId);
         jsonObject.addProperty("IsRemove", isRemove);
         jsonObject.addProperty("IsMove", isMove);
         jsonObject.addProperty("IsSurcharge", isSurcharge);
         jsonObject.addProperty("IsToPayFreight", isToPayFreight);
-        jsonObject.addProperty("ToPayFreightTel", et_toPayFreightTel.getText().toString());
+        jsonObject.addProperty("ToPayFreightTel", payFreightTel);
         jsonObject.addProperty("IsCollectionPayment", isCollectionPayment);
         jsonObject.addProperty("Payment", payment);
         jsonObject.addProperty("IsMyFleet", isMyFleet);
         jsonObject.addProperty("OrderAddress", orderAddress);
         jsonObject.addProperty("Premiums", premiums);
-        jsonObject.addProperty("Remark", et_remark.getText().toString());
+        jsonObject.addProperty("Remark", remark);
         jsonObject.addProperty("OrderType", type);
-        jsonObject.addProperty("PlanSendTime","2016-11-24 12:00:00");
+        jsonObject.addProperty("PlanSendTime", time);
         LogUtil.i(jsonObject.toString());
+        mapJson = jsonObject.toString();
         Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
-        HttpUtil.doPost(MainActivity.this, Contants.url_sendOrder, "sendOrder", map, new VolleyInterface(MainActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
-            @Override
-            public void onSuccess(JsonElement result) {
-                LogUtil.i(result.toString());
-                showShortToastByString("货源发布成功");
-            }
+        if (type == 3) {
+            HttpUtil.doPost(MainActivity.this, Contants.url_sendOrder, "sendOrder", map, new VolleyInterface(MainActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
+                @Override
+                public void onSuccess(JsonElement result) {
+                    LogUtil.i(result.toString());
+                    showShortToastByString("货源发布成功");
+                }
 
-            @Override
-            public void onError(VolleyError error) {
-                showShortToastByString(getString(R.string.timeoutError));
+                @Override
+                public void onError(VolleyError error) {
+                    showShortToastByString(getString(R.string.timeoutError));
 //                LogUtil.i("hint",error.networkResponse.headers.toString());
 //                LogUtil.i("hint",error.networkResponse.statusCode+"");
-            }
+                }
 
-            @Override
-            public void onStateError() {
-            }
-        });
+                @Override
+                public void onStateError() {
+                }
+            });
+        } else {
+            Intent intent = new Intent(MainActivity.this, ConfirmOrderActivity.class);
+            intent.putExtra("type", type);
+            intent.putExtra("mapJson", mapJson);
+            intent.putParcelableArrayListExtra("OrderAddressInfos", mOrderAddressInfos);
+            startActivity(intent);
+        }
     }
 
     private void publishCarpool(int type, String time) {
-        boolean isMove = cb_isMove.isChecked();
-        boolean isToPayFreight = cb_isToPayFreight.isChecked();
-        boolean isCollectionPayment = cb_isCollectionPayment.isChecked();
-        boolean isMyFleet = cb_isMyFleet.isChecked();
-        boolean isSurcharge = cb_isSurcharge.isChecked();
-
         if (!isPublish) {
             showShortToastByString("地址信息不完整");
             return;
         }
-        String volume = et_volume.getText().toString();
-        if (volume.isEmpty()) {
-            showShortToastByString("货物的体积不能为空");
+        if (cofirmTypeId == -1) {
+            showShortToastByString("未确定规格");
             return;
         }
-        String kg = et_kg.getText().toString();
-        if (kg.isEmpty()) {
-            showShortToastByString("货物的重量不能为空");
-            return;
-        }
-        String quantity = et_amount.getText().toString();
-        if (kg.isEmpty()) {
-            showShortToastByString("货物的件数不能为空");
-            return;
-        }
-
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("SendUserId", userInfo.getUserId());
-        jsonObject.addProperty("Volume", volume);
-        jsonObject.addProperty("Weight", kg);
-        jsonObject.addProperty("Quantity", quantity);
+        jsonObject.addProperty("Volume", Double.valueOf(volume));
+        jsonObject.addProperty("Weight", Double.valueOf(kg));
+        jsonObject.addProperty("Quantity", Integer.valueOf(quantity));
         jsonObject.addProperty("IsMove", isMove);
         jsonObject.addProperty("IsSurcharge", isSurcharge);
         jsonObject.addProperty("IsToPayFreight", isToPayFreight);
-        jsonObject.addProperty("ToPayFreightTel", et_toPayFreightTel.getText().toString());
+        jsonObject.addProperty("ToPayFreightTel", payFreightTel);
         jsonObject.addProperty("IsCollectionPayment", isCollectionPayment);
         jsonObject.addProperty("Payment", payment);
         jsonObject.addProperty("IsMyFleet", isMyFleet);
         jsonObject.addProperty("OrderAddress", orderAddress);
         jsonObject.addProperty("Premiums", premiums);
-        jsonObject.addProperty("Remark", et_remark.getText().toString());
+        jsonObject.addProperty("Remark", remark);
         jsonObject.addProperty("OrderType", type);
-        jsonObject.addProperty("PlanSendTime", "2016-11-24 12:00:00");
+        jsonObject.addProperty("PlanSendTime", time);
         LogUtil.i(jsonObject.toString());
-
+        mapJson = jsonObject.toString();
         Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
-        HttpUtil.doPost(MainActivity.this, Contants.url_sendOrder, "sendOrder", map, new VolleyInterface(MainActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
-            @Override
-            public void onSuccess(JsonElement result) {
-                LogUtil.i(result.toString());
+        if (type == 3) {
+            HttpUtil.doPost(MainActivity.this, Contants.url_sendOrder, "sendOrder", map, new VolleyInterface(MainActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
+                @Override
+                public void onSuccess(JsonElement result) {
+                    LogUtil.i(result.toString());
 
-            }
+                }
 
-            @Override
-            public void onError(VolleyError error) {
-                showShortToastByString(getString(R.string.timeoutError));
+                @Override
+                public void onError(VolleyError error) {
+                    showShortToastByString(getString(R.string.timeoutError));
 //                LogUtil.i("hint",error.networkResponse.headers.toString());
 //                LogUtil.i("hint",error.networkResponse.statusCode+"");
-            }
+                }
 
-            @Override
-            public void onStateError() {
-            }
-        });
+                @Override
+                public void onStateError() {
+                }
+            });
+        } else {
+            Intent intent = new Intent(MainActivity.this, ConfirmOrderActivity.class);
+            intent.putExtra("type", type);
+            intent.putExtra("mapJson", mapJson);
+            intent.putParcelableArrayListExtra("OrderAddressInfos", mOrderAddressInfos);
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -741,12 +843,9 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
 
         }
         if (resultCode == RESULT_OK && requestCode == 2) {
-
             premiums = data.getDoubleExtra("premium", 0);
-
             double money = freight + premiums;
             tv_money.setText(String.format("¥%s", money));
-
         }
 
 
@@ -762,21 +861,10 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
 
     private void calculateFreight() {
         if (isPublish) {
-            if (vehideTypeId == 0) {
+            if (cofirmTypeId == -1) {
+                showShortToastByString("未确定规格");
+            } else if (cofirmTypeId == 0) {
                 JsonObject jsonObject = new JsonObject();
-                String volume = et_volume.getText().toString();
-                if (volume.isEmpty()) {
-                    showShortToastByString("货物的体积不能为空");
-                    tv_money.setText("¥00.0");
-                    return;
-                }
-                String kg = et_kg.getText().toString();
-                if (kg.isEmpty()) {
-                    showShortToastByString("货物的重量不能为空");
-                    tv_money.setText("¥00.0");
-                    return;
-                }
-
                 jsonObject.addProperty("Volume", Double.valueOf(volume));
                 jsonObject.addProperty("Weight", Double.valueOf(kg));
                 jsonObject.addProperty("StartLngLat", startLngLat);
@@ -833,7 +921,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                     public void onStateError() {
                     }
                 });
-
             }
 
 

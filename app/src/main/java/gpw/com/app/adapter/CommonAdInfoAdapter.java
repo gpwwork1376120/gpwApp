@@ -48,7 +48,13 @@ public class CommonAdInfoAdapter extends RecyclerView.Adapter<CommonAdInfoAdapte
                 mOnItemClickListener.onItemClick(position);
             }
         });
-
+        viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                mOnItemClickListener.onItemLongClick(position);
+                return true;
+            }
+        });
     }
 
     //获取数据的数量
@@ -73,6 +79,7 @@ public class CommonAdInfoAdapter extends RecyclerView.Adapter<CommonAdInfoAdapte
 
     public interface OnItemClickListener {
         void onItemClick(int position);
+        void onItemLongClick(int position);
     }
 
     private OnItemClickListener mOnItemClickListener;

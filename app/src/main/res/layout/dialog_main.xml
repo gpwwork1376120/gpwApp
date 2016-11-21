@@ -352,6 +352,7 @@
         android:background="@color/color_white">
 
         <Button
+            android:id="@+id/bt_ok"
             android:layout_width="80dp"
             android:layout_height="30dp"
             android:layout_centerInParent="true"

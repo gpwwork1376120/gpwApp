@@ -246,7 +246,7 @@
                             android:id="@+id/tv_money"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignBottom="@+id/textView4"
+                            android:layout_alignBottom="@+id/tv_money_detail"
                             android:layout_centerHorizontal="true"
                             android:text="¥00.0"
                             android:textColor="@color/color_red"
@@ -434,18 +434,7 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
-            <com.bigkoo.pickerview.lib.WheelView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="45dp"
-                />
 
-        </RelativeLayout>
 
     </RelativeLayout>
 

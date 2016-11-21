@@ -1,6 +1,8 @@
 package gpw.com.app.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,6 +22,7 @@ import gpw.com.app.base.BaseActivity;
 import gpw.com.app.base.Contants;
 import gpw.com.app.bean.CommAdTimeInfo;
 import gpw.com.app.bean.CommonAdInfo;
+import gpw.com.app.bean.MoneyInfo;
 import gpw.com.app.util.DateUtil;
 import gpw.com.app.util.EncryptUtil;
 import gpw.com.app.util.HttpUtil;
@@ -37,7 +40,7 @@ public class CommonAddressActivity extends BaseActivity {
     private XRecyclerView rv_common_ad;
     private CommonAdInfoAdapter commonAdInfoAdapter;
     private ArrayList<CommonAdInfo> commonAdInfos;
-    private int CurrentPage = 1;
+    private int CurrentPage = 0;
     private int type;
 
     @Override
@@ -84,18 +87,61 @@ public class CommonAddressActivity extends BaseActivity {
                     finish();
                 }
             }
+
+            @Override
+            public void onItemLongClick(final int position) {
+                new AlertDialog.Builder(CommonAddressActivity.this).
+                        setTitle("提示").
+                        setMessage("确定删除此信息").
+                        setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                JsonObject jsonObject = new JsonObject();
+                                jsonObject.addProperty("UserId", Contants.userId);
+                                jsonObject.addProperty("AddressId", commonAdInfos.get(position).getAddressId());
+                                Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
+                                HttpUtil.doPost(CommonAddressActivity.this, Contants.url_deleteUserAddress, "deleteUserAddress", map, new VolleyInterface(CommonAddressActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
+                                    @Override
+                                    public void onSuccess(JsonElement result) {
+                                        LogUtil.i(result.toString());
+                                        commonAdInfos.remove(position);
+                                        commonAdInfoAdapter.notifyDataSetChanged();
+
+                                    }
+
+                                    @Override
+                                    public void onError(VolleyError error) {
+                                        showShortToastByString(getString(R.string.timeoutError));
+//                LogUtil.i("hint",error.networkResponse.headers.toString());
+//                LogUtil.i("hint",error.networkResponse.statusCode+"");
+                                    }
+
+                                    @Override
+                                    public void onStateError() {
+                                    }
+                                });
+                            }
+                        }).
+                        setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // TODO Auto-generated method stub
+                            }
+                        }).show();
+
+
+            }
         });
-        getUserAddress(1, 0);
+        getUserAddress(CurrentPage, 0);
         rv_common_ad.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
-                CurrentPage = 1;
+                CurrentPage = 0;
                 getUserAddress(CurrentPage, 0);
             }
 
             @Override
             public void onLoadMore() {
-                CurrentPage++;
                 getUserAddress(CurrentPage, 1);
             }
         });
@@ -117,7 +163,7 @@ public class CommonAddressActivity extends BaseActivity {
         }
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("UserId", userId);
-        jsonObject.addProperty("DataIndex", 0);
+        jsonObject.addProperty("DataIndex", PageIndex);
         jsonObject.addProperty("PageSize", 15);
         jsonObject.addProperty("GetTime", DateUtil.getCurrentDate());
         LogUtil.i(jsonObject.toString());
@@ -131,9 +177,9 @@ public class CommonAddressActivity extends BaseActivity {
                 CommAdTimeInfo commAdTimeInfo = gson.fromJson(result, CommAdTimeInfo.class);
 
                 ArrayList<CommonAdInfo> newCommonAdInfos = (ArrayList<CommonAdInfo>) commAdTimeInfo.getList();
+
                 if (ways == 0) {
                     rv_common_ad.refreshComplete("success");
-                    CurrentPage = 1;
                     commonAdInfos.clear();
                     commonAdInfos.addAll(newCommonAdInfos);
                 } else {
@@ -143,6 +189,8 @@ public class CommonAddressActivity extends BaseActivity {
                     }
                     commonAdInfos.addAll(newCommonAdInfos);
                 }
+                int size = newCommonAdInfos.size();
+                CurrentPage = newCommonAdInfos.get(size - 1).getAddressId();
                 commonAdInfoAdapter.notifyDataSetChanged();
             }
 
