@@ -107,8 +107,9 @@ public class PersonalInfoActivity extends BaseActivity {
         tv_sex.setText(userInfo.getSex());
         tv_address.setText(userInfo.getAddress());
 
-        HttpUtil.setImageLoader(Contants.imagehost + userInfo.getHeadIco(), civ_head, R.mipmap.cir_head, R.mipmap.cir_head);
-        HttpUtil.setImageLoader(Contants.imagehost + userInfo.getHeadIco(), civ_head1, R.mipmap.cir_head, R.mipmap.cir_head);
+        HttpUtil.setImageLoader(Contants.imagehost + userInfo.getHeadIco(), civ_head, R.mipmap.account, R.mipmap.account);
+
+        HttpUtil.setImageLoader(Contants.imagehost + userInfo.getHeadIco(), civ_head1, R.mipmap.account, R.mipmap.account);
 
         iv_left_white.setOnClickListener(this);
         rl_address.setOnClickListener(this);

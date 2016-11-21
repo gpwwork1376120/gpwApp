@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="#ffffff"
-
+        android:gravity="center"
         android:orientation="horizontal">
         <TextView
             android:layout_width="wrap_content"
@@ -30,9 +30,11 @@
             android:text="货物价值"/>
 
         <EditText
+            android:id="@+id/et_goodsValue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
+            android:background="@null"
             android:textSize="@dimen/small_font"
             android:hint="请输入货物价值，单位元"/>
     </LinearLayout>
@@ -45,17 +47,23 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="#ffffff"
-
+        android:gravity="center"
         android:orientation="horizontal">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:layout_gravity="center"
             android:textColor="@color/color_gary_font"
             android:text="险保费"/>
 
-
+        <TextView
+            android:id="@+id/tv_premiums"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:textSize="@dimen/small_font"
+            android:textColor="@color/color_red"
+         />
     </LinearLayout>
     <View
         android:layout_width="match_parent"
@@ -70,12 +78,14 @@
         android:orientation="vertical"
         android:layout_weight="1">
         <Button
+            android:id="@+id/bt_ok"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_margin="20dp"
             android:background="@drawable/button_red_style"
             android:text="@string/ok"/>
         <TextView
+            android:id="@+id/tv_premiums_rule"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="运费险计算规则"/>

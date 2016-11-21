@@ -48,7 +48,7 @@ public class OrderAddressAdapter extends RecyclerView.Adapter<OrderAddressAdapte
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
         final OrderAddressInfo orderAddressInfo = mOrderAddressInfos.get(position);
-        LogUtil.i("hint","aa"+orderAddressInfo.getReceiptAddress());
+
         if (orderAddressInfo.getReceiptAddress().equals("start")) {
             viewHolder.tv_contact.setVisibility(GONE);
             viewHolder.tv_address.setText("点击添加地址");

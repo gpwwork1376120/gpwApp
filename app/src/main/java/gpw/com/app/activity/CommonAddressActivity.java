@@ -117,7 +117,7 @@ public class CommonAddressActivity extends BaseActivity {
         }
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("UserId", userId);
-        jsonObject.addProperty("DataIndex", PageIndex);
+        jsonObject.addProperty("DataIndex", 0);
         jsonObject.addProperty("PageSize", 15);
         jsonObject.addProperty("GetTime", DateUtil.getCurrentDate());
         LogUtil.i(jsonObject.toString());

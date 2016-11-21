@@ -52,7 +52,7 @@ import gpw.com.app.base.Contants;
 import gpw.com.app.bean.CommonAdInfo;
 import gpw.com.app.bean.OrderAddressInfo;
 import gpw.com.app.util.DensityUtil;
-import gpw.com.app.util.LogUtil;
+
 
 public class MapActivity extends BaseActivity {
 
@@ -81,7 +81,7 @@ public class MapActivity extends BaseActivity {
     OnGetSuggestionResultListener listener = new OnGetSuggestionResultListener() {
         public void onGetSuggestionResult(SuggestionResult res) {
             if (res == null || res.getAllSuggestions() == null) {
-                Toast.makeText(MapActivity.this, "没有检索到结果", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(MapActivity.this, "没有检索到结果", Toast.LENGTH_SHORT).show();
                 return;
             }
             lv_search.setVisibility(View.VISIBLE);
@@ -95,14 +95,15 @@ public class MapActivity extends BaseActivity {
     OnGetGeoCoderResultListener listener1 = new OnGetGeoCoderResultListener() {
         public void onGetGeoCodeResult(GeoCodeResult result) {
             if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-                Toast.makeText(MapActivity.this, "没有检索到结果", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(MapActivity.this, "没有检索到结果", Toast.LENGTH_SHORT).show();
+                return;
             }
         }
 
         @Override
         public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
             if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-                Toast.makeText(MapActivity.this, "没有检索到结果", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(MapActivity.this, "没有检索到结果", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -448,7 +449,7 @@ public class MapActivity extends BaseActivity {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString("city", city);
             editor.apply();
-            LogUtil.i("city" + city);
+
 
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             BitmapDescriptor bitmap = BitmapDescriptorFactory
@@ -458,7 +459,6 @@ public class MapActivity extends BaseActivity {
                     .icon(bitmap);
             mBaiduMap.addOverlay(option);
 
-            LogUtil.i("hint", "city" + city);
 
             LinearLayout linearLayout = (LinearLayout) View.inflate(MapActivity.this, R.layout.view_map_bck, null);
             TextView tv_map_name = (TextView) linearLayout.findViewById(R.id.tv_map_name);

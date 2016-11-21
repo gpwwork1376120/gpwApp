@@ -44,9 +44,10 @@
                 android:text="----------------------------------------------------------------------------------------------------"/>
 
             <TextView
+                android:id="@+id/tv_freight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="¥65元"/>
+                android:text="¥0元"/>
         </LinearLayout>
 
         <LinearLayout
@@ -76,9 +77,10 @@
                 android:text="----------------------------------------------------------------------------------------------------"/>
 
             <TextView
+                android:id="@+id/tv_premiums"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="¥65元"/>
+                android:text="¥0元"/>
 
 
         </LinearLayout>
@@ -104,7 +106,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="¥65元"/>
+                android:text="¥0元"/>
         </LinearLayout>
 
 
@@ -134,11 +136,12 @@
                 android:layout_height="wrap_content"
                 android:text="总计"/>
             <TextView
+                android:id="@+id/tv_total_money"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="20dp"
-                android:text="¥82元"/>
+                android:text="¥0元"/>
 
         </RelativeLayout>
 

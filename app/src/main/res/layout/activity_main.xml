@@ -53,7 +53,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
+                android:layout_height="65dp"
                 android:background="#ffffff" />
 
 
@@ -154,10 +154,12 @@
                             android:textSize="12sp" />
 
                         <CheckBox
+                            android:id="@+id/cb_insurance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_marginRight="40dp"
+                            android:checked="true"
                             android:background="@drawable/check_style"
                             android:button="@null" />
                     </RelativeLayout>
@@ -171,12 +173,14 @@
                         android:background="@color/color_line" />
 
                     <RelativeLayout
+                        android:id="@+id/rl_insurance"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="7dp"
+                        android:paddingBottom="5dp"
                         android:layout_marginLeft="35dp"
                         android:layout_marginRight="40dp"
-                        android:layout_marginTop="7dp">
+                        android:background="@drawable/layout_click_style"
+                        android:paddingTop="5dp">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -227,7 +231,7 @@
                             android:text="@string/yue" />
 
                         <TextView
-                            android:id="@+id/textView4"
+                            android:id="@+id/tv_money_detail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
@@ -244,7 +248,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignBottom="@+id/textView4"
                             android:layout_centerHorizontal="true"
-                            android:text="¥00.00"
+                            android:text="¥00.0"
                             android:textColor="@color/color_red"
                             android:textSize="@dimen/big_font" />
                     </RelativeLayout>
@@ -393,7 +397,7 @@
             <LinearLayout
                 android:id="@+id/ll_total_car"
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
+                android:layout_height="65dp"
                 android:layout_marginTop="162.5dp"
                 android:background="@color/color_white"
                 android:orientation="horizontal">
@@ -430,6 +434,18 @@
 
         </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+            <com.bigkoo.pickerview.lib.WheelView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="45dp"
+                />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

@@ -200,6 +200,7 @@
             android:id="@+id/cb_wallet"
             android:layout_width="17dp"
             android:layout_height="17dp"
+            android:checked="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="25dp"

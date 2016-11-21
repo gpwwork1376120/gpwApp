@@ -169,8 +169,8 @@ public class LoginActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0 && resultCode == RESULT_OK) {
-            String account = data.getStringExtra("account");
-            String password = data.getStringExtra("password");
+            String account = data.getStringExtra("Phone");
+            String password = data.getStringExtra("Password");
             et_account.setText(account);
             et_password.setText(password);
         }

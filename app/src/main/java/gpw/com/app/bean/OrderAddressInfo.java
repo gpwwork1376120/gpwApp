@@ -84,13 +84,12 @@ public class OrderAddressInfo implements Parcelable {
 
     @Override
     public String toString() {
-        String orderAddressInfo = ReceiptAddress + "," +
+
+        return ReceiptAddress + "," +
                 Receipter + "," +
                 ReceiptTel + "," +
                 Lat + "," +
                 Lng + "," + money;
-
-        return orderAddressInfo;
     }
 
 

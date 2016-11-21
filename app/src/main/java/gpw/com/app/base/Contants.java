@@ -28,5 +28,9 @@ public class Contants {
     public static String url_obtainMessage = localhost + "Visitors/ObtainMessage";
     public static String url_getUserBalanceList = localhost + "Finance/GetUserBalanceList";
     public static String url_getUserBalance = localhost + "Finance/GetUserBalance";
-
+    public static String url_calculationFreight = localhost + "Basic/CalculationFreight";
+    public static String url_lingDanFreight = localhost + "Basic/LingDanFreight";
+    public static String url_calculatedPremium = localhost + "Basic/CalculatedPremium";
+    public static String url_sendOrder = localhost + "Consignor/SendOrder";
+    public static String url_publishCarpool = localhost + "Consignor/PublishCarpool";
 }

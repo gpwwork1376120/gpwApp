@@ -14,7 +14,7 @@ import gpw.com.app.R;
 import gpw.com.app.base.BaseActivity;
 import gpw.com.app.base.Contants;
 import gpw.com.app.bean.OrderAddressInfo;
-import gpw.com.app.util.LogUtil;
+
 
 public class ImproveDisclosureActivity extends BaseActivity {
     private int pst;
@@ -111,7 +111,6 @@ public class ImproveDisclosureActivity extends BaseActivity {
                 }
                 mOrderAddressInfo.setReceipter(name);
                 mOrderAddressInfo.setReceiptTel(tel);
-                LogUtil.i(mOrderAddressInfo.toString());
                 getIntent().putExtra("position", pst);
                 getIntent().putExtra("orderAddressInfo", mOrderAddressInfo);
                 getIntent().putExtra("type", type);
