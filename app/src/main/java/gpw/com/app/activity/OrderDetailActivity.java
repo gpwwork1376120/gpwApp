@@ -24,7 +24,6 @@ public class OrderDetailActivity extends BaseActivity {
     @Override
     protected void findById() {
         RelativeLayout rl_head = (RelativeLayout) findViewById(R.id.in_head);
-
         assert rl_head != null;
         tv_title = (TextView) rl_head.findViewById(R.id.tv_title);
         tv_right = (TextView) rl_head.findViewById(R.id.tv_right);

@@ -97,24 +97,16 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHold
                 break;
             case -1:
                 viewHolder.tv_state.setText("已取消");
-                viewHolder.bt_query.setVisibility(View.GONE);;
+                viewHolder.bt_query.setVisibility(View.GONE);
                 break;
         }
+        viewHolder.bt_query.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-
-
-//        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (invoiceInfo.ischeck()) {
-//                    invoiceInfo.setIscheck(false);
-//                    viewHolder.cb_order.setChecked(false);
-//                } else {
-//                    invoiceInfo.setIscheck(true);
-//                    viewHolder.cb_order.setChecked(true);
-//                }
-//            }
-//        });
+                mOnBtnClickListener.onBtnClick(position);
+            }
+        });
 
     }
 
@@ -149,14 +141,14 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHold
         }
     }
 
-    public interface OnItemClickListener {
-        void onItemClick(int position);
+    public interface OnBtnClickListener {
+        void onBtnClick(int position);
     }
 
-    private OnItemClickListener mOnItemClickListener;
+    private OnBtnClickListener mOnBtnClickListener;
 
 
-    public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
-        this.mOnItemClickListener = mOnItemClickListener;
+    public void setOnBtnClickListener(OnBtnClickListener mOnBtnClickListener) {
+        this.mOnBtnClickListener = mOnBtnClickListener;
     }
 }

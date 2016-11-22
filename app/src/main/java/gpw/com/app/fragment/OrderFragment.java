@@ -1,6 +1,7 @@
 package gpw.com.app.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import gpw.com.app.R;
+import gpw.com.app.activity.OrderDetailActivity;
+import gpw.com.app.activity.OrderOffersActivity;
 import gpw.com.app.adapter.MyOrderAdapter;
 import gpw.com.app.base.Contants;
 import gpw.com.app.bean.OrderInfo;
@@ -32,7 +35,7 @@ import gpw.com.app.view.XRecyclerView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class OrderFragment extends Fragment {
+public class OrderFragment extends Fragment implements MyOrderAdapter.OnBtnClickListener {
 
 
     private int status;
@@ -88,6 +91,7 @@ public class OrderFragment extends Fragment {
         });
         orderInfos = new ArrayList<>();
         myOrderAdapter = new MyOrderAdapter(getActivity(), orderInfos);
+        myOrderAdapter.setOnBtnClickListener(this);
         rv_my_order.setAdapter(myOrderAdapter);
         getOrderList(1, 0);
         return view;
@@ -126,7 +130,7 @@ public class OrderFragment extends Fragment {
                     }
                     orderInfos.addAll(newOrderInfos);
                 }
-                LogUtil.i("orderInfos"+ orderInfos.toString());
+                LogUtil.i("orderInfos" + orderInfos.toString());
                 myOrderAdapter.notifyDataSetChanged();
             }
 
@@ -156,4 +160,28 @@ public class OrderFragment extends Fragment {
     }
 
 
+    @Override
+    public void onBtnClick(int position) {
+        OrderInfo orderInfo = orderInfos.get(position);
+        Intent intent = null;
+        switch (orderInfo.getOrderStatus()) {
+            case 1:
+                if (orderInfo.getOrderType() == 3) {
+                    intent = new Intent(getActivity(), OrderOffersActivity.class);
+                    intent.putExtra("orderId",orderInfo.getOrderNo());
+                    getActivity().startActivity(intent);
+                } else {
+
+
+                }
+                break;
+            case 2:
+            case 3:
+            case 4:
+                intent = new Intent(getActivity(), OrderDetailActivity.class);
+                getActivity().startActivity(intent);
+                break;
+        }
+
+    }
 }
