@@ -3,7 +3,6 @@ package gpw.com.app.activity;
 
 import android.content.Intent;
 import android.os.Build;
-import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -21,7 +20,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.bigkoo.pickerview.TimePickerView;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -30,7 +28,6 @@ import com.nineoldandroids.view.ViewHelper;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Map;
 
 import gpw.com.app.R;
@@ -41,8 +38,6 @@ import gpw.com.app.bean.ADInfo;
 import gpw.com.app.bean.CarInfo;
 import gpw.com.app.bean.FreightInfo;
 import gpw.com.app.bean.OrderAddressInfo;
-import gpw.com.app.bean.OrderInfo;
-import gpw.com.app.bean.PremiumInfo;
 import gpw.com.app.bean.UserInfo;
 import gpw.com.app.util.DateUtil;
 import gpw.com.app.util.DensityUtil;
@@ -51,6 +46,7 @@ import gpw.com.app.util.HttpUtil;
 import gpw.com.app.util.LogUtil;
 import gpw.com.app.util.VolleyInterface;
 import gpw.com.app.view.CircleImageView;
+import gpw.com.app.view.CustomDatePicker;
 import gpw.com.app.view.ImageCycleView;
 
 
@@ -90,6 +86,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     private TextView tv_after;
     private TextView tv_money;
     private TextView tv_money_detail;
+    private TextView tv_goods;
 
     private RelativeLayout rl_head;
     private RelativeLayout rl_car;
@@ -116,7 +113,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     private TextView tv_remark;
 
     private String orderAddress;
-    private OrderInfo orderInfo;
     private int vehideTypeId;
     private double payment;
     private boolean isPublish;
@@ -147,7 +143,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     private String payFreightTel;
     private String remark;
     private String mapJson;
-    private TimePickerView timePickerView;
+    private CustomDatePicker timePickerView;
 
 
     @Override
@@ -190,6 +186,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         tv_setting = (TextView) findViewById(R.id.tv_setting);
         tv_money = (TextView) findViewById(R.id.tv_money);
         tv_money_detail = (TextView) findViewById(R.id.tv_money_detail);
+        tv_goods = (TextView) findViewById(R.id.tv_goods);
 
         rl_head = (RelativeLayout) findViewById(R.id.rl_head);
         civ_head = (CircleImageView) findViewById(R.id.civ_head);
@@ -224,7 +221,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         cb_isMyFleet = (CheckBox) dialog_car.findViewById(R.id.cb_isMyFleet);
         cb_isSurcharge = (CheckBox) dialog_car.findViewById(R.id.cb_isSurcharge);
         bt_ok = (Button) dialog_car.findViewById(R.id.bt_ok);
-        timePickerView = new TimePickerView(this, TimePickerView.Type.ALL);
+
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -239,7 +236,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     protected void initData() {
         userInfo = getIntent().getParcelableExtra("userInfo");
         adInfos = getIntent().getParcelableArrayListExtra("adInfos");
-        orderInfo = new OrderInfo();
         tvs_car = new ArrayList<>();
         premiums = 20;
         cofirmTypeId = -1;
@@ -342,9 +338,19 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 if (isChecked) {
                     rl_insurance.setVisibility(View.VISIBLE);
                     premiums = 20;
+                    if (isPublish) {
+                        double money = freight + premiums;
+                        tv_money.setText(String.format("¥%s", money));
+                    }
+
                 } else {
+
                     rl_insurance.setVisibility(View.GONE);
                     premiums = 0;
+                    if (isPublish) {
+                        double money = freight + premiums;
+                        tv_money.setText(String.format("¥%s", money));
+                    }
                 }
             }
         });
@@ -437,20 +443,20 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             }
         });
 
-        timePickerView.setTime(new Date());
-        timePickerView.setCancelable(false);
-        timePickerView.setTitle("asd");
-        timePickerView.setOnTimeSelectListener(new TimePickerView.OnTimeSelectListener() {
+        timePickerView = new CustomDatePicker(this, new CustomDatePicker.ResultHandler() {
             @Override
-            public void onTimeSelect(Date date) {
-                String time = DateUtil.getDate(date);
-                if (vehideTypeId == 1) {
+            public void handle(String time) { // 回调接口，获得选中的时间
+                LogUtil.i(time);
+                if (cofirmTypeId == 1) {
                     publishCarpool(2, time);
                 } else {
                     sendOrder(2, time);
                 }
             }
-        });
+        }, "2010-01-01 00:00"); // 初始化日期格式请用：yyyy-MM-dd HH:mm，否则不能正常运行
+
+        timePickerView.showSpecificTime(true); // 显示时和分
+        timePickerView.setIsLoop(true); // 允许循环滚动
     }
 
     @Override
@@ -466,9 +472,9 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 break;
             case R.id.bt_query:
                 if (vehideTypeId == 1) {
-                    publishCarpool(3, DateUtil.getCurrentDate());
+                    publishCarpool(3, DateUtil.getCurrentDates());
                 } else {
-                    sendOrder(3, DateUtil.getCurrentDate());
+                    sendOrder(3, DateUtil.getCurrentDates());
                 }
                 break;
             case R.id.rl_insurance:
@@ -480,9 +486,9 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 break;
             case R.id.bt_ok:
                 if (vehideTypeId == 0) {
-                    volume = et_volume.getText().toString();
-                    kg = et_kg.getText().toString();
-                    quantity = et_amount.getText().toString();
+                    volume = et_volume.getText().toString().trim();
+                    kg = et_kg.getText().toString().trim();
+                    quantity = et_amount.getText().toString().trim();
 
                     if (volume.isEmpty()) {
                         showShortToastByString("货物的体积不能为空");
@@ -509,6 +515,10 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                     return;
                 }
                 cofirmTypeId = vehideTypeId;
+                int white = 0x00000000;
+                rl_car.setBackgroundColor(white);
+                rl_car.setClickable(false);
+                dialog_car.setVisibility(View.GONE);
                 calculateFreight();
                 break;
             case R.id.tv_money_detail:
@@ -518,14 +528,14 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 startActivity(intent);
                 break;
             case R.id.iv_confirm_order:
-                if (vehideTypeId == 1) {
-                    publishCarpool(1, DateUtil.getCurrentDate());
+                if (cofirmTypeId == 1) {
+                    publishCarpool(1, DateUtil.getCurrentDates());
                 } else {
-                    sendOrder(1, DateUtil.getCurrentDate());
+                    sendOrder(1, DateUtil.getCurrentDates());
                 }
                 break;
             case R.id.ll_booking_delivery:
-                timePickerView.show();
+                timePickerView.show(DateUtil.getCurrentDates());
                 break;
             case R.id.iv_below:
                 int gray = 0x77000000;
@@ -534,8 +544,8 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 dialog_car.setVisibility(View.VISIBLE);
                 break;
             case R.id.iv_above_gray:
-                int white = 0x00000000;
-                rl_car.setBackgroundColor(white);
+                int white1 = 0x00000000;
+                rl_car.setBackgroundColor(white1);
                 rl_car.setClickable(false);
                 dialog_car.setVisibility(View.GONE);
                 break;
@@ -735,8 +745,12 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             });
         } else {
             Intent intent = new Intent(MainActivity.this, ConfirmOrderActivity.class);
+            String money = tv_money.getText().toString();
             intent.putExtra("type", type);
+            intent.putExtra("money", money);
             intent.putExtra("mapJson", mapJson);
+            intent.putExtra("time", time);
+            intent.putExtra("carType", 1);
             intent.putParcelableArrayListExtra("OrderAddressInfos", mOrderAddressInfos);
             startActivity(intent);
         }
@@ -772,7 +786,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         mapJson = jsonObject.toString();
         Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
         if (type == 3) {
-            HttpUtil.doPost(MainActivity.this, Contants.url_sendOrder, "sendOrder", map, new VolleyInterface(MainActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
+            HttpUtil.doPost(MainActivity.this, Contants.url_publishCarpool, "publishCarpool", map, new VolleyInterface(MainActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
                 @Override
                 public void onSuccess(JsonElement result) {
                     LogUtil.i(result.toString());
@@ -791,9 +805,13 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 }
             });
         } else {
+            String money = tv_money.getText().toString();
             Intent intent = new Intent(MainActivity.this, ConfirmOrderActivity.class);
             intent.putExtra("type", type);
             intent.putExtra("mapJson", mapJson);
+            intent.putExtra("money", money);
+            intent.putExtra("time", time);
+            intent.putExtra("carType", 2);
             intent.putParcelableArrayListExtra("OrderAddressInfos", mOrderAddressInfos);
             startActivity(intent);
         }
@@ -844,13 +862,16 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         }
         if (resultCode == RESULT_OK && requestCode == 2) {
             premiums = data.getDoubleExtra("premium", 0);
+            double goods = data.getDoubleExtra("goods", 0);
+            tv_goods.setText(String.format("%s元", goods));
             double money = freight + premiums;
-            tv_money.setText(String.format("¥%s", money));
+            if (isPublish) {
+                tv_money.setText(String.format("¥%s", money));
+            }
         }
 
 
         if (resultCode == RESULT_OK && requestCode == 3) {
-
             userInfo = data.getParcelableExtra("userInfo");
             tv_tel.setText(userInfo.getUserName());
             HttpUtil.setImageLoader(Contants.imagehost + userInfo.getHeadIco(), civ_head, R.mipmap.account, R.mipmap.account);

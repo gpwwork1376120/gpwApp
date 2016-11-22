@@ -90,4 +90,13 @@
     <string name="query">询价</string>
     <string name="youCan">您也可以</string>
     <string name="hint_remark">请输入留言</string>
+
+    <string name="cancle">取消</string>
+    <string name="title">请选择时间</string>
+    <string name="commit">确定</string>
+    <string name="year">年</string>
+    <string name="month">月</string>
+    <string name="day">日</string>
+    <string name="hour">时</string>
+    <string name="minute">分</string>
 </resources>

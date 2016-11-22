@@ -41,7 +41,4 @@ dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'com.android.support:recyclerview-v7:23.2.1'
     compile 'com.android.support:support-v4:23.2.1'
-    compile 'com.bigkoo:pickerview:2.1.0'
-
-
 }

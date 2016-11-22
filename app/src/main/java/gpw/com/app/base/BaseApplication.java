@@ -33,6 +33,7 @@ public class BaseApplication extends Application {
         // JPushInterface.init(this);          // 初始化 JPush
         queues = Volley.newRequestQueue(this);
         SDKInitializer.initialize(this);
+        //CrashHandler.getInstance().init(this);
     }
 
     public static RequestQueue getHttpQueues() {

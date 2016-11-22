@@ -2,6 +2,8 @@ package gpw.com.app.activity;
 
 
 import android.content.Intent;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
@@ -14,11 +16,13 @@ import org.w3c.dom.Text;
 
 import gpw.com.app.R;
 import gpw.com.app.base.BaseActivity;
+import gpw.com.app.fragment.OrderFragment;
 
 public class MyOrderActivity extends BaseActivity {
     private TextView tv_title;
     private TextView tv_right;
     private ImageView iv_left_white;
+
     private TextView tv_all;
     private TextView tv_new;
     private TextView tv_doing;
@@ -27,7 +31,11 @@ public class MyOrderActivity extends BaseActivity {
     private View view_new;
     private View view_doing;
     private View view_end;
-    private Button bt_query;
+
+    private OrderFragment fg_total;
+    private OrderFragment fg_new;
+    private OrderFragment fg_doing;
+    private OrderFragment fg_end;
 
     @Override
     protected int getLayout() {
@@ -37,12 +45,12 @@ public class MyOrderActivity extends BaseActivity {
     @Override
     protected void findById() {
         RelativeLayout rl_head = (RelativeLayout) findViewById(R.id.in_head);
-        LinearLayout test = (LinearLayout) findViewById(R.id.test1);
+
         assert rl_head != null;
         tv_title = (TextView) rl_head.findViewById(R.id.tv_title);
         tv_right = (TextView) rl_head.findViewById(R.id.tv_right);
         iv_left_white = (ImageView) rl_head.findViewById(R.id.iv_left_white);
-        bt_query = (Button) test.findViewById(R.id.bt_query);
+
         tv_all = (TextView) findViewById(R.id.tv_all);
         tv_new = (TextView) findViewById(R.id.tv_new);
         tv_doing = (TextView) findViewById(R.id.tv_doing);
@@ -63,11 +71,13 @@ public class MyOrderActivity extends BaseActivity {
         tv_title.setText(R.string.myOrder);
         tv_right.setVisibility(View.GONE);
         iv_left_white.setOnClickListener(this);
-        bt_query.setOnClickListener(this);
+
         tv_all.setOnClickListener(this);
         tv_new.setOnClickListener(this);
         tv_doing.setOnClickListener(this);
         tv_end.setOnClickListener(this);
+
+        choiceState(1);
     }
 
 
@@ -76,10 +86,6 @@ public class MyOrderActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.iv_left_white:
                 finish();
-                break;
-            case R.id.bt_query:
-                Intent intent = new Intent(MyOrderActivity.this, OrderDetailActivity.class);
-                startActivity(intent);
                 break;
             case R.id.tv_all:
                 choiceState(1);
@@ -95,26 +101,56 @@ public class MyOrderActivity extends BaseActivity {
                 break;
         }
     }
-    private void choiceState(int i){
+
+    private void choiceState(int i) {
         initState();
+        FragmentManager fManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fManager.beginTransaction();
+        hideFragments(transaction);
         switch (i) {
             case 1:
                 tv_all.setTextColor(ContextCompat.getColor(MyOrderActivity.this, R.color.color_red));
                 view_all.setVisibility(View.VISIBLE);
-              break;
+                if (fg_total == null) {
+                    fg_total = OrderFragment.newInstance(0);
+                    transaction.add(R.id.fl_content, fg_total);
+                } else {
+                    transaction.show(fg_total);
+                }
+                break;
             case 2:
                 tv_new.setTextColor(ContextCompat.getColor(MyOrderActivity.this, R.color.color_red));
                 view_new.setVisibility(View.VISIBLE);
-              break;
+                if (fg_new == null) {
+                    fg_new = OrderFragment.newInstance(1);
+                    transaction.add(R.id.fl_content, fg_new);
+                } else {
+                    transaction.show(fg_new);
+                }
+                break;
             case 3:
                 tv_doing.setTextColor(ContextCompat.getColor(MyOrderActivity.this, R.color.color_red));
                 view_doing.setVisibility(View.VISIBLE);
-              break;
+                if (fg_doing == null) {
+                    fg_doing = OrderFragment.newInstance(2);
+                    transaction.add(R.id.fl_content, fg_doing);
+                } else {
+                    transaction.show(fg_doing);
+                }
+                break;
             case 4:
                 tv_end.setTextColor(ContextCompat.getColor(MyOrderActivity.this, R.color.color_red));
                 view_end.setVisibility(View.VISIBLE);
-              break;
+                if (fg_end == null) {
+                    fg_end = OrderFragment.newInstance(3);
+                    transaction.add(R.id.fl_content, fg_end);
+                } else {
+                    transaction.show(fg_end);
+                }
+
+                break;
         }
+        transaction.commit();
     }
 
     private void initState() {
@@ -126,5 +162,20 @@ public class MyOrderActivity extends BaseActivity {
         tv_new.setTextColor(ContextCompat.getColor(MyOrderActivity.this, R.color.color_gary_font));
         tv_doing.setTextColor(ContextCompat.getColor(MyOrderActivity.this, R.color.color_gary_font));
         tv_end.setTextColor(ContextCompat.getColor(MyOrderActivity.this, R.color.color_gary_font));
+    }
+
+    private void hideFragments(FragmentTransaction transaction) {
+        if (fg_total != null) {
+            transaction.hide(fg_total);
+        }
+        if (fg_new != null) {
+            transaction.hide(fg_new);
+        }
+        if (fg_doing != null) {
+            transaction.hide(fg_doing);
+        }
+        if (fg_end != null) {
+            transaction.hide(fg_end);
+        }
     }
 }

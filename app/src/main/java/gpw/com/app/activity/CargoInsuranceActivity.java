@@ -33,6 +33,7 @@ public class CargoInsuranceActivity extends BaseActivity {
     private TextView tv_premiums;
     private EditText et_goodsValue;
     private double premium;
+    private double goodsValue;
     private boolean isChange;
 
     @Override
@@ -76,6 +77,7 @@ public class CargoInsuranceActivity extends BaseActivity {
             case R.id.iv_left_white:
                 if (isChange) {
                     getIntent().putExtra("premium", premium);
+                    getIntent().putExtra("goods", goodsValue);
                     setResult(RESULT_OK, getIntent());
 
                 }
@@ -91,6 +93,7 @@ public class CargoInsuranceActivity extends BaseActivity {
     public void onBackPressed() {
         if (isChange) {
             getIntent().putExtra("premium", premium);
+            getIntent().putExtra("goods", goodsValue);
             setResult(RESULT_OK, getIntent());
         }
         super.onBackPressed();
@@ -102,7 +105,7 @@ public class CargoInsuranceActivity extends BaseActivity {
             showShortToastByString("货物价值不能为空");
             return;
         }
-        double goodsValue = Double.valueOf(value);
+        goodsValue = Double.valueOf(value);
         if (goodsValue <= 10000) {
             showShortToastByString("货物价值小于10000");
             return;
@@ -123,7 +126,6 @@ public class CargoInsuranceActivity extends BaseActivity {
                 isChange = true;
                 tv_premiums.setText(String.format("%s  元", premiumInfo.getPremium()));
                 premium = premiumInfo.getPremium();
-
             }
 
             @Override

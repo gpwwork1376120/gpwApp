@@ -65,6 +65,7 @@ public class MyNewsActivity extends BaseActivity {
     protected void initView() {
         tv_title.setText(R.string.myNews);
         tv_right.setVisibility(View.GONE);
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_news.setLayoutManager(layoutManager);
