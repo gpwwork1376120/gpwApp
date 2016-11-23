@@ -26,6 +26,7 @@ public class OrderInfo {
 
     private String OrderNo;
     private String PlanSendTime;
+    private String IsToPay;
     private double Freight;
     private int OrderStatus;
     private int FinanceStatus;
@@ -111,6 +112,16 @@ public class OrderInfo {
     public void setJsonElement(JsonElement jsonElement) {
         this.OrderAddress = jsonElement;
     }
+
+    public String getIsToPay() {
+        return IsToPay;
+    }
+
+    public void setIsToPay(String isToPay) {
+        IsToPay = isToPay;
+    }
+
+
 
     @Override
     public String toString() {

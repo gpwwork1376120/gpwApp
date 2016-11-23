@@ -57,7 +57,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHold
         ArrayList<OrderAddressBean> orderAddressBeen = gson.fromJson(orderInfo.getJsonElement(), listType);
 
         LogUtil.i(orderAddressBeen.toString());
-        OrderAddInfoAdapter addInfoAdapter = new OrderAddInfoAdapter(orderAddressBeen,context);
+        OrderAddInfoAdapter addInfoAdapter = new OrderAddInfoAdapter(orderAddressBeen, context);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         viewHolder.rv_order_address.setLayoutManager(layoutManager);
@@ -66,49 +66,91 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHold
         viewHolder.tv_orderId.setText(String.format("订单号：%s", orderInfo.getOrderNo()));
         viewHolder.tv_time.setText(orderInfo.getPlanSendTime());
 
-        switch (orderInfo.getOrderStatus()){
-            case 1:
-                if(orderInfo.getOrderType()==3){
-                    viewHolder.bt_query.setText("查看报价");
-                    viewHolder.tv_state.setText("询价进行中");
-                    viewHolder.tv_state.setVisibility(View.VISIBLE);
-                    viewHolder.tv_noDriver.setVisibility(View.GONE);
-                    viewHolder.tv_addMoney.setVisibility(View.GONE);
-                    viewHolder.tv_money.setVisibility(View.GONE);
+        if (orderInfo.getCancelFee() > 0) {
+            viewHolder.tv_state.setVisibility(View.VISIBLE);
+            viewHolder.bt_query.setVisibility(View.VISIBLE);
+            viewHolder.tv_money.setVisibility(View.VISIBLE);
+            viewHolder.bt_pay.setVisibility(View.VISIBLE);
+            viewHolder.bt_query.setVisibility(View.GONE);
+            viewHolder.tv_state.setText("违约金");
+            viewHolder.tv_noDriver.setVisibility(View.GONE);
+            viewHolder.tv_addMoney.setVisibility(View.GONE);
+        } else {
+            switch (orderInfo.getOrderStatus()) {
+                case 1:
+                    if (orderInfo.getOrderType() == 3) {
+                        viewHolder.bt_query.setText("查看报价");
+                        viewHolder.tv_state.setText("询价进行中");
+                        viewHolder.tv_state.setVisibility(View.VISIBLE);
+                        viewHolder.bt_query.setVisibility(View.VISIBLE);
+                        viewHolder.tv_noDriver.setVisibility(View.GONE);
+                        viewHolder.bt_pay.setVisibility(View.GONE);
+                        viewHolder.tv_addMoney.setVisibility(View.GONE);
+                        viewHolder.tv_money.setVisibility(View.GONE);
+                    } else {
+                        viewHolder.bt_query.setText("取消订单");
+                        viewHolder.tv_state.setVisibility(View.GONE);
+                        viewHolder.bt_query.setVisibility(View.VISIBLE);
+                        viewHolder.tv_noDriver.setVisibility(View.VISIBLE);
+                        viewHolder.bt_pay.setVisibility(View.GONE);
+                        viewHolder.tv_addMoney.setVisibility(View.VISIBLE);
+                        viewHolder.tv_money.setVisibility(View.VISIBLE);
+                        if (orderInfo.getFinanceStatus() == 1 && !orderInfo.getIsToPay().equals("True")) {
+                            viewHolder.bt_pay.setVisibility(View.VISIBLE);
+                            viewHolder.tv_state.setText("待支付");
+                            viewHolder.tv_state.setVisibility(View.VISIBLE);
+                            viewHolder.tv_noDriver.setVisibility(View.GONE);
+                            viewHolder.tv_addMoney.setVisibility(View.GONE);
+                        }
+                    }
+                    break;
+                case 2:
+                    viewHolder.tv_state.setText("进行中");
+                    viewHolder.bt_query.setText("查看详情");
+                    visible(viewHolder);
+                    break;
+                case 3:
+                    viewHolder.tv_state.setText("已送达");
+                    viewHolder.bt_query.setText("查看详情");
+                    visible(viewHolder);
+                    break;
+                case 4:
+                    viewHolder.tv_state.setText("已完成");
+                    viewHolder.bt_query.setText("查看详情");
+                    visible(viewHolder);
+                    break;
+                case -1:
+                    viewHolder.tv_state.setText("已取消");
+                    visible(viewHolder);
+                    viewHolder.bt_query.setVisibility(View.GONE);
+                    break;
+            }
 
-                }else {
-                    viewHolder.tv_money.setVisibility(View.VISIBLE);
-                    viewHolder.tv_state.setVisibility(View.GONE);
-                    viewHolder.tv_noDriver.setVisibility(View.VISIBLE);
-                    viewHolder.tv_addMoney.setVisibility(View.VISIBLE);
-                    viewHolder.bt_query.setText("取消订单");
-                }
-                break;
-            case 2:
-                viewHolder.tv_state.setText("进行中");
-                viewHolder.bt_query.setText("查看详情");
-                break;
-            case 3:
-                viewHolder.tv_state.setText("已送达");
-                viewHolder.bt_query.setText("查看详情");
-                break;
-            case 4:
-                viewHolder.tv_state.setText("已完成");
-                break;
-            case -1:
-                viewHolder.tv_state.setText("已取消");
-                viewHolder.bt_query.setVisibility(View.GONE);
-                break;
         }
+
         viewHolder.bt_query.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 mOnBtnClickListener.onBtnClick(position);
             }
         });
-
+        viewHolder.bt_pay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mOnBtnClickListener.onBtnClick(position);
+            }
+        });
     }
+
+    private void visible(ViewHolder viewHolder) {
+        viewHolder.tv_state.setVisibility(View.VISIBLE);
+        viewHolder.bt_query.setVisibility(View.VISIBLE);
+        viewHolder.tv_noDriver.setVisibility(View.GONE);
+        viewHolder.bt_pay.setVisibility(View.GONE);
+        viewHolder.tv_addMoney.setVisibility(View.GONE);
+        viewHolder.tv_money.setVisibility(View.VISIBLE);
+    }
+
 
     //获取数据的数量
     @Override
@@ -120,6 +162,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHold
     //自定义的ViewHolder，持有每个Item的的所有界面元素
     public static class ViewHolder extends RecyclerView.ViewHolder {
         Button bt_query;
+        Button bt_pay;
         TextView tv_money;
         TextView tv_time;
         TextView tv_orderId;
@@ -131,6 +174,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHold
         public ViewHolder(View view) {
             super(view);
             bt_query = (Button) view.findViewById(R.id.bt_query);
+            bt_pay = (Button) view.findViewById(R.id.bt_pay);
             tv_money = (TextView) view.findViewById(R.id.tv_money);
             tv_time = (TextView) view.findViewById(R.id.tv_time);
             tv_orderId = (TextView) view.findViewById(R.id.tv_orderId);

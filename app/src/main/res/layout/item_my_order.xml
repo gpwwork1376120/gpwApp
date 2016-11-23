@@ -71,7 +71,7 @@
                 android:layout_gravity="center"
                 android:text="¥88"
                 android:textColor="@color/color_red"
-                android:textSize="22sp" />
+                android:textSize="18sp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -84,7 +84,7 @@
                     android:layout_centerHorizontal="true"
                     android:text="进行中"
                     android:textColor="@color/color_red"
-                    android:textSize="18sp" />
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tv_noDriver"
@@ -113,13 +113,24 @@
             <Button
                 android:id="@+id/bt_query"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
+                android:textColor="@color/color_gary_font"
                 android:background="@drawable/button_red_style"
                 android:text="查看详情" />
 
+            <Button
+                android:id="@+id/bt_pay"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/color_gary_font"
+                android:background="@drawable/button_red_style"
+                android:text="支付" />
         </LinearLayout>
 
 

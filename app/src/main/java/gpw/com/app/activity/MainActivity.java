@@ -37,6 +37,7 @@ import gpw.com.app.base.Contants;
 import gpw.com.app.bean.ADInfo;
 import gpw.com.app.bean.CarInfo;
 import gpw.com.app.bean.FreightInfo;
+import gpw.com.app.bean.JsonInfo;
 import gpw.com.app.bean.OrderAddressInfo;
 import gpw.com.app.bean.UserInfo;
 import gpw.com.app.util.DateUtil;
@@ -142,7 +143,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     private int cofirmTypeId;
     private String payFreightTel;
     private String remark;
-    private String mapJson;
+
     private CustomDatePicker timePickerView;
 
 
@@ -262,6 +263,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     @Override
     protected void initView() {
 
+        initAdverVerType();
         tv_tel.setText(userInfo.getUserName());
         HttpUtil.setImageLoader(Contants.imagehost + userInfo.getHeadIco(), civ_head, R.mipmap.account, R.mipmap.account);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -355,6 +357,12 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             }
         });
 
+        initTimePick();
+
+
+    }
+
+    private void initAdverVerType() {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("AdvertisingType", 1);
         Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
@@ -442,7 +450,9 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             public void onStateError() {
             }
         });
+    }
 
+    private void initTimePick() {
         timePickerView = new CustomDatePicker(this, new CustomDatePicker.ResultHandler() {
             @Override
             public void handle(String time) { // 回调接口，获得选中的时间
@@ -705,6 +715,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             showShortToastByString("未确定规格");
             return;
         }
+
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("SendUserId", userInfo.getUserId());
         jsonObject.addProperty("VehideTypeId", cofirmTypeId);
@@ -722,7 +733,8 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         jsonObject.addProperty("OrderType", type);
         jsonObject.addProperty("PlanSendTime", time);
         LogUtil.i(jsonObject.toString());
-        mapJson = jsonObject.toString();
+        JsonInfo json = new JsonInfo();
+        json.setJsonObject(jsonObject);
         Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
         if (type == 3) {
             HttpUtil.doPost(MainActivity.this, Contants.url_sendOrder, "sendOrder", map, new VolleyInterface(MainActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
@@ -735,8 +747,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 @Override
                 public void onError(VolleyError error) {
                     showShortToastByString(getString(R.string.timeoutError));
-//                LogUtil.i("hint",error.networkResponse.headers.toString());
-//                LogUtil.i("hint",error.networkResponse.statusCode+"");
                 }
 
                 @Override
@@ -744,16 +754,22 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 }
             });
         } else {
-            Intent intent = new Intent(MainActivity.this, ConfirmOrderActivity.class);
+            Intent intent;
+            if (isToPayFreight) {
+                intent = new Intent(MainActivity.this, ConfirmOrderActivity.class);
+            } else {
+                intent = new Intent(MainActivity.this, OrderPayActivity.class);
+            }
             String money = tv_money.getText().toString();
             intent.putExtra("type", type);
             intent.putExtra("money", money);
-            intent.putExtra("mapJson", mapJson);
+            intent.putExtra("json", json);
             intent.putExtra("time", time);
             intent.putExtra("carType", 1);
             intent.putParcelableArrayListExtra("OrderAddressInfos", mOrderAddressInfos);
             startActivity(intent);
         }
+
     }
 
     private void publishCarpool(int type, String time) {
@@ -783,7 +799,8 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         jsonObject.addProperty("OrderType", type);
         jsonObject.addProperty("PlanSendTime", time);
         LogUtil.i(jsonObject.toString());
-        mapJson = jsonObject.toString();
+        JsonInfo json = new JsonInfo();
+        json.setJsonObject(jsonObject);
         Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
         if (type == 3) {
             HttpUtil.doPost(MainActivity.this, Contants.url_publishCarpool, "publishCarpool", map, new VolleyInterface(MainActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
@@ -805,10 +822,15 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 }
             });
         } else {
+            Intent intent;
+            if (isToPayFreight) {
+                intent = new Intent(MainActivity.this, ConfirmOrderActivity.class);
+            } else {
+                intent = new Intent(MainActivity.this, OrderPayActivity.class);
+            }
             String money = tv_money.getText().toString();
-            Intent intent = new Intent(MainActivity.this, ConfirmOrderActivity.class);
             intent.putExtra("type", type);
-            intent.putExtra("mapJson", mapJson);
+            intent.putExtra("json", json);
             intent.putExtra("money", money);
             intent.putExtra("time", time);
             intent.putExtra("carType", 2);
@@ -816,6 +838,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             startActivity(intent);
         }
     }
+
 
     @Override
     public void onItemClick(int position) {
@@ -825,7 +848,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         intent.putExtra("type", 3);
         startActivityForResult(intent, 1);
     }
-
 
     @Override
     public void onActionClick(int position) {
@@ -856,10 +878,12 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
 
             getOrderInfo();
 
-            calculateFreight();
+            if (cofirmTypeId != -1)
+                calculateFreight();
 
 
         }
+
         if (resultCode == RESULT_OK && requestCode == 2) {
             premiums = data.getDoubleExtra("premium", 0);
             double goods = data.getDoubleExtra("goods", 0);
@@ -879,6 +903,42 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
 
     }
 
+
+    private void getOrderInfo() {
+        orderAddress = "";
+        startLngLat = "";
+        endLngLat = "";
+        payment = 0;
+        isPublish = false;
+
+        OrderAddressInfo orderAddressInfo;
+        int size = mOrderAddressInfos.size();
+        if (!mOrderAddressInfos.get(0).getReceiptAddress().equals("start") && !mOrderAddressInfos.get(size - 1).getReceiptAddress().equals("start")) {
+            isPublish = true;
+        }
+
+        for (int i = 0; i < size; i++) {
+            orderAddressInfo = mOrderAddressInfos.get(i);
+            payment += orderAddressInfo.getMoney();
+            if (i == 0) {
+                orderAddress = orderAddressInfo.toString() + "|";
+                startLngLat = String.valueOf(orderAddressInfo.getLng()) + "," + String.valueOf(orderAddressInfo.getLat());
+            } else if (i == size - 1) {
+                orderAddress = orderAddress + orderAddressInfo.toString();
+                endLngLat = endLngLat + String.valueOf(orderAddressInfo.getLng()) + "," + String.valueOf(orderAddressInfo.getLat());
+            } else {
+                orderAddress = orderAddress + orderAddressInfo.toString() + "|";
+                startLngLat = startLngLat + "|" + String.valueOf(orderAddressInfo.getLng()) + "," + String.valueOf(orderAddressInfo.getLat());
+                endLngLat = endLngLat + String.valueOf(orderAddressInfo.getLng()) + "," + String.valueOf(orderAddressInfo.getLat()) + "|";
+            }
+        }
+
+        LogUtil.i("startLngLat" + startLngLat);
+        LogUtil.i("endLngLat" + endLngLat);
+        LogUtil.i("orderAddress" + orderAddress);
+        LogUtil.i("payment" + payment);
+        LogUtil.i("isPublish" + isPublish);
+    }
 
     private void calculateFreight() {
         if (isPublish) {
@@ -948,40 +1008,5 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         }
     }
 
-    private void getOrderInfo() {
-        orderAddress = "";
-        startLngLat = "";
-        endLngLat = "";
-        payment = 0;
-        isPublish = false;
-
-        OrderAddressInfo orderAddressInfo;
-        int size = mOrderAddressInfos.size();
-        if (!mOrderAddressInfos.get(0).getReceiptAddress().equals("start") && !mOrderAddressInfos.get(size - 1).getReceiptAddress().equals("start")) {
-            isPublish = true;
-        }
-
-        for (int i = 0; i < size; i++) {
-            orderAddressInfo = mOrderAddressInfos.get(i);
-            payment += orderAddressInfo.getMoney();
-            if (i == 0) {
-                orderAddress = orderAddressInfo.toString() + "|";
-                startLngLat = String.valueOf(orderAddressInfo.getLng()) + "," + String.valueOf(orderAddressInfo.getLat());
-            } else if (i == size - 1) {
-                orderAddress = orderAddress + orderAddressInfo.toString();
-                endLngLat = endLngLat + String.valueOf(orderAddressInfo.getLng()) + "," + String.valueOf(orderAddressInfo.getLat());
-            } else {
-                orderAddress = orderAddress + orderAddressInfo.toString() + "|";
-                startLngLat = startLngLat + "|" + String.valueOf(orderAddressInfo.getLng()) + "," + String.valueOf(orderAddressInfo.getLat());
-                endLngLat = endLngLat + String.valueOf(orderAddressInfo.getLng()) + "," + String.valueOf(orderAddressInfo.getLat()) + "|";
-            }
-        }
-
-        LogUtil.i("startLngLat" + startLngLat);
-        LogUtil.i("endLngLat" + endLngLat);
-        LogUtil.i("orderAddress" + orderAddress);
-        LogUtil.i("payment" + payment);
-        LogUtil.i("isPublish" + isPublish);
-    }
 
 }

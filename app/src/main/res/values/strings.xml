@@ -67,7 +67,8 @@
     <string name="amount">货物总件数</string>
     <string name="order_detail">订单详情</string>
     <string name="improve_disclosure">完善发货信息</string>
-    <string name="confirm_order">订单支付</string>
+    <string name="confirm_order">确认订单</string>
+    <string name="order_pay">订单支付</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
