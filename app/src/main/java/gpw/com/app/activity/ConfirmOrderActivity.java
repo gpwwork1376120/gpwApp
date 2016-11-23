@@ -15,6 +15,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -77,8 +78,8 @@ public class ConfirmOrderActivity extends BaseActivity {
         carType = getIntent().getIntExtra("carType", 0);
         money = getIntent().getStringExtra("money");
         time = getIntent().getStringExtra("time");
-        JsonInfo json = (JsonInfo) getIntent().getSerializableExtra("json");
-        jsonObject = json.getJsonObject();
+        String mapJson = getIntent().getStringExtra("mapJson");
+        jsonObject = new JsonParser().parse(mapJson).getAsJsonObject();
         jsonObject.addProperty("PayWay",0);
         orderAddAdapter = new OrderAddAdapter(orderAddressInfos, this);
     }

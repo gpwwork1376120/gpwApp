@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -91,8 +92,8 @@ public class OrderPayActivity extends BaseActivity {
         ArrayList<OrderAddressInfo> orderAddressInfos = getIntent().getParcelableArrayListExtra("OrderAddressInfos");
         orderType = getIntent().getIntExtra("type", 0);
         carType = getIntent().getIntExtra("carType", 0);
-        JsonInfo json = (JsonInfo) getIntent().getSerializableExtra("json");
-        jsonObject = json.getJsonObject();
+        String mapJson = getIntent().getStringExtra("mapJson");
+        jsonObject = new JsonParser().parse(mapJson).getAsJsonObject();
         money = getIntent().getStringExtra("money");
         time = getIntent().getStringExtra("time");
         orderAddAdapter = new OrderAddAdapter(orderAddressInfos, this);

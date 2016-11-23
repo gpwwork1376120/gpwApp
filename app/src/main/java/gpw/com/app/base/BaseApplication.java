@@ -2,7 +2,6 @@ package gpw.com.app.base;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -18,7 +17,6 @@ import java.util.Stack;
 public class BaseApplication extends Application {
     private static BaseApplication sBaseApplication;
     public static RequestQueue queues;
-
     private Stack<Activity> mActivityStack = new Stack<>();
 
 

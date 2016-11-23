@@ -108,6 +108,9 @@
             android:name=".activity.OrderDetailActivity"
             android:theme="@style/RedTranslucentTheme" />
         <activity
+            android:name=".activity.PayActivity"
+            android:theme="@style/RedTranslucentTheme" />
+        <activity
             android:name=".activity.MapActivity"
             android:theme="@style/GrayTranslucentTheme" />
         <activity
@@ -144,6 +147,9 @@
             android:screenOrientation="behind"></activity>
         <activity
             android:name=".activity.OrderOffersActivity"
+            android:theme="@style/RedTranslucentTheme"></activity>
+        <activity
+            android:name=".activity.OrderPayActivity"
             android:theme="@style/RedTranslucentTheme"></activity>
     </application>
 

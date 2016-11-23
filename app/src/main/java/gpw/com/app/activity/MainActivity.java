@@ -733,8 +733,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         jsonObject.addProperty("OrderType", type);
         jsonObject.addProperty("PlanSendTime", time);
         LogUtil.i(jsonObject.toString());
-        JsonInfo json = new JsonInfo();
-        json.setJsonObject(jsonObject);
+        String mapJson = jsonObject.toString();
         Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
         if (type == 3) {
             HttpUtil.doPost(MainActivity.this, Contants.url_sendOrder, "sendOrder", map, new VolleyInterface(MainActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
@@ -763,7 +762,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             String money = tv_money.getText().toString();
             intent.putExtra("type", type);
             intent.putExtra("money", money);
-            intent.putExtra("json", json);
+            intent.putExtra("mapJson", mapJson);
             intent.putExtra("time", time);
             intent.putExtra("carType", 1);
             intent.putParcelableArrayListExtra("OrderAddressInfos", mOrderAddressInfos);
@@ -799,8 +798,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         jsonObject.addProperty("OrderType", type);
         jsonObject.addProperty("PlanSendTime", time);
         LogUtil.i(jsonObject.toString());
-        JsonInfo json = new JsonInfo();
-        json.setJsonObject(jsonObject);
+        String mapJson = jsonObject.toString();
         Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
         if (type == 3) {
             HttpUtil.doPost(MainActivity.this, Contants.url_publishCarpool, "publishCarpool", map, new VolleyInterface(MainActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
@@ -822,15 +820,10 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 }
             });
         } else {
-            Intent intent;
-            if (isToPayFreight) {
-                intent = new Intent(MainActivity.this, ConfirmOrderActivity.class);
-            } else {
-                intent = new Intent(MainActivity.this, OrderPayActivity.class);
-            }
             String money = tv_money.getText().toString();
+            Intent intent = new Intent(MainActivity.this, ConfirmOrderActivity.class);
             intent.putExtra("type", type);
-            intent.putExtra("json", json);
+            intent.putExtra("mapJson", mapJson);
             intent.putExtra("money", money);
             intent.putExtra("time", time);
             intent.putExtra("carType", 2);

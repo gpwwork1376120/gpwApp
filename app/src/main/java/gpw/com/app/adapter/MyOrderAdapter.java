@@ -79,7 +79,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHold
             switch (orderInfo.getOrderStatus()) {
                 case 1:
                     if (orderInfo.getOrderType() == 3) {
-                        viewHolder.bt_query.setText("查看报价");
+                        viewHolder.bt_query.setText("查询报价");
                         viewHolder.tv_state.setText("询价进行中");
                         viewHolder.tv_state.setVisibility(View.VISIBLE);
                         viewHolder.bt_query.setVisibility(View.VISIBLE);
@@ -131,13 +131,17 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHold
         viewHolder.bt_query.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mOnBtnClickListener.onBtnClick(position);
+                Button button = (Button) view;
+                String text = button.getText().toString();
+                mOnBtnClickListener.onBtnClick(position,text);
             }
         });
         viewHolder.bt_pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mOnBtnClickListener.onBtnClick(position);
+                Button button = (Button) view;
+                String text = button.getText().toString();
+                mOnBtnClickListener.onBtnClick(position,text);
             }
         });
     }
@@ -186,7 +190,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHold
     }
 
     public interface OnBtnClickListener {
-        void onBtnClick(int position);
+        void onBtnClick(int position,String viewName);
     }
 
     private OnBtnClickListener mOnBtnClickListener;

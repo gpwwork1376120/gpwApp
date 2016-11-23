@@ -28,6 +28,7 @@ import gpw.com.app.activity.CommonAddressActivity;
 import gpw.com.app.activity.MyWalletActivity;
 import gpw.com.app.activity.OrderDetailActivity;
 import gpw.com.app.activity.OrderOffersActivity;
+import gpw.com.app.activity.PayActivity;
 import gpw.com.app.adapter.MyOrderAdapter;
 import gpw.com.app.base.Contants;
 import gpw.com.app.bean.MoneyInfo;
@@ -170,22 +171,29 @@ public class OrderFragment extends Fragment implements MyOrderAdapter.OnBtnClick
 
 
     @Override
-    public void onBtnClick(int position) {
+    public void onBtnClick(int position, String viewName) {
         OrderInfo orderInfo = orderInfos.get(position);
         Intent intent = null;
-        switch (orderInfo.getOrderStatus()) {
-            case 1:
-                if (orderInfo.getOrderType() == 3) {
+        switch (viewName) {
+            case "查询报价":
                     intent = new Intent(getActivity(), OrderOffersActivity.class);
                     intent.putExtra("orderId", orderInfo.getOrderNo());
                     getActivity().startActivity(intent);
-                } else {
-                    cancelOrder(orderInfo);
+                break;
+            case "取消订单":
+                cancelOrder(orderInfo);
+                break;
+            case "支付":
+                if(orderInfo.getCancelFee() > 0){
+                    intent.setClass(getActivity(), PayActivity.class);
+                    intent.putExtra("orderId", orderInfo.getOrderNo());
+                    getActivity().startActivity(intent);
+
+                }else {
+
                 }
                 break;
-            case 2:
-            case 3:
-            case 4:
+            case "查看详情":
                 intent = new Intent(getActivity(), OrderDetailActivity.class);
                 intent.putExtra("orderId", orderInfo.getOrderNo());
                 getActivity().startActivity(intent);
