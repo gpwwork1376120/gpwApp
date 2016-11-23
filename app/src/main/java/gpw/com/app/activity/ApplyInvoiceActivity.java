@@ -27,7 +27,7 @@ import gpw.com.app.util.HttpUtil;
 import gpw.com.app.util.LogUtil;
 import gpw.com.app.util.VolleyInterface;
 
-public class ApplyInvoiceActivity extends BaseActivity {
+public class ApplyInvoiceActivity extends BaseActivity  {
 
     private TextView tv_title;
     private TextView tv_right;
