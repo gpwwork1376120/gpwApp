@@ -10,7 +10,9 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -19,7 +21,9 @@ import gpw.com.app.adapter.OrderOffersAdapter;
 import gpw.com.app.base.BaseActivity;
 import gpw.com.app.base.Contants;
 import gpw.com.app.bean.MoneyInfo;
+import gpw.com.app.bean.NewsInfo;
 import gpw.com.app.bean.OrderOfferInfo;
+import gpw.com.app.util.BdMapLocationUtil;
 import gpw.com.app.util.EncryptUtil;
 import gpw.com.app.util.HttpUtil;
 import gpw.com.app.util.LogUtil;
@@ -50,6 +54,7 @@ public class OrderOffersActivity extends BaseActivity {
         lv_order_offers = (ListView) findViewById(R.id.lv_order_offers);
         tv_empty = (TextView) findViewById(R.id.tv_empty);
 
+
     }
 
     @Override
@@ -64,30 +69,39 @@ public class OrderOffersActivity extends BaseActivity {
         tv_title.setText(R.string.order_offers);
         lv_order_offers.setAdapter(orderOffersAdapter);
 
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("UserId", Contants.userId);
-        jsonObject.addProperty("OrderNo", orderId);
-        jsonObject.addProperty("Lat", orderId);
-        jsonObject.addProperty("Lng", orderId);
-        Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
-        HttpUtil.doPost(OrderOffersActivity.this, Contants.url_getUserBalance, "getUserBalance", map, new VolleyInterface(OrderOffersActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
+        BdMapLocationUtil.getInstance(this).startLocation(new BdMapLocationUtil.BdLocationSuccessListenner() {
             @Override
-            public void onSuccess(JsonElement result) {
-                LogUtil.i(result.toString());
-                Gson gson = new Gson();
-                MoneyInfo moneyInfo = gson.fromJson(result, MoneyInfo.class);
-                tv_balance_money.setText(String.format("¥%s", moneyInfo.getBalance()));
-            }
+            public void locationResult(double _latitude, double _longitude, String _locationAddr, String _locationCity) {
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("UserId", Contants.userId);
+                jsonObject.addProperty("OrderNo", orderId);
+                jsonObject.addProperty("Lat", _latitude);
+                jsonObject.addProperty("Lng", _longitude);
+                Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
+                HttpUtil.doPost(OrderOffersActivity.this, Contants.url_getOrderOffers, "getUserBalance", map, new VolleyInterface(OrderOffersActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
+                    @Override
+                    public void onSuccess(JsonElement result) {
+                        LogUtil.i(result.toString());
+                        Gson gson = new Gson();
+                        Type listType = new TypeToken<ArrayList<OrderOfferInfo>>() {
+                        }.getType();
+                        ArrayList<OrderOfferInfo> newOrderOfferInfos = gson.fromJson(result, listType);
+                        orderOfferInfos.clear();
+                        orderOfferInfos.addAll(newOrderOfferInfos);
+                        orderOffersAdapter.notifyDataSetChanged();
+                    }
 
-            @Override
-            public void onError(VolleyError error) {
-                showShortToastByString(getString(R.string.timeoutError));
-//                LogUtil.i("hint",error.networkResponse.headers.toString());
-//                LogUtil.i("hint",error.networkResponse.statusCode+"");
-            }
+                    @Override
+                    public void onError(VolleyError error) {
+                        showShortToastByString(getString(R.string.timeoutError));
+//                        LogUtil.i("hint",error.networkResponse.headers.toString());
+//                        LogUtil.i("hint",error.networkResponse.statusCode+"");
+                    }
 
-            @Override
-            public void onStateError() {
+                    @Override
+                    public void onStateError() {
+                    }
+                });
             }
         });
 
@@ -95,6 +109,7 @@ public class OrderOffersActivity extends BaseActivity {
         tv_right.setVisibility(View.GONE);
         iv_left_white.setOnClickListener(this);
     }
+
 
     @Override
     public void onClick(View view) {

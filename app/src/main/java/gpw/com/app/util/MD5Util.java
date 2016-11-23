@@ -1,6 +1,10 @@
 package gpw.com.app.util;
 
+import android.widget.Toast;
+
 import java.security.MessageDigest;
+
+import gpw.com.app.base.BaseApplication;
 
 public class MD5Util {
 

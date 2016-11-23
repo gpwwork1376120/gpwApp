@@ -2,6 +2,7 @@ package gpw.com.app.base;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -17,14 +18,17 @@ import java.util.Stack;
 public class BaseApplication extends Application {
     private static BaseApplication sBaseApplication;
     public static RequestQueue queues;
+
     private Stack<Activity> mActivityStack = new Stack<>();
 
+
     public static BaseApplication getInstance() {
-        if (null == sBaseApplication) {
+        if (sBaseApplication == null) {
             sBaseApplication = new BaseApplication();
         }
         return sBaseApplication;
     }
+
 
     @Override
     public void onCreate() {
@@ -33,7 +37,6 @@ public class BaseApplication extends Application {
         // JPushInterface.init(this);          // 初始化 JPush
         queues = Volley.newRequestQueue(this);
         SDKInitializer.initialize(this);
-        //CrashHandler.getInstance().init(this);
     }
 
     public static RequestQueue getHttpQueues() {

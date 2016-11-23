@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -21,21 +22,23 @@ import gpw.com.app.R;
  */
 public class MyDialog extends Dialog {
 
-    private static MyDialog nickDialog;;
+    private static MyDialog nickDialog;
+    private static MyDialog endDialog;
+    ;
     public static NickListener nickListener;
+    public static EndListener endListener;
 
     public MyDialog(Activity activity) {
-        super(activity, R.style.MyDialog);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        super(activity, R.style.myDialog);
     }
 
     public static MyDialog nickDialog(Activity activity) {
         nickDialog = new MyDialog(activity);
+
         View v = View.inflate(activity, R.layout.dialog_edit, null);
         final EditText et_nick = (EditText) v.findViewById(R.id.et_nick);
         Button bt_cancel = (Button) v.findViewById(R.id.bt_cancel);
         Button bt_ok = (Button) v.findViewById(R.id.bt_ok);
-
         Point size = new Point();
         activity.getWindowManager().getDefaultDisplay().getSize(size);
         int width = (int) (size.x * 0.8);
@@ -67,7 +70,7 @@ public class MyDialog extends Dialog {
     }
 
 
-//    public static MyDialog psdDialog(Activity activity) {
+    //    public static MyDialog psdDialog(Activity activity) {
 //        psdDialog = new MyDialog(activity);
 //        View v = View.inflate(activity, R.layout.dialog_psd, null);
 //        final EditText et_old = (EditText) v.findViewById(R.id.et_old);
@@ -109,47 +112,48 @@ public class MyDialog extends Dialog {
 //
 //
 //
-//    public static MyDialog endDialog(final Activity activity) {
-//        endDialog = new MyDialog(activity);
-//        View v = View.inflate(activity, R.layout.dialog_end, null);
-//
-//        final EditText et_content = (EditText) v.findViewById(R.id.et_content);
-//        Button bt_cancel = (Button) v.findViewById(R.id.bt_cancel);
-//        Button bt_ok = (Button) v.findViewById(R.id.bt_ok);
-//
-//        Point size = new Point();
-//        activity.getWindowManager().getDefaultDisplay().getSize(size);
-//        int width = (int) (size.x * 0.9);
-//        int height = (int) (size.y * 0.26);
-//        endDialog.setContentView(v);
-//        endDialog.setCancelable(true);
-//        Window dialogWindow = endDialog.getWindow();
-//        WindowManager.LayoutParams lp = dialogWindow.getAttributes(); // 获取对话框当前的参数值
-//        dialogWindow.setGravity(Gravity.CENTER);
-//        lp.height = height;
-//        lp.width = width;
-//        dialogWindow.setAttributes(lp);
-//
-//        bt_cancel.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                endDialog.dismiss();
-//            }
-//        });
-//        bt_ok.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (et_content.getText().toString().isEmpty()){
-//                    Toast.makeText(activity, "请输入原因", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-//                endListener.onSetting(et_content.getText().toString());
-//            }
-//        });
-//
-//        return endDialog;
-//    }
-//
+    public static MyDialog endDialog(final Activity activity) {
+        endDialog = new MyDialog(activity);
+        View v = View.inflate(activity, R.layout.dialog_reason,null);
+
+        final EditText et_content = (EditText) v.findViewById(R.id.et_reason);
+        Button bt_cancel = (Button) v.findViewById(R.id.bt_cancel);
+        Button bt_ok = (Button) v.findViewById(R.id.bt_ok);
+
+        Point size = new Point();
+        activity.getWindowManager().getDefaultDisplay().getSize(size);
+        int width = (int) (size.x * 0.8);
+        int height = (int) (size.y * 0.3);
+        endDialog.setContentView(v);
+        endDialog.setCancelable(true);
+        Window dialogWindow = endDialog.getWindow();
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes(); // 获取对话框当前的参数值
+        dialogWindow.setGravity(Gravity.CENTER);
+        lp.height = height;
+        lp.width = width;
+        dialogWindow.setAttributes(lp);
+
+        bt_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                endDialog.dismiss();
+            }
+        });
+        bt_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (et_content.getText().toString().isEmpty()) {
+                    Toast.makeText(activity, "请输入原因", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                endListener.onSetting(et_content.getText().toString());
+            }
+        });
+
+        return endDialog;
+    }
+
+    //
 //    public static MyDialog loginDialog(Activity activity) {
 //        MyDialog loginDialog = new MyDialog(activity);
 //        View v = View.inflate(activity, R.layout.dialog_login, null);
@@ -184,12 +188,12 @@ public class MyDialog extends Dialog {
 //        psdListener = listener;
 //    }
 //
-//    public interface EndListener {
-//        void onSetting(String content);
-//    }
-//
-//    public void setOnSettingListener(EndListener listener) {
-//        endListener = listener;
-//    }
+    public interface EndListener {
+        void onSetting(String content);
+    }
+
+    public void setOnSettingListener(EndListener listener) {
+        endListener = listener;
+    }
 
 }
