@@ -74,7 +74,6 @@ public class AddMapActivity extends BaseActivity {
     public BDLocationListener myListener = new MyLocationListener();
     MapView mMapView = null;
 
-
     OnGetSuggestionResultListener listener = new OnGetSuggestionResultListener() {
         public void onGetSuggestionResult(SuggestionResult res) {
             if (res == null || res.getAllSuggestions() == null) {
@@ -178,11 +177,12 @@ public class AddMapActivity extends BaseActivity {
         et_search = (EditText) findViewById(R.id.et_search);
         lv_search = (ListView) findViewById(R.id.lv_search);
         ll_search = (LinearLayout) findViewById(R.id.ll_search);
-
+        View view_status = findViewById(R.id.view_status);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(AddMapActivity.this, 50.0f));
             layoutParams.setMargins(DensityUtil.dip2px(AddMapActivity.this, 5.0f), DensityUtil.dip2px(AddMapActivity.this, 15.0f), DensityUtil.dip2px(AddMapActivity.this, 5.0f), 0);
             ll_search.setLayoutParams(layoutParams);
+            view_status.setVisibility(View.GONE);
         }
     }
 

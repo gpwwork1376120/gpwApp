@@ -151,6 +151,10 @@
         <activity
             android:name=".activity.OrderPayActivity"
             android:theme="@style/RedTranslucentTheme"></activity>
+        <activity
+            android:name=".activity.CarLocationActivity"
+            android:theme="@style/RedTranslucentTheme"></activity>
+
     </application>
 
 </manifest>

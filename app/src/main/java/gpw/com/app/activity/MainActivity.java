@@ -58,7 +58,8 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     private CircleImageView civ_head;
     private ImageView iv_below;
     private ImageView iv_confirm_order;
-    private ImageView iv_cir_head;
+    private CircleImageView iv_cir_head;
+    private View view_status;
 
     private RecyclerView rv_main_address;
     private OrderAddressAdapter mOrderAddressAdapter;
@@ -168,7 +169,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         cb_insurance = (CheckBox) findViewById(R.id.cb_insurance);
 
         iv_confirm_order = (ImageView) findViewById(R.id.iv_confirm_order);
-        iv_cir_head = (ImageView) findViewById(R.id.iv_cir_head);
+        iv_cir_head = (CircleImageView) findViewById(R.id.iv_cir_head);
         icv_banner = (ImageCycleView) findViewById(R.id.icv_banner);
         iv_below = (ImageView) findViewById(R.id.iv_below);
 
@@ -191,6 +192,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
 
         rl_head = (RelativeLayout) findViewById(R.id.rl_head);
         civ_head = (CircleImageView) findViewById(R.id.civ_head);
+        view_status = findViewById(R.id.view_status);
 
 
         dialog_car = (LinearLayout) findViewById(R.id.dialog_car);
@@ -228,6 +230,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             layoutParams.setMargins(DensityUtil.dip2px(MainActivity.this, 10.0f), DensityUtil.dip2px(MainActivity.this, 15.0f), 0, 0);
             iv_cir_head.setLayoutParams(layoutParams);
+            view_status.setVisibility(View.GONE);
         }
 
 
@@ -266,6 +269,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         initAdverVerType();
         tv_tel.setText(userInfo.getUserName());
         HttpUtil.setImageLoader(Contants.imagehost + userInfo.getHeadIco(), civ_head, R.mipmap.account, R.mipmap.account);
+        HttpUtil.setImageLoader(Contants.imagehost + userInfo.getHeadIco(), iv_cir_head, R.mipmap.account, R.mipmap.account);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setAutoMeasureEnabled(true);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -892,6 +896,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             userInfo = data.getParcelableExtra("userInfo");
             tv_tel.setText(userInfo.getUserName());
             HttpUtil.setImageLoader(Contants.imagehost + userInfo.getHeadIco(), civ_head, R.mipmap.account, R.mipmap.account);
+            HttpUtil.setImageLoader(Contants.imagehost + userInfo.getHeadIco(), iv_cir_head, R.mipmap.account, R.mipmap.account);
         }
 
     }

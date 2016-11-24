@@ -173,6 +173,8 @@ public class OrderPayActivity extends BaseActivity {
                 public void onSuccess(JsonElement result) {
                     LogUtil.i(result.toString());
                     showShortToastByString("货源发布成功");
+                    String amount = money.substring(1);
+                    payOrder(Double.valueOf(amount),2);
                     Intent intent = new Intent(OrderPayActivity.this, MyOrderActivity.class);
                     startActivity(intent);
                 }
@@ -191,6 +193,8 @@ public class OrderPayActivity extends BaseActivity {
                 @Override
                 public void onSuccess(JsonElement result) {
                     LogUtil.i(result.toString());
+                    String amount = money.substring(1);
+                    payOrder(Double.valueOf(amount),2);
                     showShortToastByString("货源发布成功");
                     Intent intent = new Intent(OrderPayActivity.this, MyOrderActivity.class);
                     startActivity(intent);
@@ -206,6 +210,38 @@ public class OrderPayActivity extends BaseActivity {
                 }
             });
         }
+    }
+
+    private void payOrder(double money,int type) {
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("UserId", Contants.userId);
+        jsonObject.addProperty("UserType", 1);
+        jsonObject.addProperty("Amount", money);
+        jsonObject.addProperty("PayWay", payType);
+        jsonObject.addProperty("PayType",type);
+        jsonObject.addProperty("AIndex",0);
+        jsonObject.addProperty("OrderNo","");
+
+        Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
+        HttpUtil.doPost(OrderPayActivity.this, Contants.url_payAmount, "payAmount", map, new VolleyInterface(OrderPayActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
+            @Override
+            public void onSuccess(JsonElement result) {
+                LogUtil.i(result.toString());
+                showShortToastByString(result.toString());
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                showShortToastByString(getString(R.string.timeoutError));
+//                LogUtil.i("hint",error.networkResponse.headers.toString());
+//                LogUtil.i("hint",error.networkResponse.statusCode+"");
+            }
+
+            @Override
+            public void onStateError() {
+            }
+        });
     }
 
     private void initRadio() {

@@ -9,8 +9,19 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import java.util.Map;
+
 import gpw.com.app.R;
 import gpw.com.app.base.BaseActivity;
+import gpw.com.app.base.Contants;
+import gpw.com.app.util.EncryptUtil;
+import gpw.com.app.util.HttpUtil;
+import gpw.com.app.util.LogUtil;
+import gpw.com.app.util.VolleyInterface;
 
 public class PayActivity extends BaseActivity{
 
@@ -30,10 +41,12 @@ public class PayActivity extends BaseActivity{
     private ImageView iv_left_white;
     private Button bt_ok;
     private int payType;
+    private String orderNo;
+    private double money;
 
     @Override
     protected int getLayout() {
-        return R.layout.activity_recharge;
+        return R.layout.activity_pay;
     }
 
     @Override
@@ -62,7 +75,9 @@ public class PayActivity extends BaseActivity{
     @Override
     protected void initData() {
 
+        orderNo =getIntent().getStringExtra("orderNo");
 
+        money =getIntent().getDoubleExtra("money",0);
 
     }
 
@@ -70,7 +85,7 @@ public class PayActivity extends BaseActivity{
     protected void initView() {
         tv_right.setVisibility(View.GONE);
         tv_title.setText("支付");
-
+        tv_money.setText(String.format("¥%s", money));
         iv_left_white.setOnClickListener(this);
         bt_ok.setOnClickListener(this);
 
@@ -92,7 +107,7 @@ public class PayActivity extends BaseActivity{
                 finish();
                 break;
             case R.id.bt_ok:
-
+                payOrder();
                 break;
             case R.id.rl_wallet:
             case R.id.cb_wallet:
@@ -127,5 +142,35 @@ public class PayActivity extends BaseActivity{
         cb_alipay.setChecked(false);
         cb_card.setChecked(false);
     }
+    private void payOrder() {
 
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("UserId", Contants.userId);
+        jsonObject.addProperty("UserType", 1);
+        jsonObject.addProperty("Amount", money);
+        jsonObject.addProperty("PayWay", payType);
+        jsonObject.addProperty("PayType",5);
+        jsonObject.addProperty("AIndex",0);
+        jsonObject.addProperty("OrderNo",orderNo);
+
+        Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
+        HttpUtil.doPost(PayActivity.this, Contants.url_payAmount, "payAmount", map, new VolleyInterface(PayActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
+            @Override
+            public void onSuccess(JsonElement result) {
+                LogUtil.i(result.toString());
+                showShortToastByString(result.toString());
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                showShortToastByString(getString(R.string.timeoutError));
+//                LogUtil.i("hint",error.networkResponse.headers.toString());
+//                LogUtil.i("hint",error.networkResponse.statusCode+"");
+            }
+
+            @Override
+            public void onStateError() {
+            }
+        });
+    }
 }

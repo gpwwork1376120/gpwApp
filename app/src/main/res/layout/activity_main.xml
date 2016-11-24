@@ -29,13 +29,19 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true" />
 
-                <ImageView
+
+                <gpw.com.app.view.CircleImageView
                     android:id="@+id/iv_cir_head"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="35dp"
-                    android:src="@mipmap/cir_head" />
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/account"
+                    app:border_color="#ff0000"
+                    app:border_width="1.5dp" />
+
+
             </RelativeLayout>
 
             <View
@@ -159,9 +165,9 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_marginRight="40dp"
-                            android:checked="true"
                             android:background="@drawable/check_style"
-                            android:button="@null" />
+                            android:button="@null"
+                            android:checked="true" />
                     </RelativeLayout>
 
                     <View
@@ -176,10 +182,10 @@
                         android:id="@+id/rl_insurance"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="5dp"
                         android:layout_marginLeft="35dp"
                         android:layout_marginRight="40dp"
                         android:background="@drawable/layout_click_style"
+                        android:paddingBottom="5dp"
                         android:paddingTop="5dp">
 
                         <TextView
@@ -436,172 +442,183 @@
         </RelativeLayout>
 
 
-
     </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/rl_left_menu"
         android:layout_width="230dp"
         android:layout_height="match_parent"
         android:layout_gravity="left"
-        android:orientation="vertical"
         android:tag="LEFT">
 
-        <RelativeLayout
-            android:id="@+id/rl_head"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:background="@color/color_white">
+        <LinearLayout
+            android:layout_width="230dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <gpw.com.app.view.CircleImageView
-                android:id="@+id/civ_head"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp"
-                android:scaleType="centerCrop"
-                android:src="@mipmap/cir_head"
-                app:border_color="#ff0000"
-                app:border_width="1.5dp" />
-
-            <TextView
-                android:id="@+id/tv_tel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/civ_head"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="6dp"
-                android:textSize="15sp" />
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="0.6dp"
-                android:layout_below="@+id/tv_tel"
-                android:layout_marginTop="19dp"
-                android:background="@color/color_line" />
-
-            <View
+            <RelativeLayout
+                android:id="@+id/rl_head"
                 android:layout_width="match_parent"
-                android:layout_height="12dp"
-                android:layout_below="@+id/tv_tel"
-                android:layout_marginTop="20dp"
-                android:background="@color/color_gary_bck" />
+                android:layout_height="150dp"
+                android:background="@color/color_white">
 
-        </RelativeLayout>
+                <gpw.com.app.view.CircleImageView
+                    android:id="@+id/civ_head"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="30dp"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/account"
+                    app:border_color="#ff0000"
+                    app:border_width="1.5dp" />
 
-        <TextView
-            android:id="@+id/tv_myOrder"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="@drawable/layout_click_style"
-            android:gravity="center_vertical"
-            android:paddingLeft="30dp"
-            android:text="@string/myOrder"
-            android:textColor="#3d3d3d"
-            android:textSize="@dimen/bigest_font" />
+                <TextView
+                    android:id="@+id/tv_tel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/civ_head"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="6dp"
+                    android:textSize="15sp" />
 
-        <TextView
-            android:id="@+id/tv_myWallet"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="@drawable/layout_click_style"
-            android:gravity="center_vertical"
-            android:paddingLeft="30dp"
-            android:text="@string/myWallet"
-            android:textColor="#3d3d3d"
-            android:textSize="@dimen/bigest_font" />
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="0.6dp"
+                    android:layout_below="@+id/tv_tel"
+                    android:layout_marginTop="19dp"
+                    android:background="@color/color_line" />
 
-        <TextView
-            android:id="@+id/tv_myConvoy"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="@drawable/layout_click_style"
-            android:gravity="center_vertical"
-            android:paddingLeft="30dp"
-            android:text="@string/myConvoy"
-            android:textColor="#3d3d3d"
-            android:textSize="@dimen/bigest_font" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:layout_below="@+id/tv_tel"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/color_gary_bck" />
 
-        <TextView
-            android:id="@+id/tv_common_address"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="@drawable/layout_click_style"
-            android:gravity="center_vertical"
-            android:paddingLeft="30dp"
-            android:text="@string/common_address"
-            android:textColor="#3d3d3d"
-            android:textSize="@dimen/bigest_font" />
-
-        <TextView
-            android:id="@+id/tv_myInvoice"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="@drawable/layout_click_style"
-            android:gravity="center_vertical"
-            android:paddingLeft="30dp"
-            android:text="@string/myInvoice"
-            android:textColor="#3d3d3d"
-            android:textSize="@dimen/bigest_font" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="@drawable/layout_click_style">
+            </RelativeLayout>
 
             <TextView
-                android:id="@+id/tv_news"
+                android:id="@+id/tv_myOrder"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
+                android:background="@drawable/layout_click_style"
                 android:gravity="center_vertical"
                 android:paddingLeft="30dp"
-                android:text="@string/news"
+                android:text="@string/myOrder"
                 android:textColor="#3d3d3d"
                 android:textSize="@dimen/bigest_font" />
 
             <TextView
-                android:id="@+id/tv_news_num"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/num_style"
-                android:gravity="center"
-                android:text="5"
-                android:textColor="#cfcfcf"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                android:id="@+id/tv_myWallet"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@drawable/layout_click_style"
+                android:gravity="center_vertical"
+                android:paddingLeft="30dp"
+                android:text="@string/myWallet"
+                android:textColor="#3d3d3d"
+                android:textSize="@dimen/bigest_font" />
 
-        <TextView
-            android:id="@+id/tv_benefit_activity"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="@drawable/layout_click_style"
-            android:gravity="center_vertical"
-            android:paddingLeft="30dp"
-            android:text="@string/benefit_activity"
-            android:textColor="#3d3d3d"
-            android:textSize="@dimen/bigest_font" />
+            <TextView
+                android:id="@+id/tv_myConvoy"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@drawable/layout_click_style"
+                android:gravity="center_vertical"
+                android:paddingLeft="30dp"
+                android:text="@string/myConvoy"
+                android:textColor="#3d3d3d"
+                android:textSize="@dimen/bigest_font" />
 
-        <TextView
-            android:id="@+id/tv_setting"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="@drawable/layout_click_style"
-            android:gravity="center_vertical"
-            android:paddingLeft="30dp"
-            android:text="@string/setting"
-            android:textColor="#3d3d3d"
-            android:textSize="@dimen/bigest_font" />
+            <TextView
+                android:id="@+id/tv_common_address"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@drawable/layout_click_style"
+                android:gravity="center_vertical"
+                android:paddingLeft="30dp"
+                android:text="@string/common_address"
+                android:textColor="#3d3d3d"
+                android:textSize="@dimen/bigest_font" />
+
+            <TextView
+                android:id="@+id/tv_myInvoice"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@drawable/layout_click_style"
+                android:gravity="center_vertical"
+                android:paddingLeft="30dp"
+                android:text="@string/myInvoice"
+                android:textColor="#3d3d3d"
+                android:textSize="@dimen/bigest_font" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@drawable/layout_click_style">
+
+                <TextView
+                    android:id="@+id/tv_news"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="30dp"
+                    android:text="@string/news"
+                    android:textColor="#3d3d3d"
+                    android:textSize="@dimen/bigest_font" />
+
+                <TextView
+                    android:id="@+id/tv_news_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/num_style"
+                    android:gravity="center"
+                    android:text="5"
+                    android:textColor="#cfcfcf"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_benefit_activity"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@drawable/layout_click_style"
+                android:gravity="center_vertical"
+                android:paddingLeft="30dp"
+                android:text="@string/benefit_activity"
+                android:textColor="#3d3d3d"
+                android:textSize="@dimen/bigest_font" />
+
+            <TextView
+                android:id="@+id/tv_setting"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@drawable/layout_click_style"
+                android:gravity="center_vertical"
+                android:paddingLeft="30dp"
+                android:text="@string/setting"
+                android:textColor="#3d3d3d"
+                android:textSize="@dimen/bigest_font" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@color/color_white" />
+
+
+        </LinearLayout>
 
         <View
+            android:id="@+id/view_status"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@color/color_white" />
-    </LinearLayout>
-
+            android:layout_height="25dp"
+            android:background="#33000000" />
+    </RelativeLayout>
 
 </android.support.v4.widget.DrawerLayout>

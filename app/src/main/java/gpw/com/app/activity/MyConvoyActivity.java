@@ -1,8 +1,11 @@
 package gpw.com.app.activity;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -33,6 +36,7 @@ public class MyConvoyActivity extends BaseActivity {
 
     private TextView tv_title;
     private TextView tv_right;
+    private TextView tv_empty;
     private ImageView iv_left_white;
     private ListView lv_my_convoy;
     private ConvoyAdapter mConvoyAdapter;
@@ -50,6 +54,7 @@ public class MyConvoyActivity extends BaseActivity {
         assert rl_head != null;
         tv_title = (TextView) rl_head.findViewById(R.id.tv_title);
         tv_right = (TextView) rl_head.findViewById(R.id.tv_right);
+        tv_empty = (TextView)findViewById(R.id.tv_empty);
         iv_left_white = (ImageView) rl_head.findViewById(R.id.iv_left_white);
         lv_my_convoy = (ListView) findViewById(R.id.lv_my_convoy);
     }
@@ -65,6 +70,15 @@ public class MyConvoyActivity extends BaseActivity {
     protected void initView() {
         tv_title.setText(R.string.myConvoy);
         tv_right.setText(R.string.select);
+        lv_my_convoy.setAdapter(mConvoyAdapter);
+        lv_my_convoy.setEmptyView(tv_empty);
+        lv_my_convoy.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                deleteTransportTeam(mConvoyInfos.get(i).getTransporterId(),i);
+                return true;
+            }
+        });
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("UserId",userId);
         Map<String,String> map = EncryptUtil.encryptDES(jsonObject.toString());
@@ -96,6 +110,50 @@ public class MyConvoyActivity extends BaseActivity {
         iv_left_white.setOnClickListener(this);
         tv_right.setOnClickListener(this);
     }
+
+
+    private void deleteTransportTeam(final String TransporterId, final int position){
+    new AlertDialog.Builder(MyConvoyActivity.this).
+    setTitle("提示").
+    setMessage("确定删除此信息").
+    setPositiveButton("确定", new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("SendUserId", Contants.userId);
+            jsonObject.addProperty("TransporterId", TransporterId);
+            Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
+            HttpUtil.doPost(MyConvoyActivity.this, Contants.url_deleteTransportTeam, "deleteTransportTeam", map, new VolleyInterface(MyConvoyActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
+                @Override
+                public void onSuccess(JsonElement result) {
+                    LogUtil.i(result.toString());
+                    mConvoyInfos.remove(position);
+                    mConvoyAdapter.notifyDataSetChanged();
+
+                }
+
+                @Override
+                public void onError(VolleyError error) {
+                    showShortToastByString(getString(R.string.timeoutError));
+//                LogUtil.i("hint",error.networkResponse.headers.toString());
+//                LogUtil.i("hint",error.networkResponse.statusCode+"");
+                }
+
+                @Override
+                public void onStateError() {
+                }
+            });
+        }
+    }).
+    setNegativeButton("取消", new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            // TODO Auto-generated method stub
+        }
+    }).show();
+
+    }
+
 
     @Override
     public void onClick(View v) {

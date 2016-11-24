@@ -177,7 +177,7 @@ public class OrderFragment extends Fragment implements MyOrderAdapter.OnBtnClick
                     getActivity().startActivity(intent);
                 break;
             case "取消订单":
-                cancelOrder(orderInfo);
+                confirmCancel(orderInfo);
                 break;
             case "支付":
                 if(orderInfo.getCancelFee() > 0){
@@ -198,7 +198,7 @@ public class OrderFragment extends Fragment implements MyOrderAdapter.OnBtnClick
 
     }
 
-    private void cancelOrder(final OrderInfo orderInfo) {
+    private void confirmCancel(final OrderInfo orderInfo) {
         endDialog = MyDialog.endDialog(getActivity());
         endDialog.show();
         endDialog.setOnSettingListener(new MyDialog.EndListener() {
@@ -208,7 +208,7 @@ public class OrderFragment extends Fragment implements MyOrderAdapter.OnBtnClick
                 jsonObject.addProperty("UserId", Contants.userId);
                 jsonObject.addProperty("UserType", 1);
                 jsonObject.addProperty("OrderNo", orderInfo.getOrderNo());
-                jsonObject.addProperty("Reason", "reason");
+                jsonObject.addProperty("Reason", content);
                 final Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
                 HttpUtil.doPost(getActivity(), Contants.url_confirmCancel, "confirmCancel", map, new VolleyInterface(getActivity(), VolleyInterface.mListener, VolleyInterface.mErrorListener) {
                     @Override

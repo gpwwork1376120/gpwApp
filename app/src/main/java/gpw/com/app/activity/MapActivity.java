@@ -177,11 +177,13 @@ public class MapActivity extends BaseActivity {
         tv_address = (TextView) findViewById(R.id.tv_address);
         lv_search = (ListView) findViewById(R.id.lv_search);
         ll_search = (LinearLayout) findViewById(R.id.ll_search);
+        View view_status = findViewById(R.id.view_status);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(MapActivity.this, 50.0f));
             layoutParams.setMargins(DensityUtil.dip2px(MapActivity.this, 5.0f), DensityUtil.dip2px(MapActivity.this, 15.0f), DensityUtil.dip2px(MapActivity.this, 5.0f), 0);
             ll_search.setLayoutParams(layoutParams);
+            view_status.setVisibility(View.GONE);
         }
     }
 

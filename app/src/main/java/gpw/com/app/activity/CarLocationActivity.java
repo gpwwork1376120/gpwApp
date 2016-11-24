@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -118,19 +119,15 @@ public class CarLocationActivity extends BaseActivity {
 
                 mBaiduMap.clear();
                 LatLng latLng = new LatLng(carLoactionInfo.getLat(), carLoactionInfo.getLng());
-                BitmapDescriptor bitmap = BitmapDescriptorFactory
-                        .fromResource(R.mipmap.location);
+                BitmapDescriptor bitmap = getBitmapDescriptor(carLoactionInfo.getAngle());
                 OverlayOptions option = new MarkerOptions()
                         .position(latLng)
                         .icon(bitmap);
                 mBaiduMap.addOverlay(option);
 
-                LinearLayout linearLayout = (LinearLayout) View.inflate(CarLocationActivity.this, R.layout.view_map_bck, null);
-                TextView tv_map_name = (TextView) linearLayout.findViewById(R.id.tv_map_name);
-                TextView tv_map_detail = (TextView) linearLayout.findViewById(R.id.tv_map_detail);
-                //tv_map_name.setText("当前位置");
-                //tv_map_detail.setText(location.getAddress().address);
-                InfoWindow mInfoWindow = new InfoWindow(linearLayout, latLng, -85);
+                Button button = new Button(CarLocationActivity.this);
+                button.setText(carLoactionInfo.getGpsNo());
+                InfoWindow mInfoWindow = new InfoWindow(button, latLng, -85);
                 mBaiduMap.showInfoWindow(mInfoWindow);
 
                 MapStatus mapStatus = new MapStatus.Builder()
@@ -154,6 +151,20 @@ public class CarLocationActivity extends BaseActivity {
             public void onStateError() {
             }
         });
+    }
+
+    private BitmapDescriptor getBitmapDescriptor(int angle) {
+//        int resoure;
+//        switch (angle){
+//            case 0:
+//                resoure=R.mipmap.r_vehicle0;
+//                break;
+//            case 0:
+//                resoure=R.mipmap.r_vehicle0;
+//                break;
+//        }
+        return BitmapDescriptorFactory
+                            .fromResource(R.mipmap.location);
     }
 
 

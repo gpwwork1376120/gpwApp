@@ -45,7 +45,7 @@ public abstract  class VolleyInterface {
                     BaseInfo baseInfo = gson.fromJson(result,BaseInfo.class);
                     if (baseInfo.getStatus()!=1){
                         Toast.makeText(mContext, baseInfo.getMessage(), Toast.LENGTH_SHORT).show();
-                        LogUtil.i("hint",baseInfo.toString());
+                        LogUtil.i(baseInfo.toString());
                         onStateError();
                     }else {
                         onSuccess(baseInfo.getData());
