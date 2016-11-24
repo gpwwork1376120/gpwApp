@@ -10,10 +10,24 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import org.json.JSONObject;
+
+import java.util.Map;
+
 import gpw.com.app.R;
 import gpw.com.app.base.BaseActivity;
 import gpw.com.app.base.Contants;
+import gpw.com.app.bean.AddressIdInfo;
 import gpw.com.app.bean.OrderAddressInfo;
+import gpw.com.app.util.EncryptUtil;
+import gpw.com.app.util.HttpUtil;
+import gpw.com.app.util.LogUtil;
+import gpw.com.app.util.VolleyInterface;
 
 
 public class ImproveDisclosureActivity extends BaseActivity {
@@ -61,13 +75,13 @@ public class ImproveDisclosureActivity extends BaseActivity {
         type = getIntent().getIntExtra("type", 0);
         mOrderAddressInfo = getIntent().getParcelableExtra("orderAddressInfo");
         SharedPreferences prefs = getSharedPreferences(Contants.SHARED_NAME, MODE_PRIVATE);
-        userId = prefs.getString("UserId","");
+        userId = prefs.getString("UserId", "");
 
     }
 
     @Override
     protected void initView() {
-        if (!mOrderAddressInfo.getReceiptAddress().equals("start")){
+        if (!mOrderAddressInfo.getReceiptAddress().equals("start")) {
             et_contact_name.setText(mOrderAddressInfo.getReceipter());
             et_contact_tel.setText(mOrderAddressInfo.getReceiptTel());
         }
@@ -100,22 +114,60 @@ public class ImproveDisclosureActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.bt_ok:
-                String name = et_contact_name.getText().toString();
-                String tel = et_contact_tel.getText().toString();
+                final String name = et_contact_name.getText().toString();
+                final String tel = et_contact_tel.getText().toString();
                 String loan_money = et_loan_money.getText().toString();
-                System.out.println("loan_money"+loan_money);
-                if (!loan_money.equals("")){
+                System.out.println("loan_money" + loan_money);
+                if (!loan_money.equals("")) {
                     System.out.println("aaaaa");
                     double money = Double.valueOf(loan_money);
                     mOrderAddressInfo.setMoney(money);
                 }
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("UserId", userId);
+                jsonObject.addProperty("Address", mOrderAddressInfo.getReceiptAddress());
+                jsonObject.addProperty("Contacts", name);
+                jsonObject.addProperty("Tel", tel);
+                jsonObject.addProperty("Lat", mOrderAddressInfo.getLat());
+                jsonObject.addProperty("Lng", mOrderAddressInfo.getLng());
                 mOrderAddressInfo.setReceipter(name);
                 mOrderAddressInfo.setReceiptTel(tel);
-                getIntent().putExtra("position", pst);
-                getIntent().putExtra("orderAddressInfo", mOrderAddressInfo);
-                getIntent().putExtra("type", type);
-                setResult(RESULT_OK, getIntent());
-                finish();
+                if (cb_common_address.isChecked()) {
+
+                    LogUtil.i(jsonObject.toString());
+                    Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
+                    HttpUtil.doPost(ImproveDisclosureActivity.this, Contants.url_saveUserAddress, "saveUserAddress", map, new VolleyInterface(ImproveDisclosureActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
+                        @Override
+                        public void onSuccess(JsonElement result) {
+                            LogUtil.i(result.toString());
+                            showShortToastByString("添加成功");
+                            getIntent().putExtra("position", pst);
+                            getIntent().putExtra("orderAddressInfo", mOrderAddressInfo);
+                            getIntent().putExtra("type", type);
+                            setResult(RESULT_OK, getIntent());
+                            finish();
+
+                        }
+
+                        @Override
+                        public void onError(VolleyError error) {
+                            showShortToastByString(getString(R.string.timeoutError));
+//                          LogUtil.i("hint",error.networkResponse.headers.toString());
+//                          LogUtil.i("hint",error.networkResponse.statusCode+"");
+                        }
+
+                        @Override
+                        public void onStateError() {
+
+                        }
+                    });
+                } else {
+                    getIntent().putExtra("position", pst);
+                    getIntent().putExtra("orderAddressInfo", mOrderAddressInfo);
+                    getIntent().putExtra("type", type);
+                    setResult(RESULT_OK, getIntent());
+                    finish();
+                }
                 break;
         }
     }

@@ -101,4 +101,5 @@
     <string name="hour">时</string>
     <string name="minute">分</string>
     <string name="order_offers">查询报价</string>
+    <string name="car_location">车辆定位</string>
 </resources>

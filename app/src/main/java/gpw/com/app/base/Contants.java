@@ -39,4 +39,7 @@ public class Contants {
     public static String url_cancelOrder = localhost + "Orders/CancelOrder";
     public static String url_getOrderOffers = localhost + "Consignor/GetOrderOffers";
     public static String url_getSendOrderDetail = localhost + "Consignor/GetSendOrderDetail";
+    public static String url_payAmount = localhost + "Finance/PayAmount";
+    public static String url_keepTransporter = localhost + "Consignor/KeepTransporter";
+    public static String url_getVehicleLocation = localhost + "Basic/GetVehicleLocation";
 }

@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:background="@color/color_red"
     android:fitsSystemWindows="true"
-    tools:context="gpw.com.app.activity.OrderDetailActivity">
+    tools:context=".activity.CarLocationActivity">
 
     <include
         android:layout_width="match_parent"
@@ -22,14 +22,13 @@
         android:background="#ffffff"
         android:layout_weight="1">
 
-        <ListView
-            android:id="@+id/lv_order_detail"
-            android:layout_marginTop="10dp"
+        <com.baidu.mapapi.map.MapView
+            android:id="@+id/map_view"
             android:layout_width="match_parent"
-            android:divider="@null"
-            android:layout_height="match_parent">
-
-        </ListView>
+            android:layout_height="match_parent"
+            android:background="#00000000"
+            android:clickable="true">
+        </com.baidu.mapapi.map.MapView>
 
     </LinearLayout>
 </LinearLayout>

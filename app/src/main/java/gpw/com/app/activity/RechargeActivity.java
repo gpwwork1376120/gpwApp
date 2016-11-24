@@ -11,10 +11,23 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import java.util.Map;
+
 import gpw.com.app.R;
 import gpw.com.app.base.BaseActivity;
+import gpw.com.app.base.Contants;
+import gpw.com.app.bean.MoneyInfo;
+import gpw.com.app.util.EncryptUtil;
+import gpw.com.app.util.HttpUtil;
+import gpw.com.app.util.LogUtil;
+import gpw.com.app.util.VolleyInterface;
 
-public class RechargeActivity extends BaseActivity{
+public class RechargeActivity extends BaseActivity {
 
 
     private CheckBox cb_wechat;
@@ -28,6 +41,7 @@ public class RechargeActivity extends BaseActivity{
     private TextView tv_right;
     private ImageView iv_left_white;
     private Button bt_ok;
+    private int PayWay = 2;
 
     @Override
     protected int getLayout() {
@@ -54,7 +68,6 @@ public class RechargeActivity extends BaseActivity{
 
     @Override
     protected void initData() {
-
 
 
     }
@@ -85,24 +98,64 @@ public class RechargeActivity extends BaseActivity{
                 finish();
                 break;
             case R.id.bt_ok:
-
+                recharge();
                 break;
             case R.id.rl_wechat:
             case R.id.cb_wechat:
                 initRadio();
                 cb_wechat.setChecked(true);
+                PayWay = 2;
                 break;
             case R.id.rl_alipay:
             case R.id.cb_alipay:
                 initRadio();
                 cb_alipay.setChecked(true);
+                PayWay = 3;
                 break;
             case R.id.rl_card:
             case R.id.cb_card:
                 initRadio();
                 cb_card.setChecked(true);
+                PayWay =4;
                 break;
         }
+    }
+
+    private void recharge() {
+
+        String money = et_money.getText().toString();
+        if (money.isEmpty()){
+            showShortToastByString("金额不能为空");
+            return;
+        }
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("UserId", Contants.userId);
+        jsonObject.addProperty("UserType", 1);
+        jsonObject.addProperty("Amount", Double.valueOf(money));
+        jsonObject.addProperty("PayWay", PayWay);
+        jsonObject.addProperty("PayType",1);
+        jsonObject.addProperty("AIndex",0);
+        jsonObject.addProperty("OrderNo","");
+
+        Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
+        HttpUtil.doPost(RechargeActivity.this, Contants.url_payAmount, "payAmount", map, new VolleyInterface(RechargeActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
+            @Override
+            public void onSuccess(JsonElement result) {
+                LogUtil.i(result.toString());
+                showShortToastByString(result.toString());
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                showShortToastByString(getString(R.string.timeoutError));
+//                LogUtil.i("hint",error.networkResponse.headers.toString());
+//                LogUtil.i("hint",error.networkResponse.statusCode+"");
+            }
+
+            @Override
+            public void onStateError() {
+            }
+        });
     }
 
     private void initRadio() {

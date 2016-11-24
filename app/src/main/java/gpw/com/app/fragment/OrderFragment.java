@@ -108,7 +108,7 @@ public class OrderFragment extends Fragment implements MyOrderAdapter.OnBtnClick
     }
 
     private void getOrderList(int PageIndex, final int ways) {
-        LogUtil.i("status" + status);
+
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("UserId", Contants.userId);
         jsonObject.addProperty("Status", status);
@@ -119,15 +119,12 @@ public class OrderFragment extends Fragment implements MyOrderAdapter.OnBtnClick
         HttpUtil.doPost(getActivity(), Contants.url_getSendOrderList, "getSendOrderList", map, new VolleyInterface(getActivity(), VolleyInterface.mListener, VolleyInterface.mErrorListener) {
             @Override
             public void onSuccess(JsonElement result) {
-                LogUtil.i("result" + result.toString());
-
                 Gson gson = new Gson();
                 Type listType = new TypeToken<ArrayList<OrderInfo>>() {
                 }.getType();
 
                 ArrayList<OrderInfo> newOrderInfos = gson.fromJson(result, listType);
 
-                LogUtil.i("orderInfos000" + newOrderInfos.toString());
                 if (ways == 0) {
                     rv_my_order.refreshComplete("success");
                     CurrentPage = 1;
@@ -140,7 +137,6 @@ public class OrderFragment extends Fragment implements MyOrderAdapter.OnBtnClick
                     }
                     orderInfos.addAll(newOrderInfos);
                 }
-                LogUtil.i("orderInfos" + orderInfos.toString());
                 myOrderAdapter.notifyDataSetChanged();
             }
 
@@ -211,13 +207,12 @@ public class OrderFragment extends Fragment implements MyOrderAdapter.OnBtnClick
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("UserId", Contants.userId);
                 jsonObject.addProperty("UserType", 1);
-                jsonObject.addProperty("OrderNo", orderInfo.getCancelFee());
+                jsonObject.addProperty("OrderNo", orderInfo.getOrderNo());
                 jsonObject.addProperty("Reason", "reason");
                 final Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
                 HttpUtil.doPost(getActivity(), Contants.url_confirmCancel, "confirmCancel", map, new VolleyInterface(getActivity(), VolleyInterface.mListener, VolleyInterface.mErrorListener) {
                     @Override
                     public void onSuccess(JsonElement result) {
-                        LogUtil.i(result.toString());
                         Gson gson = new Gson();
                         PayFeeInfo payFeeInfo = gson.fromJson(result, PayFeeInfo.class);
                         if (payFeeInfo.getPayFee() > 0) {
@@ -258,6 +253,7 @@ public class OrderFragment extends Fragment implements MyOrderAdapter.OnBtnClick
 
 
     private void cancelOrder(Map<String, String> map) {
+
         HttpUtil.doPost(getActivity(), Contants.url_cancelOrder, "cancelOrder", map, new VolleyInterface(getActivity(), VolleyInterface.mListener, VolleyInterface.mErrorListener) {
             @Override
             public void onSuccess(JsonElement result) {

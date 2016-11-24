@@ -9,7 +9,6 @@ import java.util.List;
 
 public class OrderDetailInfo {
 
-
     /**
      * OrderNo : TO20161122000014
      * OrderStatus : 2
@@ -83,7 +82,7 @@ public class OrderDetailInfo {
      * PayStatus : 0
      */
 
-    private List<OrderAddress> OrderAddress;
+    private List<OrderAddressBean> OrderAddress;
 
     public String getOrderNo() {
         return OrderNo;
@@ -301,15 +300,15 @@ public class OrderDetailInfo {
         this.Remark = Remark;
     }
 
-    public List<OrderAddress> getOrderAddress() {
+    public List<OrderAddressBean> getOrderAddress() {
         return OrderAddress;
     }
 
-    public void setOrderAddress(List<OrderAddress> OrderAddress) {
+    public void setOrderAddress(List<OrderAddressBean> OrderAddress) {
         this.OrderAddress = OrderAddress;
     }
 
-    public static class OrderAddress {
+    public static class OrderAddressBean {
         private int AIndex;
         private String Address;
         private String Receipter;
