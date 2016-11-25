@@ -159,6 +159,8 @@ public class PayActivity extends BaseActivity{
             public void onSuccess(JsonElement result) {
                 LogUtil.i(result.toString());
                 showShortToastByString(result.toString());
+                setResult(RESULT_OK,getIntent());
+                finish();
             }
 
             @Override

@@ -43,14 +43,13 @@ public abstract  class VolleyInterface {
                     result = EncryptUtil.decryptDES(result);
                     Gson gson = new Gson();
                     BaseInfo baseInfo = gson.fromJson(result,BaseInfo.class);
+                    LogUtil.i(baseInfo.toString());
                     if (baseInfo.getStatus()!=1){
                         Toast.makeText(mContext, baseInfo.getMessage(), Toast.LENGTH_SHORT).show();
-                        LogUtil.i(baseInfo.toString());
                         onStateError();
                     }else {
                         onSuccess(baseInfo.getData());
                     }
-
 
                 } catch (Exception e) {
                     e.printStackTrace();

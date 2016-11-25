@@ -25,6 +25,7 @@ import gpw.com.app.adapter.OrderAddAdapter;
 import gpw.com.app.base.BaseActivity;
 import gpw.com.app.base.Contants;
 import gpw.com.app.bean.JsonInfo;
+import gpw.com.app.bean.OrderAddressBean;
 import gpw.com.app.bean.OrderAddressInfo;
 import gpw.com.app.util.EncryptUtil;
 import gpw.com.app.util.HttpUtil;
@@ -74,6 +75,16 @@ public class ConfirmOrderActivity extends BaseActivity {
     @Override
     protected void initData() {
         ArrayList<OrderAddressInfo> orderAddressInfos = getIntent().getParcelableArrayListExtra("OrderAddressInfos");
+        ArrayList<OrderAddressBean> orderAddressBeen = new ArrayList<>();
+        int size = orderAddressInfos.size();
+        for (int i = 0; i < size; i++) {
+            OrderAddressBean orderAddressBean = new OrderAddressBean();
+            OrderAddressInfo orderAddressInfo = orderAddressInfos.get(i);
+            orderAddressBean.setAddress(orderAddressInfo.getReceiptAddress());
+            orderAddressBean.setReceipter(orderAddressInfo.getReceipter());
+            orderAddressBean.setTel(orderAddressInfo.getReceiptTel());
+            orderAddressBeen.add(orderAddressBean);
+        }
         orderType = getIntent().getIntExtra("type", 0);
         carType = getIntent().getIntExtra("carType", 0);
         money = getIntent().getStringExtra("money");
@@ -81,7 +92,7 @@ public class ConfirmOrderActivity extends BaseActivity {
         String mapJson = getIntent().getStringExtra("mapJson");
         jsonObject = new JsonParser().parse(mapJson).getAsJsonObject();
         jsonObject.addProperty("PayWay",0);
-        orderAddAdapter = new OrderAddAdapter(orderAddressInfos, this);
+        orderAddAdapter = new OrderAddAdapter(orderAddressBeen, this);
     }
 
     @Override
@@ -112,7 +123,6 @@ public class ConfirmOrderActivity extends BaseActivity {
                 break;
             case R.id.bt_recharge:
                 publishOrder();
-
                 break;
         }
     }
@@ -125,8 +135,8 @@ public class ConfirmOrderActivity extends BaseActivity {
                 public void onSuccess(JsonElement result) {
                     LogUtil.i(result.toString());
                     showShortToastByString("货源发布成功");
-                    Intent intent = new Intent(ConfirmOrderActivity.this, MyOrderActivity.class);
-                    startActivity(intent);
+                    setResult(RESULT_OK,getIntent());
+                    finish();
                 }
 
                 @Override
@@ -144,8 +154,8 @@ public class ConfirmOrderActivity extends BaseActivity {
                 public void onSuccess(JsonElement result) {
                     LogUtil.i(result.toString());
                     showShortToastByString("货源发布成功");
-                    Intent intent = new Intent(ConfirmOrderActivity.this, MyOrderActivity.class);
-                    startActivity(intent);
+                    setResult(RESULT_OK,getIntent());
+                    finish();
                 }
 
                 @Override

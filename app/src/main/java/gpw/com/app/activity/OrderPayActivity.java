@@ -22,6 +22,7 @@ import gpw.com.app.adapter.OrderAddAdapter;
 import gpw.com.app.base.BaseActivity;
 import gpw.com.app.base.Contants;
 import gpw.com.app.bean.JsonInfo;
+import gpw.com.app.bean.OrderAddressBean;
 import gpw.com.app.bean.OrderAddressInfo;
 import gpw.com.app.util.EncryptUtil;
 import gpw.com.app.util.HttpUtil;
@@ -55,6 +56,8 @@ public class OrderPayActivity extends BaseActivity {
     private String money;
     private String time;
     private int payType = 1;
+    private boolean isAfterPay;
+    private String orderId;
 
     @Override
     protected int getLayout() {
@@ -89,14 +92,34 @@ public class OrderPayActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        ArrayList<OrderAddressInfo> orderAddressInfos = getIntent().getParcelableArrayListExtra("OrderAddressInfos");
+
+        isAfterPay = getIntent().getBooleanExtra("isAfterPay", false);
+
+
+        ArrayList<OrderAddressBean> orderAddressBeen = new ArrayList<>();
+        if (isAfterPay) {
+            orderAddressBeen = getIntent().getParcelableArrayListExtra("orderAddressBeen");
+            orderId = getIntent().getStringExtra("orderId");
+        } else {
+            ArrayList<OrderAddressInfo> orderAddressInfos = getIntent().getParcelableArrayListExtra("OrderAddressInfos");
+            int size = orderAddressInfos.size();
+            for (int i = 0; i < size; i++) {
+                OrderAddressBean orderAddressBean = new OrderAddressBean();
+                OrderAddressInfo orderAddressInfo = orderAddressInfos.get(i);
+                orderAddressBean.setAddress(orderAddressInfo.getReceiptAddress());
+                orderAddressBean.setReceipter(orderAddressInfo.getReceipter());
+                orderAddressBean.setTel(orderAddressInfo.getReceiptTel());
+                orderAddressBeen.add(orderAddressBean);
+            }
+            carType = getIntent().getIntExtra("carType", 0);
+            String mapJson = getIntent().getStringExtra("mapJson");
+            jsonObject = new JsonParser().parse(mapJson).getAsJsonObject();
+        }
+
         orderType = getIntent().getIntExtra("type", 0);
-        carType = getIntent().getIntExtra("carType", 0);
-        String mapJson = getIntent().getStringExtra("mapJson");
-        jsonObject = new JsonParser().parse(mapJson).getAsJsonObject();
         money = getIntent().getStringExtra("money");
         time = getIntent().getStringExtra("time");
-        orderAddAdapter = new OrderAddAdapter(orderAddressInfos, this);
+        orderAddAdapter = new OrderAddAdapter(orderAddressBeen, this);
     }
 
     @Override
@@ -137,34 +160,39 @@ public class OrderPayActivity extends BaseActivity {
             case R.id.cb_wallet:
                 initRadio();
                 cb_wallet.setChecked(true);
-                payType =1;
+                payType = 1;
                 break;
             case R.id.rl_wechat:
             case R.id.cb_wechat:
                 initRadio();
                 cb_wechat.setChecked(true);
-                payType =2;
+                payType = 2;
                 break;
             case R.id.rl_alipay:
             case R.id.cb_alipay:
                 initRadio();
                 cb_alipay.setChecked(true);
-                payType =3;
+                payType = 3;
                 break;
             case R.id.rl_card:
             case R.id.cb_card:
                 initRadio();
                 cb_card.setChecked(true);
-                payType =4;
+                payType = 4;
                 break;
             case R.id.bt_recharge:
-                publishOrder();
+                if (isAfterPay) {
+                    String amount = money.substring(1);
+                    payOrder(Double.valueOf(amount), 2);
+                } else {
+                    publishOrder();
+                }
                 break;
         }
     }
 
     private void publishOrder() {
-        jsonObject.addProperty("PayWay",payType);
+        jsonObject.addProperty("PayWay", payType);
         Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
         if (carType == 1) {
 
@@ -173,10 +201,9 @@ public class OrderPayActivity extends BaseActivity {
                 public void onSuccess(JsonElement result) {
                     LogUtil.i(result.toString());
                     showShortToastByString("货源发布成功");
-                    String amount = money.substring(1);
-                    payOrder(Double.valueOf(amount),2);
-                    Intent intent = new Intent(OrderPayActivity.this, MyOrderActivity.class);
-                    startActivity(intent);
+                    setResult(RESULT_OK,getIntent());
+                    finish();
+
                 }
 
                 @Override
@@ -186,6 +213,9 @@ public class OrderPayActivity extends BaseActivity {
 
                 @Override
                 public void onStateError() {
+                    if (payType != 1) {
+                        showShortToastByString("支付失败，订单已产生");
+                    }
                 }
             });
         } else if (carType == 2) {
@@ -193,11 +223,9 @@ public class OrderPayActivity extends BaseActivity {
                 @Override
                 public void onSuccess(JsonElement result) {
                     LogUtil.i(result.toString());
-                    String amount = money.substring(1);
-                    payOrder(Double.valueOf(amount),2);
                     showShortToastByString("货源发布成功");
-                    Intent intent = new Intent(OrderPayActivity.this, MyOrderActivity.class);
-                    startActivity(intent);
+                    setResult(RESULT_OK,getIntent());
+                    finish();
                 }
 
                 @Override
@@ -207,28 +235,33 @@ public class OrderPayActivity extends BaseActivity {
 
                 @Override
                 public void onStateError() {
+                    if (payType != 1) {
+                        showShortToastByString("支付失败，订单已产生");
+                    }
                 }
             });
         }
     }
 
-    private void payOrder(double money,int type) {
+    private void payOrder(double money, int type) {
 
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("UserId", Contants.userId);
         jsonObject.addProperty("UserType", 1);
         jsonObject.addProperty("Amount", money);
         jsonObject.addProperty("PayWay", payType);
-        jsonObject.addProperty("PayType",type);
-        jsonObject.addProperty("AIndex",0);
-        jsonObject.addProperty("OrderNo","");
+        jsonObject.addProperty("PayType", type);
+        jsonObject.addProperty("AIndex", 0);
+        jsonObject.addProperty("OrderNo", orderId);
 
         Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
         HttpUtil.doPost(OrderPayActivity.this, Contants.url_payAmount, "payAmount", map, new VolleyInterface(OrderPayActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
             @Override
             public void onSuccess(JsonElement result) {
                 LogUtil.i(result.toString());
-                showShortToastByString(result.toString());
+                showShortToastByString("支付成功");
+                setResult(RESULT_OK,getIntent());
+                finish();
             }
 
             @Override
@@ -240,6 +273,7 @@ public class OrderPayActivity extends BaseActivity {
 
             @Override
             public void onStateError() {
+                showShortToastByString("支付失败");
             }
         });
     }

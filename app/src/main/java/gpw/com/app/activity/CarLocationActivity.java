@@ -72,6 +72,7 @@ public class CarLocationActivity extends BaseActivity {
     private LatLng latLng;
     MapView mMapView = null;
     private String TransporterId;
+    private String TransporterName;
 
 
     @Override
@@ -93,6 +94,7 @@ public class CarLocationActivity extends BaseActivity {
     @Override
     protected void initData() {
         TransporterId = getIntent().getStringExtra("TransporterId");
+        TransporterName = getIntent().getStringExtra("TransporterName");
     }
 
     @Override
@@ -126,7 +128,7 @@ public class CarLocationActivity extends BaseActivity {
                 mBaiduMap.addOverlay(option);
 
                 Button button = new Button(CarLocationActivity.this);
-                button.setText(carLoactionInfo.getGpsNo());
+                button.setText(TransporterName+"  "+carLoactionInfo.getVehicleNo());
                 InfoWindow mInfoWindow = new InfoWindow(button, latLng, -85);
                 mBaiduMap.showInfoWindow(mInfoWindow);
 

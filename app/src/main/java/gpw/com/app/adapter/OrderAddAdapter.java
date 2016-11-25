@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import gpw.com.app.R;
 import gpw.com.app.bean.ConvoyInfo;
+import gpw.com.app.bean.OrderAddressBean;
 import gpw.com.app.bean.OrderAddressInfo;
 
 /**
@@ -23,23 +24,25 @@ import gpw.com.app.bean.OrderAddressInfo;
  */
 
 public class OrderAddAdapter extends BaseAdapter {
-    private ArrayList<OrderAddressInfo> mOrderAddressInfos;
+    private ArrayList<OrderAddressBean> orderAddressBeen;
     private Context mContext;
+    private int size;
 
-    public OrderAddAdapter(ArrayList<OrderAddressInfo> mOrderAddressInfos, Context mContext) {
+    public OrderAddAdapter(ArrayList<OrderAddressBean> orderAddressBeen, Context mContext) {
         super();
-        this.mOrderAddressInfos = mOrderAddressInfos;
+        this.orderAddressBeen = orderAddressBeen;
         this.mContext = mContext;
+        this.size = orderAddressBeen.size();
     }
 
     @Override
     public int getCount() {
-        return mOrderAddressInfos.size();
+        return orderAddressBeen.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mOrderAddressInfos.get(position);
+        return orderAddressBeen.get(position);
     }
 
     @Override
@@ -62,16 +65,19 @@ public class OrderAddAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        OrderAddressInfo orderAddressInfo  =mOrderAddressInfos.get(position);
-        if (orderAddressInfo.getState() == 1) {
+
+        OrderAddressBean addressBean  =orderAddressBeen.get(position);
+        if (position== 0) {
             viewHolder.iv_state.setImageResource(R.mipmap.start);
-        } else if (orderAddressInfo.getState() == 2) {
+        } else if (position== 2) {
             viewHolder.iv_state.setImageResource(R.mipmap.pass);
         } else {
             viewHolder.iv_state.setImageResource(R.mipmap.arrive);
         }
-        viewHolder.tv_address.setText(orderAddressInfo.getReceiptAddress());
-        viewHolder.tv_contact.setText(String.format("%s %s", orderAddressInfo.getReceipter(), orderAddressInfo.getReceiptTel()));
+
+
+        viewHolder.tv_address.setText(addressBean.getAddress());
+        viewHolder.tv_contact.setText(String.format("%s %s", addressBean.getReceipter(), addressBean.getTel()));
         viewHolder.view_line.setBackgroundColor(ContextCompat.getColor(mContext, R.color.color_white));
         return convertView;
     }

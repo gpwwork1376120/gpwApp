@@ -70,6 +70,7 @@ public class OrderDetailActivity extends BaseActivity {
 
     }
 
+
     @Override
     protected void initView() {
 
@@ -108,6 +109,7 @@ public class OrderDetailActivity extends BaseActivity {
                             case "车辆定位":
                                 Intent intent = new Intent(OrderDetailActivity.this, CarLocationActivity.class);
                                 intent.putExtra("TransporterId", orderDetailInfo.getTransporterId());
+                                intent.putExtra("TransporterName", orderDetailInfo.getTransporterName());
                                 startActivity(intent);
                                 break;
                             case "收藏至车队":

@@ -2,6 +2,7 @@ package gpw.com.app.activity;
 
 import android.content.SharedPreferences;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -100,6 +101,38 @@ public class OrderOffersActivity extends BaseActivity {
         tv_title.setText(R.string.order_offers);
         lv_order_offers.setAdapter(orderOffersAdapter);
         lv_order_offers.setEmptyView(tv_empty);
+        lv_order_offers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("UserId", Contants.userId);
+                jsonObject.addProperty("OrderNo", orderId);
+                jsonObject.addProperty("TransporterId",orderOfferInfos.get(position).getTransporterId());
+                LogUtil.i(jsonObject.toString());
+                Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
+
+                HttpUtil.doPost(OrderOffersActivity.this, Contants.url_confirmTransporter, "confirmTransporter", map, new VolleyInterface(OrderOffersActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
+                    @Override
+                    public void onSuccess(JsonElement result) {
+                        LogUtil.i(result.toString());
+                        showShortToastByString(result.toString());
+
+                    }
+
+                    @Override
+                    public void onError(VolleyError error) {
+                        showShortToastByString(getString(R.string.timeoutError));
+//                LogUtil.i("hint",error.networkResponse.headers.toString());
+//                LogUtil.i("hint",error.networkResponse.statusCode+"");
+                    }
+
+                    @Override
+                    public void onStateError() {
+                    }
+                });
+            }
+        });
         tv_right.setVisibility(View.GONE);
         iv_left_white.setOnClickListener(this);
         mLocationClient.start();

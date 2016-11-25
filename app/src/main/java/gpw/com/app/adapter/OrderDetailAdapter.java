@@ -79,8 +79,8 @@ public class OrderDetailAdapter extends BaseAdapter {
             viewHolder.ll_carInfo = (LinearLayout) convertView.findViewById(R.id.ll_carInfo);
             viewHolder.bt_1 = (Button) convertView.findViewById(R.id.bt_1);
             viewHolder.bt_2 = (Button) convertView.findViewById(R.id.bt_2);
-            viewHolder.rb_score = (RatingBar) convertView.findViewById(R.id.rb_score);
-            viewHolder.rb_score1 = (RatingBar) convertView.findViewById(R.id.rb_score1);
+            viewHolder.rb_score = (RatingBar) convertView.findViewById(R.id.rb_score1);
+            viewHolder.rb_score1 = (RatingBar) convertView.findViewById(R.id.rb_score);
             viewHolder.iv_state = (ImageView) convertView.findViewById(R.id.iv_state);
             viewHolder.rl_line = (RelativeLayout) convertView.findViewById(R.id.rl_line);
             convertView.setTag(viewHolder);

@@ -44,4 +44,5 @@ public class Contants {
     public static String url_getVehicleLocation = localhost + "Basic/GetVehicleLocation";
     public static String url_updateOrder = localhost + "Orders/UpdateOrder";
     public static String url_deleteTransportTeam = localhost + "Consignor/DeleteTransportTeam";
+    public static String url_confirmTransporter = localhost + "Consignor/ConfirmTransporter";
 }

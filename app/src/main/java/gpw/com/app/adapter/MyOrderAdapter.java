@@ -66,6 +66,8 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHold
         viewHolder.tv_orderId.setText(String.format("订单号：%s", orderInfo.getOrderNo()));
         viewHolder.tv_time.setText(orderInfo.getPlanSendTime());
 
+
+
         if (orderInfo.getCancelFee() > 0) {
             viewHolder.tv_state.setVisibility(View.VISIBLE);
             viewHolder.bt_query.setVisibility(View.VISIBLE);

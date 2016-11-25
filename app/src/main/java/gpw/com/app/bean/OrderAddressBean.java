@@ -1,6 +1,9 @@
 package gpw.com.app.bean;
 
-public class OrderAddressBean {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class OrderAddressBean implements Parcelable {
     private String Address;
     private String Receipter;
     private String Tel;
@@ -37,4 +40,37 @@ public class OrderAddressBean {
                 ", Tel='" + Tel + '\'' +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.Address);
+        dest.writeString(this.Receipter);
+        dest.writeString(this.Tel);
+    }
+
+    public OrderAddressBean() {
+    }
+
+    protected OrderAddressBean(Parcel in) {
+        this.Address = in.readString();
+        this.Receipter = in.readString();
+        this.Tel = in.readString();
+    }
+
+    public static final Parcelable.Creator<OrderAddressBean> CREATOR = new Parcelable.Creator<OrderAddressBean>() {
+        @Override
+        public OrderAddressBean createFromParcel(Parcel source) {
+            return new OrderAddressBean(source);
+        }
+
+        @Override
+        public OrderAddressBean[] newArray(int size) {
+            return new OrderAddressBean[size];
+        }
+    };
 }

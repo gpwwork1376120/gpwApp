@@ -28,10 +28,14 @@ import gpw.com.app.activity.CommonAddressActivity;
 import gpw.com.app.activity.MyWalletActivity;
 import gpw.com.app.activity.OrderDetailActivity;
 import gpw.com.app.activity.OrderOffersActivity;
+import gpw.com.app.activity.OrderPayActivity;
 import gpw.com.app.activity.PayActivity;
 import gpw.com.app.adapter.MyOrderAdapter;
+import gpw.com.app.adapter.OrderAddInfoAdapter;
 import gpw.com.app.base.Contants;
 import gpw.com.app.bean.MoneyInfo;
+import gpw.com.app.bean.OrderAddressBean;
+import gpw.com.app.bean.OrderAddressInfo;
 import gpw.com.app.bean.OrderInfo;
 import gpw.com.app.bean.PayFeeInfo;
 import gpw.com.app.util.EncryptUtil;
@@ -40,6 +44,8 @@ import gpw.com.app.util.LogUtil;
 import gpw.com.app.util.VolleyInterface;
 import gpw.com.app.view.MyDialog;
 import gpw.com.app.view.XRecyclerView;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -169,24 +175,36 @@ public class OrderFragment extends Fragment implements MyOrderAdapter.OnBtnClick
     @Override
     public void onBtnClick(int position, String viewName) {
         OrderInfo orderInfo = orderInfos.get(position);
-        Intent intent = null;
+        Intent intent = new Intent();
         switch (viewName) {
             case "查询报价":
-                    intent = new Intent(getActivity(), OrderOffersActivity.class);
-                    intent.putExtra("orderId", orderInfo.getOrderNo());
-                    getActivity().startActivity(intent);
+                intent = new Intent(getActivity(), OrderOffersActivity.class);
+                intent.putExtra("orderId", orderInfo.getOrderNo());
+                getActivity().startActivity(intent);
                 break;
             case "取消订单":
                 confirmCancel(orderInfo);
                 break;
             case "支付":
-                if(orderInfo.getCancelFee() > 0){
+                if (orderInfo.getCancelFee() > 0) {
                     intent.setClass(getActivity(), PayActivity.class);
                     intent.putExtra("orderId", orderInfo.getOrderNo());
-                    getActivity().startActivity(intent);
+                    getActivity().startActivityForResult(intent,1);
+                } else {
+                    String money = String.format("¥%s", orderInfo.getFreight());
+                    Gson gson = new Gson();
+                    Type listType = new TypeToken<ArrayList<OrderAddressBean>>() {
+                    }.getType();
+                    ArrayList<OrderAddressBean> orderAddressBeen = gson.fromJson(orderInfo.getJsonElement(), listType);
 
-                }else {
-
+                    intent.setClass(getActivity(), OrderPayActivity.class);
+                    intent.putExtra("orderId", orderInfo.getOrderNo());
+                    intent.putExtra("type", orderInfo.getOrderType());
+                    intent.putParcelableArrayListExtra("orderAddressBeen", orderAddressBeen);
+                    intent.putExtra("money", money);
+                    intent.putExtra("time", orderInfo.getPlanSendTime());
+                    intent.putExtra("isAfterPay", true);
+                    getActivity().startActivityForResult(intent,1);
                 }
                 break;
             case "查看详情":
@@ -233,7 +251,10 @@ public class OrderFragment extends Fragment implements MyOrderAdapter.OnBtnClick
                                         }
                                     }).show();
                         } else {
-                            cancelOrder(map);
+                            endDialog.dismiss();
+                            Toast.makeText(mContext, "取消成功", Toast.LENGTH_SHORT).show();
+                            getOrderList(1, 0);
+
                         }
                     }
 
@@ -259,6 +280,7 @@ public class OrderFragment extends Fragment implements MyOrderAdapter.OnBtnClick
             public void onSuccess(JsonElement result) {
                 endDialog.dismiss();
                 Toast.makeText(mContext, "取消成功", Toast.LENGTH_SHORT).show();
+                getOrderList(1, 0);
             }
 
             @Override
@@ -271,5 +293,13 @@ public class OrderFragment extends Fragment implements MyOrderAdapter.OnBtnClick
 
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK){
+            getOrderList(1, 0);
+        }
     }
 }
