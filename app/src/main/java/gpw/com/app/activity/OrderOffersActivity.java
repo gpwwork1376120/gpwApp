@@ -1,6 +1,11 @@
 package gpw.com.app.activity;
 
+import android.Manifest;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -8,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.baidu.location.BDLocation;
@@ -36,7 +42,9 @@ import gpw.com.app.R;
 import gpw.com.app.adapter.OrderOffersAdapter;
 import gpw.com.app.base.BaseActivity;
 import gpw.com.app.base.Contants;
+import gpw.com.app.bean.OrderAddressBean;
 import gpw.com.app.bean.OrderOfferInfo;
+import gpw.com.app.bean.PayAmount;
 import gpw.com.app.util.EncryptUtil;
 import gpw.com.app.util.HttpUtil;
 import gpw.com.app.util.LogUtil;
@@ -51,6 +59,11 @@ public class OrderOffersActivity extends BaseActivity {
     private ArrayList<OrderOfferInfo> orderOfferInfos;
     private OrderOffersAdapter orderOffersAdapter;
     private String orderId;
+    private String money;
+    private String time;
+    private int orderType;
+    private boolean isChange = false;
+    private ArrayList<OrderAddressBean> orderAddressBeen;
     public LocationClient mLocationClient = null;
     public BDLocationListener myListener = new MyLocationListener();
 
@@ -72,10 +85,20 @@ public class OrderOffersActivity extends BaseActivity {
 
     }
 
+
+    @Override
+    protected void initData() {
+        orderOfferInfos = new ArrayList<>();
+        orderOffersAdapter = new OrderOffersAdapter(orderOfferInfos, this);
+        orderId = getIntent().getStringExtra("orderId");
+        orderType = getIntent().getIntExtra("type", 0);
+        time = getIntent().getStringExtra("time");
+        orderAddressBeen = getIntent().getParcelableArrayListExtra("orderAddressBeen");
+        initLocation();
+    }
     private void initLocation() {
         mLocationClient = new LocationClient(OrderOffersActivity.this);     //声明LocationClient类
         mLocationClient.registerLocationListener(myListener);    //注册监听函数
-
         LocationClientOption mOption = new LocationClientOption();
         mOption.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
         mOption.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系，如果配合百度地图使用，建议设置为bd09ll;
@@ -86,15 +109,6 @@ public class OrderOffersActivity extends BaseActivity {
         mOption.setIgnoreKillProcess(true);//可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
         mLocationClient.setLocOption(mOption);
     }
-
-    @Override
-    protected void initData() {
-        orderOfferInfos = new ArrayList<>();
-        orderOffersAdapter = new OrderOffersAdapter(orderOfferInfos, this);
-        orderId = getIntent().getStringExtra("orderId");
-        initLocation();
-    }
-
 
     @Override
     protected void initView() {
@@ -108,7 +122,7 @@ public class OrderOffersActivity extends BaseActivity {
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("UserId", Contants.userId);
                 jsonObject.addProperty("OrderNo", orderId);
-                jsonObject.addProperty("TransporterId",orderOfferInfos.get(position).getTransporterId());
+                jsonObject.addProperty("TransporterId", orderOfferInfos.get(position).getTransporterId());
                 LogUtil.i(jsonObject.toString());
                 Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
 
@@ -117,7 +131,18 @@ public class OrderOffersActivity extends BaseActivity {
                     public void onSuccess(JsonElement result) {
                         LogUtil.i(result.toString());
                         showShortToastByString(result.toString());
-
+                        isChange = true;
+                        Gson gson = new Gson();
+                        PayAmount payAmount = gson.fromJson(result, PayAmount.class);
+                        money = String.format("¥%s", payAmount.getPayAmount());
+                        Intent intent = new Intent(OrderOffersActivity.this, OrderPayActivity.class);
+                        intent.putExtra("orderId", orderId);
+                        intent.putExtra("type", orderType);
+                        intent.putParcelableArrayListExtra("orderAddressBeen", orderAddressBeen);
+                        intent.putExtra("time", time);
+                        intent.putExtra("money", money);
+                        intent.putExtra("isAfterPay", true);
+                        startActivityForResult(intent, 1);
                     }
 
                     @Override
@@ -135,7 +160,16 @@ public class OrderOffersActivity extends BaseActivity {
         });
         tv_right.setVisibility(View.GONE);
         iv_left_white.setOnClickListener(this);
-        mLocationClient.start();
+
+        if (ContextCompat.checkSelfPermission(OrderOffersActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(OrderOffersActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(OrderOffersActivity.this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.READ_PHONE_STATE}, 200);
+        } else {
+            mLocationClient.start();
+        }
     }
 
 
@@ -143,11 +177,32 @@ public class OrderOffersActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_left_white:
+                if (isChange) {
+                    setResult(RESULT_OK, getIntent());
+                }
                 finish();
                 break;
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (requestCode == 200) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                mLocationClient.start();
+            } else {
+                Toast.makeText(OrderOffersActivity.this, "Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (isChange) {
+            setResult(RESULT_OK, getIntent());
+        }
+    }
 
     @Override
     protected void onDestroy() {
@@ -175,7 +230,7 @@ public class OrderOffersActivity extends BaseActivity {
             HttpUtil.doPost(OrderOffersActivity.this, Contants.url_getOrderOffers, "getUserBalance", map, new VolleyInterface(OrderOffersActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
                 @Override
                 public void onSuccess(JsonElement result) {
-                    LogUtil.i("offer"+result.toString());
+                    LogUtil.i("offer" + result.toString());
                     Gson gson = new Gson();
                     Type listType = new TypeToken<ArrayList<OrderOfferInfo>>() {
                     }.getType();
@@ -197,6 +252,15 @@ public class OrderOffersActivity extends BaseActivity {
                 }
             });
 
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            setResult(RESULT_OK, getIntent());
+            finish();
         }
     }
 }

@@ -9,6 +9,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
@@ -145,7 +147,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     private int cofirmTypeId;
     private String payFreightTel;
     private String remark;
-
+    private long mExitTime;
     private CustomDatePicker timePickerView;
 
 
@@ -248,6 +250,24 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
 
 
     }
+
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if ((System.currentTimeMillis() - mExitTime) > 2000) {
+
+                Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                mExitTime = System.currentTimeMillis();
+
+            } else {
+                finish();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 
     private void initOrderData() {
         premiums = 100;
@@ -769,7 +789,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 public void onSuccess(JsonElement result) {
                     LogUtil.i(result.toString());
                     initOrderData();
-                    Intent intent = new Intent(MainActivity.this,MyOrderActivity.class);
+                    Intent intent = new Intent(MainActivity.this, MyOrderActivity.class);
                     startActivity(intent);
                 }
 
@@ -839,7 +859,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 public void onSuccess(JsonElement result) {
                     LogUtil.i(result.toString());
                     initOrderData();
-                    Intent intent = new Intent(MainActivity.this,MyOrderActivity.class);
+                    Intent intent = new Intent(MainActivity.this, MyOrderActivity.class);
                     startActivity(intent);
 
                 }

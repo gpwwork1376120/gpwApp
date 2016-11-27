@@ -25,6 +25,8 @@ public class UserInfo implements Parcelable {
     private String HeadIco;
     private String Sex;
     private String Address;
+    private double Balance;
+    private double Frozen;
 
     public String getUserId() {
         return UserId;
@@ -74,6 +76,22 @@ public class UserInfo implements Parcelable {
         this.Address = Address;
     }
 
+    public double getBalance() {
+        return Balance;
+    }
+
+    public void setBalance(double balance) {
+        Balance = balance;
+    }
+
+    public double getFrozen() {
+        return Frozen;
+    }
+
+    public void setFrozen(double frozen) {
+        Frozen = frozen;
+    }
+
     @Override
     public String toString() {
         return "UserInfo{" +
@@ -85,6 +103,7 @@ public class UserInfo implements Parcelable {
                 ", Address='" + Address + '\'' +
                 '}';
     }
+
 
     @Override
     public int describeContents() {
@@ -99,6 +118,8 @@ public class UserInfo implements Parcelable {
         dest.writeString(this.HeadIco);
         dest.writeString(this.Sex);
         dest.writeString(this.Address);
+        dest.writeDouble(this.Balance);
+        dest.writeDouble(this.Frozen);
     }
 
     public UserInfo() {
@@ -111,9 +132,11 @@ public class UserInfo implements Parcelable {
         this.HeadIco = in.readString();
         this.Sex = in.readString();
         this.Address = in.readString();
+        this.Balance = in.readDouble();
+        this.Frozen = in.readDouble();
     }
 
-    public static final Parcelable.Creator<UserInfo> CREATOR = new Parcelable.Creator<UserInfo>() {
+    public static final Creator<UserInfo> CREATOR = new Creator<UserInfo>() {
         @Override
         public UserInfo createFromParcel(Parcel source) {
             return new UserInfo(source);

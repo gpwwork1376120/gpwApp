@@ -28,16 +28,20 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.MainActivity"
-            android:theme="@style/GrayTranslucentTheme" />
+            android:theme="@style/GrayTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.SettingActivity"
-            android:theme="@style/RedTranslucentTheme" />
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.MyOrderActivity"
-            android:theme="@style/RedTranslucentTheme" />
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.LoginActivity"
-            android:theme="@style/ImageTranslucentTheme">
+            android:theme="@style/ImageTranslucentTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -46,76 +50,100 @@
         </activity>
         <activity
             android:name=".activity.RegisterActivity"
-            android:theme="@style/ImageTranslucentTheme" />
+            android:theme="@style/ImageTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.RebuildPsdActivity"
-            android:theme="@style/RedTranslucentTheme" />
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.PersonalInfoActivity"
-            android:theme="@style/RedTranslucentTheme" />
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.MyWalletActivity"
-            android:theme="@style/RedTranslucentTheme" />
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.RechargeActivity"
-            android:theme="@style/RedTranslucentTheme" />
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.AboutUsActivity"
-            android:theme="@style/RedTranslucentTheme" />
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.FeedbackActivity"
-            android:theme="@style/RedTranslucentTheme" />
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.MyConvoyActivity"
-            android:theme="@style/RedTranslucentTheme" />
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.MyInvoiceActivity"
-            android:theme="@style/RedTranslucentTheme" />
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.ApplyInvoiceActivity"
-            android:theme="@style/RedTranslucentTheme" />
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.FAQActivity"
-            android:theme="@style/RedTranslucentTheme" />
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.ChargeScheduleActivity"
-            android:theme="@style/RedTranslucentTheme" />
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.FeeScaleActivity"
-            android:theme="@style/RedTranslucentTheme" />
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.CommonAddressActivity"
-            android:theme="@style/RedTranslucentTheme" />
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.BenefitActivityActivity"
-            android:theme="@style/RedTranslucentTheme" />
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.RechargeHintActivity"
-            android:theme="@style/RedTranslucentTheme" />
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.ConfirmOrderActivity"
-            android:theme="@style/RedTranslucentTheme" />
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.MoneyDetailActivity"
-            android:theme="@style/RedTranslucentTheme" />
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.MyNewsActivity"
-            android:theme="@style/RedTranslucentTheme" />
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.InvoiceRuleActivity"
-            android:theme="@style/RedTranslucentTheme" />
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.OrderDetailActivity"
-            android:theme="@style/RedTranslucentTheme" />
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.PayActivity"
-            android:theme="@style/RedTranslucentTheme" />
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.MapActivity"
-            android:theme="@style/GrayTranslucentTheme" />
+            android:theme="@style/GrayTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.AddMapActivity"
-            android:theme="@style/GrayTranslucentTheme" />
+            android:theme="@style/GrayTranslucentTheme"
+            android:screenOrientation="portrait"/>
 
         <service
             android:name="com.baidu.location.f"
@@ -128,13 +156,16 @@
 
         <activity
             android:name=".activity.ImproveDisclosureActivity"
-            android:theme="@style/RedTranslucentTheme" />
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.EditAddressActivity"
-            android:theme="@style/RedTranslucentTheme" />
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.CargoInsuranceActivity"
-            android:theme="@style/RedTranslucentTheme" />
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.alipay.sdk.app.H5PayActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
@@ -147,13 +178,16 @@
             android:screenOrientation="behind"></activity>
         <activity
             android:name=".activity.OrderOffersActivity"
-            android:theme="@style/RedTranslucentTheme"></activity>
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.OrderPayActivity"
-            android:theme="@style/RedTranslucentTheme"></activity>
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.CarLocationActivity"
-            android:theme="@style/RedTranslucentTheme"></activity>
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"></activity>
 
     </application>
 

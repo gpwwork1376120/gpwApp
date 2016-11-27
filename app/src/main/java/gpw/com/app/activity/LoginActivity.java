@@ -2,8 +2,12 @@ package gpw.com.app.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,10 +41,11 @@ public class LoginActivity extends BaseActivity {
     private EditText et_account;
     private EditText et_password;
     private ImageView iv_close;
-    private ImageView iv_login_eye;
+
     private TextView tv_forget_psd;
     private TextView tv_register;
     private Button bt_login;
+    private CheckBox cb_eye;
 
     private SharedPreferences prefs;
 
@@ -58,10 +63,11 @@ public class LoginActivity extends BaseActivity {
         et_account = (EditText) findViewById(R.id.et_account);
         et_password = (EditText) findViewById(R.id.et_password);
         iv_close = (ImageView) findViewById(R.id.iv_close);
-        iv_login_eye = (ImageView) findViewById(R.id.iv_login_eye);
+
         tv_forget_psd = (TextView) findViewById(R.id.tv_forget_psd);
         tv_register = (TextView) findViewById(R.id.tv_register);
         bt_login = (Button) findViewById(R.id.bt_login);
+        cb_eye = (CheckBox) findViewById(R.id.cb_eye);
     }
 
     @Override
@@ -76,10 +82,19 @@ public class LoginActivity extends BaseActivity {
         et_password.setText(password);
         et_account.setText(account);
         iv_close.setOnClickListener(this);
-        iv_login_eye.setOnClickListener(this);
         tv_forget_psd.setOnClickListener(this);
         tv_register.setOnClickListener(this);
         bt_login.setOnClickListener(this);
+        cb_eye.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b){
+                    et_password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                }else {
+                    et_password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                }
+            }
+        });
     }
 
     @Override
@@ -93,13 +108,12 @@ public class LoginActivity extends BaseActivity {
                     showShortToastByString(getString(R.string.Neterror));
                 }
                 break;
-            case R.id.iv_login_eye:
-                break;
+
             case R.id.iv_close:
                 break;
             case R.id.tv_forget_psd:
                 intent.setClass(LoginActivity.this, RebuildPsdActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 0);
                 break;
             case R.id.tv_register:
                 intent.setClass(LoginActivity.this, RegisterActivity.class);
@@ -140,6 +154,7 @@ public class LoginActivity extends BaseActivity {
                 final UserInfo userInfo = gson.fromJson(result, UserInfo.class);
                 SharedPreferences.Editor editor = prefs.edit();
                 Contants.userId = userInfo.getUserId();
+                Contants.Balance = userInfo.getBalance();
                 editor.putString("account", account);
                 editor.putString("password", password);
                 editor.putString("UserId", userInfo.getUserId());
@@ -164,6 +179,8 @@ public class LoginActivity extends BaseActivity {
             }
         });
     }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

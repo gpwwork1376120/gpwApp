@@ -154,6 +154,7 @@ public class OrderPayActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_left_white:
+                setResult(RESULT_OK,getIntent());
                 finish();
                 break;
             case R.id.rl_wallet:
@@ -276,6 +277,13 @@ public class OrderPayActivity extends BaseActivity {
                 showShortToastByString("支付失败");
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_OK,getIntent());
+        super.onBackPressed();
+
     }
 
     private void initRadio() {

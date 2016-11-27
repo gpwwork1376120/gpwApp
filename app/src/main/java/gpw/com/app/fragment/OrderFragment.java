@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -55,6 +56,7 @@ public class OrderFragment extends Fragment implements MyOrderAdapter.OnBtnClick
 
     private int status;
     private XRecyclerView rv_my_order;
+    private TextView tv_empty;
     private int CurrentPage = 1;
     private ArrayList<OrderInfo> orderInfos;
     private MyOrderAdapter myOrderAdapter;
@@ -89,9 +91,11 @@ public class OrderFragment extends Fragment implements MyOrderAdapter.OnBtnClick
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_order, container, false);
         rv_my_order = (XRecyclerView) view.findViewById(R.id.rv_my_order);
+        tv_empty = (TextView) view.findViewById(R.id.tv_empty);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_my_order.setLayoutManager(layoutManager);
+        rv_my_order.setEmptyView(tv_empty);
         rv_my_order.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
@@ -176,11 +180,19 @@ public class OrderFragment extends Fragment implements MyOrderAdapter.OnBtnClick
     public void onBtnClick(int position, String viewName) {
         OrderInfo orderInfo = orderInfos.get(position);
         Intent intent = new Intent();
+        Gson gson = new Gson();
+        Type listType = new TypeToken<ArrayList<OrderAddressBean>>() {
+        }.getType();
+        ArrayList<OrderAddressBean> orderAddressBeen = gson.fromJson(orderInfo.getJsonElement(), listType);
         switch (viewName) {
             case "查询报价":
                 intent = new Intent(getActivity(), OrderOffersActivity.class);
                 intent.putExtra("orderId", orderInfo.getOrderNo());
-                getActivity().startActivity(intent);
+                intent.putExtra("type", orderInfo.getOrderType());
+                intent.putParcelableArrayListExtra("orderAddressBeen", orderAddressBeen);
+                intent.putExtra("time", orderInfo.getPlanSendTime());
+                intent.putExtra("isAfterPay", true);
+                getActivity().startActivityForResult(intent,1);
                 break;
             case "取消订单":
                 confirmCancel(orderInfo);
@@ -192,10 +204,7 @@ public class OrderFragment extends Fragment implements MyOrderAdapter.OnBtnClick
                     getActivity().startActivityForResult(intent,1);
                 } else {
                     String money = String.format("¥%s", orderInfo.getFreight());
-                    Gson gson = new Gson();
-                    Type listType = new TypeToken<ArrayList<OrderAddressBean>>() {
-                    }.getType();
-                    ArrayList<OrderAddressBean> orderAddressBeen = gson.fromJson(orderInfo.getJsonElement(), listType);
+
 
                     intent.setClass(getActivity(), OrderPayActivity.class);
                     intent.putExtra("orderId", orderInfo.getOrderNo());

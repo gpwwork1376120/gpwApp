@@ -80,10 +80,14 @@
                 android:hint="@string/hint_input_psd"
                 android:inputType="textPassword"
                 />
-            <ImageView
-                android:id="@+id/iv_login_eye"
+
+            <CheckBox
+                android:id="@+id/cb_eye"
                 android:layout_width="19dp"
                 android:layout_height="19dp"
+                android:scaleX="1.1"
+                android:scaleY="1.1"
+                android:button="@drawable/check_eye"
                 android:src="@mipmap/login_eye"
                 android:layout_gravity="center"
                 />

@@ -1,8 +1,12 @@
 package gpw.com.app.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Build;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -182,7 +186,8 @@ public class AddMapActivity extends BaseActivity {
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(AddMapActivity.this, 50.0f));
             layoutParams.setMargins(DensityUtil.dip2px(AddMapActivity.this, 5.0f), DensityUtil.dip2px(AddMapActivity.this, 15.0f), DensityUtil.dip2px(AddMapActivity.this, 5.0f), 0);
             ll_search.setLayoutParams(layoutParams);
-            view_status.setVisibility(View.GONE);
+            int color = 0xffffff;
+            view_status.setBackgroundColor(color);
         }
     }
 
@@ -275,7 +280,16 @@ public class AddMapActivity extends BaseActivity {
                 }
             });
         } else {
-            mLocationClient.start();
+
+            if (ContextCompat.checkSelfPermission(AddMapActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    || ContextCompat.checkSelfPermission(AddMapActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(AddMapActivity.this,
+                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.READ_PHONE_STATE}, 200);
+            } else {
+                mLocationClient.start();
+            }
         }
 
 
@@ -319,6 +333,17 @@ public class AddMapActivity extends BaseActivity {
 
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (requestCode == 200) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                mLocationClient.start();
+            } else {
+                Toast.makeText(AddMapActivity.this, "Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
 
     @Override
     public void onClick(View v) {

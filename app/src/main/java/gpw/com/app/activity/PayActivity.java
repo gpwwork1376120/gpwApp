@@ -57,7 +57,7 @@ public class PayActivity extends BaseActivity{
         tv_title = (TextView) rl_head.findViewById(R.id.tv_title);
         tv_right = (TextView) rl_head.findViewById(R.id.tv_right);
         iv_left_white = (ImageView) rl_head.findViewById(R.id.iv_left_white);
-        tv_money = (EditText) findViewById(R.id.tv_money1);
+        tv_money = (TextView) findViewById(R.id.tv_money1);
         tv_balance = (TextView) findViewById(R.id.tv_balance);
         rl_wallet = (RelativeLayout) findViewById(R.id.rl_wallet);
         rl_wechat = (RelativeLayout) findViewById(R.id.rl_wechat);

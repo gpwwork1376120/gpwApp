@@ -7,10 +7,13 @@ package gpw.com.app.base;
 
 public class Contants {
     public static String userId;
+    public static double Balance;
     public final static String SHARED_NAME = "gpwsp";
     public static String imagehost = "http://121.40.212.89:8009";
     private static String localhost = "http://121.40.212.89:8009/";
     public static String url_register = localhost + "Register/Register";
+    public static String url_editPassWord= localhost + "Users/EditPassWord";
+    public static String url_updatePassWord= localhost + "Users/UpdatePassWord";
     public static String url_obtainCheckCode = localhost + "Visitors/ObtainCheckCode";
     public static String url_userLogin = localhost + "Register/UserLogin";
     public static String url_getUserAddress = localhost + "Consignor/GetUserAddress";

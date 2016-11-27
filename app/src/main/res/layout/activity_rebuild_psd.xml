@@ -78,10 +78,13 @@
                 android:layout_marginLeft="15dp"
                 android:textSize="@dimen/small_font"
                 android:hint="@string/hint_input_psd1"/>
-            <ImageView
-                android:layout_width="23dp"
-                android:layout_height="23dp"
-                android:src="@mipmap/login_eye"
+            <CheckBox
+                android:id="@+id/cb_eye"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:scaleX="1.2"
+                android:scaleY="1.2"
+                android:button="@drawable/check_eye"
                 android:layout_marginRight="10dp"
                 android:layout_gravity="center"
                 />
@@ -123,6 +126,7 @@
                 android:layout_marginBottom="5dp"
                 android:background="@color/color_red"/>
             <TextView
+                android:id="@+id/get_validate_code"
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:text="@string/get_validate_code"

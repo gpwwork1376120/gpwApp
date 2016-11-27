@@ -1,8 +1,15 @@
 package gpw.com.app.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -43,6 +50,7 @@ import com.baidu.mapapi.search.sug.SuggestionResult;
 import com.baidu.mapapi.search.sug.SuggestionSearch;
 import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import gpw.com.app.R;
@@ -81,7 +89,7 @@ public class MapActivity extends BaseActivity {
     OnGetSuggestionResultListener listener = new OnGetSuggestionResultListener() {
         public void onGetSuggestionResult(SuggestionResult res) {
             if (res == null || res.getAllSuggestions() == null) {
-               // Toast.makeText(MapActivity.this, "没有检索到结果", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(MapActivity.this, "没有检索到结果", Toast.LENGTH_SHORT).show();
                 return;
             }
             lv_search.setVisibility(View.VISIBLE);
@@ -183,7 +191,8 @@ public class MapActivity extends BaseActivity {
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(MapActivity.this, 50.0f));
             layoutParams.setMargins(DensityUtil.dip2px(MapActivity.this, 5.0f), DensityUtil.dip2px(MapActivity.this, 15.0f), DensityUtil.dip2px(MapActivity.this, 5.0f), 0);
             ll_search.setLayoutParams(layoutParams);
-            view_status.setVisibility(View.GONE);
+            int color = 0xffffff;
+            view_status.setBackgroundColor(color);
         }
     }
 
@@ -235,7 +244,17 @@ public class MapActivity extends BaseActivity {
         lv_search.setAdapter(mAddressNameAdapter);
 
         if (mOrderAddressInfo.getReceiptAddress().equals("start")) {
-            mLocationClient.start();
+            if (ContextCompat.checkSelfPermission(MapActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    || ContextCompat.checkSelfPermission(MapActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(MapActivity.this,
+                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.READ_PHONE_STATE}, 200);
+            } else {
+                mLocationClient.start();
+            }
+
+
         } else {
             LatLng latLng = new LatLng(mOrderAddressInfo.getLat(), mOrderAddressInfo.getLng());
             BitmapDescriptor bitmap = BitmapDescriptorFactory
@@ -355,6 +374,19 @@ public class MapActivity extends BaseActivity {
         mMapView.onDestroy();
         mSuggestionSearch.destroy();
         mLocationClient.unRegisterLocationListener(myListener);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (requestCode == 200) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                mLocationClient.start();
+            } else {
+                Toast.makeText(MapActivity.this, "Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
 

@@ -2,9 +2,11 @@ package gpw.com.app.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -127,9 +129,15 @@ public class CarLocationActivity extends BaseActivity {
                         .icon(bitmap);
                 mBaiduMap.addOverlay(option);
 
-                Button button = new Button(CarLocationActivity.this);
-                button.setText(TransporterName+"  "+carLoactionInfo.getVehicleNo());
-                InfoWindow mInfoWindow = new InfoWindow(button, latLng, -85);
+                LinearLayout linearLayout = (LinearLayout) View.inflate(CarLocationActivity.this, R.layout.view_map_bck, null);
+                TextView tv_map_name = (TextView) linearLayout.findViewById(R.id.tv_map_name);
+                TextView tv_map_detail = (TextView) linearLayout.findViewById(R.id.tv_map_detail);
+                tv_map_name.setVisibility(View.GONE);
+                tv_map_name.setPadding(0,10,0,0);
+                tv_map_detail.setText(TransporterName+"  "+carLoactionInfo.getVehicleNo());
+                tv_map_detail.setGravity(Gravity.CENTER);
+
+                InfoWindow mInfoWindow = new InfoWindow(linearLayout, latLng, -55);
                 mBaiduMap.showInfoWindow(mInfoWindow);
 
                 MapStatus mapStatus = new MapStatus.Builder()
@@ -156,17 +164,59 @@ public class CarLocationActivity extends BaseActivity {
     }
 
     private BitmapDescriptor getBitmapDescriptor(int angle) {
-//        int resoure;
-//        switch (angle){
-//            case 0:
-//                resoure=R.mipmap.r_vehicle0;
-//                break;
-//            case 0:
-//                resoure=R.mipmap.r_vehicle0;
-//                break;
-//        }
+        int resource = 0;
+        switch (angle){
+            case 0:
+                resource=R.mipmap.r_vehicle0;
+                break;
+            case 22:
+                resource=R.mipmap.r_vehicle0_45;
+                break;
+            case 45:
+                resource=R.mipmap.r_vehicle45;
+                break;
+            case 67:
+                resource=R.mipmap.r_vehicle45_90;
+                break;
+            case 90:
+                resource=R.mipmap.r_vehicle90;
+                break;
+            case 112:
+                resource=R.mipmap.r_vehicle90_135;
+                break;
+            case 135:
+                resource=R.mipmap.r_vehicle135;
+                break;
+            case 157:
+                resource=R.mipmap.r_vehicle135_180;
+                break;
+            case 180:
+                resource=R.mipmap.r_vehicle180;
+                break;
+            case 202:
+                resource=R.mipmap.r_vehicle180_225;
+                break;
+            case 225:
+                resource=R.mipmap.r_vehicle225;
+                break;
+            case 247:
+                resource=R.mipmap.r_vehicle225_270;
+                break;
+            case 270:
+                resource=R.mipmap.r_vehicle270;
+                break;
+            case 292:
+                resource=R.mipmap.r_vehicle270_315;
+                break;
+            case 315:
+                resource=R.mipmap.r_vehicle315;
+                break;
+            case 337:
+                resource=R.mipmap.r_vehicle315_0;
+                break;
+        }
         return BitmapDescriptorFactory
-                            .fromResource(R.mipmap.location);
+                            .fromResource(resource);
     }
 
 
@@ -183,6 +233,8 @@ public class CarLocationActivity extends BaseActivity {
 
         }
     }
+
+
 
     @Override
     protected void onResume() {
