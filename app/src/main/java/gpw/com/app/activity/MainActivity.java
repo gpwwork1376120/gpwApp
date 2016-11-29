@@ -114,6 +114,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     private LinearLayout ll_0;
     private LinearLayout ll_1;
     private LinearLayout ll_2;
+    private LinearLayout ll_isToPayFreight;
     private ImageView iv_above_gray;
     private TextView tv_remark;
 
@@ -221,6 +222,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         ll_0 = (LinearLayout) dialog_car.findViewById(R.id.ll_0);
         ll_1 = (LinearLayout) dialog_car.findViewById(R.id.ll_1);
         ll_2 = (LinearLayout) dialog_car.findViewById(R.id.ll_2);
+        ll_isToPayFreight = (LinearLayout) dialog_car.findViewById(R.id.ll_isToPayFreight);
 
         cb_isRemove = (CheckBox) dialog_car.findViewById(R.id.cb_isRemove);
         cb_isMove = (CheckBox) dialog_car.findViewById(R.id.cb_isMove);
@@ -275,6 +277,9 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         premiums = 100;
         cofirmTypeId = -1;
         freight = 0;
+        kg="";
+        quantity="";
+        volume="";
 
 
         mOrderAddressInfos.clear();
@@ -552,7 +557,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                     volume = et_volume.getText().toString().trim();
                     kg = et_kg.getText().toString().trim();
                     quantity = et_amount.getText().toString().trim();
-
                     if (volume.isEmpty()) {
                         showShortToastByString("货物的体积不能为空");
                         return;
@@ -562,7 +566,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                         return;
                     }
                     cb_isRemove.setChecked(false);
-
                 }
                 payFreightTel = et_toPayFreightTel.getText().toString();
                 isRemove = cb_isRemove.isChecked();
@@ -721,6 +724,15 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             cb_isSurcharge.setChecked(false);
             et_remark.setText("");
             et_toPayFreightTel.setText("");
+        }else {
+            cb_isRemove.setChecked(isRemove);
+            cb_isMove.setChecked(isMove);
+            cb_isToPayFreight.setChecked(isToPayFreight);
+            cb_isCollectionPayment.setChecked(isCollectionPayment);
+            cb_isMyFleet.setChecked(isMyFleet);
+            cb_isSurcharge.setChecked(isSurcharge);
+            et_remark.setText(remark);
+            et_toPayFreightTel.setText(payFreightTel);
         }
         tv_volume.setText(String.format("运输体积:%sm³", carInfo.getVolume()));
         tv_kg.setText(String.format("载重:%skg", carInfo.getLoadWeight()));
@@ -743,6 +755,18 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             cb_isSurcharge.setChecked(false);
             et_remark.setText("");
             et_toPayFreightTel.setText("");
+        }else {
+            cb_isRemove.setChecked(isRemove);
+            cb_isMove.setChecked(isMove);
+            cb_isToPayFreight.setChecked(isToPayFreight);
+            cb_isCollectionPayment.setChecked(isCollectionPayment);
+            cb_isMyFleet.setChecked(isMyFleet);
+            cb_isSurcharge.setChecked(isSurcharge);
+            et_remark.setText(remark);
+            et_toPayFreightTel.setText(payFreightTel);
+            et_amount.setText(quantity);
+            et_kg.setText(kg);
+            et_volume.setText(volume);
         }
     }
 
@@ -896,9 +920,33 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     }
 
     @Override
-    public void onActionClick(int position) {
-        mOrderAddressInfos.remove(position);
-        mOrderAddressAdapter.notifyDataSetChanged();
+    public void onActionClick(int position, int type) {
+
+        if (type == 1) {
+            if (isToPayFreight && cofirmTypeId != -1){
+                showShortToastByString("您已勾选运费到付，不可以增设中途点");
+            }else {
+                Intent intent = new Intent(MainActivity.this, MapActivity.class);
+                intent.putExtra("position", position);
+                intent.putExtra("orderAddressInfo", mOrderAddressInfos.get(position));
+                intent.putExtra("type", 2);
+                startActivityForResult(intent, 1);
+            }
+        }
+        if (type == 2) {
+            mOrderAddressInfos.remove(position);
+            mOrderAddressAdapter.notifyDataSetChanged();
+            getOrderInfo();
+            if (cofirmTypeId != -1) {
+                calculateFreight();
+            }
+
+            if (mOrderAddressInfos.size() > 2) {
+                ll_isToPayFreight.setVisibility(View.GONE);
+            } else {
+                ll_isToPayFreight.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     @Override
@@ -919,7 +967,11 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 mOrderAddressInfos.set(position, orderAddressInfo);
             }
             mOrderAddressAdapter.notifyDataSetChanged();
-
+            if (mOrderAddressInfos.size() > 2) {
+                ll_isToPayFreight.setVisibility(View.GONE);
+            } else {
+                ll_isToPayFreight.setVisibility(View.VISIBLE);
+            }
             LogUtil.i(mOrderAddressInfos.toString());
 
             getOrderInfo();

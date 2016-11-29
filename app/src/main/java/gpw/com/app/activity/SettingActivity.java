@@ -146,7 +146,7 @@ public class SettingActivity extends BaseActivity {
                         LogUtil.i(jsonObject.toString());
                         Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
 
-                        HttpUtil.doPost(SettingActivity.this, Contants.url_editUserInfo, "editUserInfo", map, new VolleyInterface(SettingActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
+                        HttpUtil.doPost(SettingActivity.this, Contants.url_editPassWord, "editPassWord", map, new VolleyInterface(SettingActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
                             @Override
                             public void onSuccess(JsonElement result) {
                                 LogUtil.i(result.toString());

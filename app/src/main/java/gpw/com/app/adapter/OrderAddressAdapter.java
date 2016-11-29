@@ -80,28 +80,17 @@ public class OrderAddressAdapter extends RecyclerView.Adapter<OrderAddressAdapte
 
         if (orderAddressInfo.getAction() == 1) {
             viewHolder.iv_action.setImageResource(R.mipmap.add);
-            viewHolder.iv_action.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(mActivity, MapActivity.class);
-                    intent.putExtra("position",position);
-                    intent.putExtra("orderAddressInfo",orderAddressInfo);
-                    intent.putExtra("type",2);
-                    mActivity.startActivityForResult(intent,1);
-                }
-            });
         } else if (orderAddressInfo.getState() == 2) {
             viewHolder.iv_action.setImageResource(R.mipmap.close);
-            viewHolder.iv_action.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mOnItemClickListener.onActionClick(position);
-                }
-            });
         } else {
             viewHolder.iv_action.setImageResource(0);
         }
-
+        viewHolder.iv_action.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnItemClickListener.onActionClick(position,orderAddressInfo.getAction());
+            }
+        });
 
 
     }
@@ -138,8 +127,7 @@ public class OrderAddressAdapter extends RecyclerView.Adapter<OrderAddressAdapte
 
     public interface OnItemClickListener {
         void onItemClick(int position);
-
-        void onActionClick(int position);
+        void onActionClick(int position,int type);
     }
 
     private OnItemClickListener mOnItemClickListener;

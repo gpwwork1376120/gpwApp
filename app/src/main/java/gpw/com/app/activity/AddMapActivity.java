@@ -36,6 +36,7 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
@@ -46,6 +47,7 @@ import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
 import com.baidu.mapapi.search.sug.SuggestionResult;
 import com.baidu.mapapi.search.sug.SuggestionSearch;
 import com.baidu.mapapi.search.sug.SuggestionSearchOption;
+import com.baidu.mapapi.utils.DistanceUtil;
 
 import java.util.ArrayList;
 
@@ -55,6 +57,7 @@ import gpw.com.app.base.BaseActivity;
 import gpw.com.app.base.Contants;
 import gpw.com.app.bean.CommonAdInfo;
 import gpw.com.app.util.DensityUtil;
+import gpw.com.app.util.LogUtil;
 
 public class AddMapActivity extends BaseActivity {
 
@@ -66,10 +69,14 @@ public class AddMapActivity extends BaseActivity {
     private AddressNameAdapter mAddressNameAdapter;
     private ArrayList<SuggestionResult.SuggestionInfo> mSuggestionInfos;
     private BaiduMap mBaiduMap;
+    private TextView tv_map_name;
+    private TextView tv_map_detail;
+    private LinearLayout ll_location;
     private SharedPreferences prefs;
     private int pst;
     private int type;
     private String city;
+    private boolean isSuggest = false;
     private CommonAdInfo commonAdInfo;
     private GeoCoder mSearch;
     private String receiptAddress;
@@ -105,47 +112,51 @@ public class AddMapActivity extends BaseActivity {
                 Toast.makeText(AddMapActivity.this, "没有检索到结果", Toast.LENGTH_SHORT).show();
                 return;
             }
-
-
             LatLng location = result.getLocation();
-            // String name = mAddressMainInfo.getName();
             final String address = result.getAddress();
-            LinearLayout linearLayout = (LinearLayout) View.inflate(AddMapActivity.this, R.layout.view_map_bck, null);
-            TextView tv_map_name = (TextView) linearLayout.findViewById(R.id.tv_map_name);
-            TextView tv_map_detail = (TextView) linearLayout.findViewById(R.id.tv_map_detail);
-            tv_map_name.setText(receiptAddress);
+            if (!isSuggest) {
+                if (result.getPoiList().size() != 0) {
+                    PoiInfo poiInfo = result.getPoiList().get(0);
+                    LatLng poiLatLng = poiInfo.location;
+                    double distance = DistanceUtil.getDistance(poiLatLng, location);
+                    LogUtil.i("distance" + distance);
+                    if (distance > 300) {
+                        receiptAddress = address;
+                    } else {
+                        LogUtil.i("小于300米了！！！");
+                        receiptAddress = poiInfo.name;
+                    }
+                } else {
+                    receiptAddress = address;
+                }
+                tv_map_name.setText(receiptAddress);
+                receiptAddress = receiptAddress + "   " + "(" + address + ")";
+
+            } else {
+                tv_map_name.setText(receiptAddress);
+                receiptAddress = receiptAddress + "   " + "(" + address + ")";
+                isSuggest = false;
+            }
             tv_map_detail.setText(address);
-            InfoWindow mInfoWindow = new InfoWindow(linearLayout, location, -85);
-            mBaiduMap.showInfoWindow(mInfoWindow);
-
-            receiptAddress = receiptAddress + "  " + "(" + address + ")";
-
-            commonAdInfo.setReceiptAddress(receiptAddress);
-            commonAdInfo.setLat(location.latitude);
-            commonAdInfo.setLng(location.longitude);
-
-            BitmapDescriptor bitmap = BitmapDescriptorFactory
-                    .fromResource(R.mipmap.location);
-            OverlayOptions option = new MarkerOptions()
-                    .position(location)
-                    .icon(bitmap);
-            mBaiduMap.addOverlay(option);
-
-
             MapStatus mapStatus = new MapStatus.Builder()
                     .target(location)
-                    .zoom(15.0f)
                     .build();
             MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory
                     .newMapStatus(mapStatus);
             mBaiduMap.animateMapStatus(mapStatusUpdate);
+            tv_map_detail.setText(address);
+            commonAdInfo.setReceiptAddress(receiptAddress);
+            commonAdInfo.setLat(location.latitude);
+            commonAdInfo.setLng(location.longitude);
+
+
 
             lv_search.setVisibility(View.GONE);
 
            city = result.getAddressDetail().city;
            final String province =  result.getAddressDetail().province;
 
-            linearLayout.setOnClickListener(new View.OnClickListener() {
+            ll_location.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (type == 3) {
@@ -181,6 +192,9 @@ public class AddMapActivity extends BaseActivity {
         et_search = (EditText) findViewById(R.id.et_search);
         lv_search = (ListView) findViewById(R.id.lv_search);
         ll_search = (LinearLayout) findViewById(R.id.ll_search);
+        tv_map_name = (TextView) findViewById(R.id.tv_map_name);
+        tv_map_detail = (TextView) findViewById(R.id.tv_map_detail);
+        ll_location = (LinearLayout) findViewById(R.id.ll_location);
         View view_status = findViewById(R.id.view_status);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(AddMapActivity.this, 50.0f));
@@ -239,43 +253,26 @@ public class AddMapActivity extends BaseActivity {
         }
         mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
         lv_search.setAdapter(mAddressNameAdapter);
-
+        mBaiduMap.setOnMapStatusChangeListener(listener2);
         if (type == 1) {
-            BitmapDescriptor bitmap = BitmapDescriptorFactory
-                    .fromResource(R.mipmap.location);
-            OverlayOptions option = new MarkerOptions()
-                    .position(latLng)
-                    .icon(bitmap);
-            mBaiduMap.addOverlay(option);
-
-            LinearLayout linearLayout = (LinearLayout) View.inflate(AddMapActivity.this, R.layout.view_map_bck, null);
-            TextView tv_map_name = (TextView) linearLayout.findViewById(R.id.tv_map_name);
-            TextView tv_map_detail = (TextView) linearLayout.findViewById(R.id.tv_map_detail);
             receiptAddress = commonAdInfo.getReceiptAddress();
             String[] nameAd = receiptAddress.split("  ");
-
             tv_map_name.setText(nameAd[0]);
             tv_map_detail.setText(nameAd[1]);
-
-            InfoWindow mInfoWindow = new InfoWindow(linearLayout, latLng, -85);
-            mBaiduMap.showInfoWindow(mInfoWindow);
-
             MapStatus mapStatus = new MapStatus.Builder()
                     .target(latLng)
-                    .zoom(15.0f)
+                    .zoom(17.0f)
                     .build();
             MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory
                     .newMapStatus(mapStatus);
             mBaiduMap.animateMapStatus(mapStatusUpdate);
-
-            linearLayout.setOnClickListener(new View.OnClickListener() {
+            ll_location.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(AddMapActivity.this, EditAddressActivity.class);
                     intent.putExtra("position", pst);
                     intent.putExtra("commonAdInfo", commonAdInfo);
                     intent.putExtra("type", type);
-                    intent.putExtra("userId", getIntent().getStringExtra("userId"));
                     startActivityForResult(intent, 5);
                 }
             });
@@ -322,6 +319,7 @@ public class AddMapActivity extends BaseActivity {
                 mBaiduMap.clear();
                 LatLng pt = mSuggestionInfos.get(position).pt;
                 receiptAddress = mSuggestionInfos.get(position).key;
+                isSuggest = true;
                 mSearch.reverseGeoCode(new ReverseGeoCodeOption()
                         .location(pt));
 
@@ -396,6 +394,20 @@ public class AddMapActivity extends BaseActivity {
         }
     }
 
+    BaiduMap.OnMapStatusChangeListener listener2 = new BaiduMap.OnMapStatusChangeListener() {
+        public void onMapStatusChangeStart(MapStatus status) {
+        }
+
+        public void onMapStatusChange(MapStatus status) {
+        }
+
+        public void onMapStatusChangeFinish(MapStatus status) {
+            if (status != null) {
+                mSearch.reverseGeoCode(new ReverseGeoCodeOption().location(status.target));
+            }
+        }
+    };
+
 
     class MyLocationListener implements BDLocationListener {
         @Override
@@ -406,34 +418,16 @@ public class AddMapActivity extends BaseActivity {
                 mLocationClient.start();
                 return;
             }
-
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString("city", city);
             editor.apply();
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            BitmapDescriptor bitmap = BitmapDescriptorFactory
-                    .fromResource(R.mipmap.location);
-            OverlayOptions option = new MarkerOptions()
-                    .position(latLng)
-                    .icon(bitmap);
-            mBaiduMap.addOverlay(option);
-
-            LinearLayout linearLayout = (LinearLayout) View.inflate(AddMapActivity.this, R.layout.view_map_bck, null);
-            TextView tv_map_name = (TextView) linearLayout.findViewById(R.id.tv_map_name);
-            TextView tv_map_detail = (TextView) linearLayout.findViewById(R.id.tv_map_detail);
-            tv_map_name.setText("当前位置");
-            tv_map_detail.setText(location.getAddress().address);
-            InfoWindow mInfoWindow = new InfoWindow(linearLayout, latLng, -85);
-            mBaiduMap.showInfoWindow(mInfoWindow);
-
             MapStatus mapStatus = new MapStatus.Builder()
                     .target(latLng)
-                    .zoom(15.0f)
+                    .zoom(17.0f)
                     .build();
-            MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory
-                    .newMapStatus(mapStatus);
+            MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mapStatus);
             mBaiduMap.animateMapStatus(mapStatusUpdate);
-
         }
     }
 

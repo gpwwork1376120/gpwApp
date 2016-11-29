@@ -36,7 +36,7 @@ public class CommonAddressActivity extends BaseActivity {
     private TextView tv_title;
     private ImageView iv_right;
     private ImageView iv_left_white;
-    private String userId;
+
     private XRecyclerView rv_common_ad;
     private CommonAdInfoAdapter commonAdInfoAdapter;
     private ArrayList<CommonAdInfo> commonAdInfos;
@@ -58,7 +58,7 @@ public class CommonAddressActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        userId = getIntent().getStringExtra("userId");
+
         type = getIntent().getIntExtra("type", 0);
         commonAdInfos = new ArrayList<>();
         commonAdInfoAdapter = new CommonAdInfoAdapter(this, commonAdInfos);
@@ -76,7 +76,7 @@ public class CommonAddressActivity extends BaseActivity {
             public void onItemClick(int position) {
                 if (type == 2) {
                     Intent intent = new Intent(CommonAddressActivity.this, AddMapActivity.class);
-                    intent.putExtra("userId", userId);
+                    intent.putExtra("userId", Contants.userId);
                     intent.putExtra("position", position);
                     intent.putExtra("commonAdInfo", commonAdInfos.get(position));
                     intent.putExtra("type", 1);
@@ -162,7 +162,7 @@ public class CommonAddressActivity extends BaseActivity {
             return;
         }
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("UserId", userId);
+        jsonObject.addProperty("UserId", Contants.userId);
         jsonObject.addProperty("DataIndex", PageIndex);
         jsonObject.addProperty("PageSize", 15);
         jsonObject.addProperty("GetTime", DateUtil.getCurrentDate());
@@ -225,7 +225,7 @@ public class CommonAddressActivity extends BaseActivity {
                 break;
             case R.id.iv_right:
                 Intent intent = new Intent(CommonAddressActivity.this, AddMapActivity.class);
-                intent.putExtra("userId", userId);
+                intent.putExtra("userId", Contants.userId);
                 intent.putExtra("type", 0);
                 startActivityForResult(intent, 4);
                 break;

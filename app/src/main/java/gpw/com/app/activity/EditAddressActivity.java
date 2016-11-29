@@ -37,7 +37,7 @@ public class EditAddressActivity extends BaseActivity {
     private LinearLayout ll_address;
     private TextView tv_address;
     private Button bt_ok;
-    private String userId;
+
 
     @Override
     protected int getLayout() {
@@ -64,7 +64,7 @@ public class EditAddressActivity extends BaseActivity {
         pst = getIntent().getIntExtra("position", 0);
         type = getIntent().getIntExtra("type", 0);
         commonAdInfo = getIntent().getParcelableExtra("commonAdInfo");
-        userId = getIntent().getStringExtra("userId");
+
     }
 
     @Override
@@ -97,7 +97,7 @@ public class EditAddressActivity extends BaseActivity {
                 commonAdInfo.setReceipter(name);
                 commonAdInfo.setReceiptTel(tel);
                 JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("UserId", userId);
+                jsonObject.addProperty("UserId", Contants.userId);
                 jsonObject.addProperty("Address", commonAdInfo.getReceiptAddress());
                 jsonObject.addProperty("Contacts", name);
                 jsonObject.addProperty("Tel", tel);

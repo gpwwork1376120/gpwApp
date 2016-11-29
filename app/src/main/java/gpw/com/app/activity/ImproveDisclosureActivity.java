@@ -45,7 +45,7 @@ public class ImproveDisclosureActivity extends BaseActivity {
     private ImageView iv_address;
     private TextView tv_address;
     private Button bt_ok;
-    private String userId;
+
 
     @Override
     protected int getLayout() {
@@ -75,7 +75,7 @@ public class ImproveDisclosureActivity extends BaseActivity {
         type = getIntent().getIntExtra("type", 0);
         mOrderAddressInfo = getIntent().getParcelableExtra("orderAddressInfo");
         SharedPreferences prefs = getSharedPreferences(Contants.SHARED_NAME, MODE_PRIVATE);
-        userId = prefs.getString("UserId", "");
+
 
     }
 
@@ -129,7 +129,7 @@ public class ImproveDisclosureActivity extends BaseActivity {
                     mOrderAddressInfo.setMoney(money);
                 }
                 JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("UserId", userId);
+                jsonObject.addProperty("UserId", Contants.userId);
                 jsonObject.addProperty("Address", mOrderAddressInfo.getReceiptAddress());
                 jsonObject.addProperty("Contacts", name);
                 jsonObject.addProperty("Tel", tel);

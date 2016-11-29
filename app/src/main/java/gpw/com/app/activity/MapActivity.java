@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -28,6 +29,7 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.baidu.location.Poi;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
@@ -70,25 +72,27 @@ public class MapActivity extends BaseActivity {
     private ImageView iv_left_black;
     private EditText et_search;
     private TextView tv_address;
+    private TextView tv_map_name;
+    private TextView tv_map_detail;
     private ListView lv_search;
     private LinearLayout ll_search;
+    private LinearLayout ll_location;
+
+    private int pst;
+    private int type;
+    private boolean isSuggest = false;
+    private String city;
+    private String receiptAddress;
+    private MapView mMapView;
+    private GeoCoder mSearch;
+    private BaiduMap mBaiduMap;
+    private SharedPreferences prefs;
+    private LocationClient mLocationClient;
+    private OrderAddressInfo mOrderAddressInfo;
     private SuggestionSearch mSuggestionSearch;
     private AddressNameAdapter mAddressNameAdapter;
     private ArrayList<SuggestionResult.SuggestionInfo> mSuggestionInfos;
-    private BaiduMap mBaiduMap;
-    private SharedPreferences prefs;
-    private int pst;
-    private int type;
-    private String city;
-    private String receiptAddress;
-    private OrderAddressInfo mOrderAddressInfo;
-    private GeoCoder mSearch;
-    private String userId;
-    public LocationClient mLocationClient = null;
-    public BDLocationListener myListener = new MyLocationListener();
-    MapView mMapView = null;
-    private TextView tv_map_name;
-    private TextView tv_map_detail;
+    private BDLocationListener myListener = new MyLocationListener();
 
 
     @Override
@@ -106,6 +110,7 @@ public class MapActivity extends BaseActivity {
         ll_search = (LinearLayout) findViewById(R.id.ll_search);
         tv_map_name = (TextView) findViewById(R.id.tv_map_name);
         tv_map_detail = (TextView) findViewById(R.id.tv_map_detail);
+        ll_location = (LinearLayout) findViewById(R.id.ll_location);
         View view_status = findViewById(R.id.view_status);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
@@ -128,11 +133,10 @@ public class MapActivity extends BaseActivity {
 
         prefs = getSharedPreferences(Contants.SHARED_NAME, MODE_PRIVATE);
         city = prefs.getString("city", "深圳市");
-        userId = prefs.getString("UserId", "");
-
         pst = getIntent().getIntExtra("position", 0);
         type = getIntent().getIntExtra("type", 0);
         mOrderAddressInfo = getIntent().getParcelableExtra("orderAddressInfo");
+
 
         mLocationClient = new LocationClient(MapActivity.this);     //声明LocationClient类
         mLocationClient.registerLocationListener(myListener);    //注册监听函数
@@ -191,18 +195,6 @@ public class MapActivity extends BaseActivity {
                     .build();
             MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mapStatus);
             mBaiduMap.animateMapStatus(mapStatusUpdate);
-
-//            linearLayout.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent intent = new Intent(MapActivity.this, ImproveDisclosureActivity.class);
-//                    intent.putExtra("position", pst);
-//                    intent.putExtra("orderAddressInfo", mOrderAddressInfo);
-//                    intent.putExtra("type", type);
-//                    intent.putExtra("userId", getIntent().getStringExtra("userId"));
-//                    startActivityForResult(intent, 4);
-//                }
-//            });
         }
 
 
@@ -219,7 +211,6 @@ public class MapActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                System.out.println("sadsad" + s.toString());
                 System.out.println("city" + city);
                 mSuggestionSearch.requestSuggestion((new SuggestionSearchOption())
                         .keyword(s.toString())
@@ -235,26 +226,34 @@ public class MapActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 LatLng pt = mSuggestionInfos.get(position).pt;
                 receiptAddress = mSuggestionInfos.get(position).key;
-                mSearch.reverseGeoCode(new ReverseGeoCodeOption()
-                        .location(pt));
+                isSuggest = true;
+                mSearch.reverseGeoCode(new ReverseGeoCodeOption().location(pt));
 
 
             }
         });
         iv_left_black.setOnClickListener(this);
         tv_address.setOnClickListener(this);
+        ll_location.setOnClickListener(this);
     }
 
 
     @Override
     public void onClick(View v) {
+        Intent intent = null;
         switch (v.getId()) {
             case R.id.iv_left_black:
                 finish();
                 break;
+            case R.id.ll_location:
+                intent = new Intent(MapActivity.this, ImproveDisclosureActivity.class);
+                intent.putExtra("position", pst);
+                intent.putExtra("orderAddressInfo", mOrderAddressInfo);
+                intent.putExtra("type", type);
+                startActivityForResult(intent, 4);
+                break;
             case R.id.tv_address:
-                Intent intent = new Intent(MapActivity.this, CommonAddressActivity.class);
-                intent.putExtra("userId", userId);
+                intent = new Intent(MapActivity.this, CommonAddressActivity.class);
                 intent.putExtra("type", 1);
                 startActivityForResult(intent, 7);
                 break;
@@ -324,7 +323,7 @@ public class MapActivity extends BaseActivity {
 
             MapStatus mapStatus = new MapStatus.Builder()
                     .target(latLng)
-                    .zoom(15.0f)
+                    .zoom(17.0f)
                     .build();
             MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory
                     .newMapStatus(mapStatus);
@@ -346,23 +345,6 @@ public class MapActivity extends BaseActivity {
             mOrderAddressInfo.setReceipter(commonAdInfo.getReceipter());
             mOrderAddressInfo.setReceiptTel(commonAdInfo.getReceiptTel());
             System.out.println(mOrderAddressInfo.toString());
-
-            Intent intent = new Intent(MapActivity.this, ImproveDisclosureActivity.class);
-            intent.putExtra("position", pst);
-            intent.putExtra("orderAddressInfo", mOrderAddressInfo);
-            intent.putExtra("type", type);
-            startActivityForResult(intent, 4);
-
-//            linearLayout.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent intent = new Intent(MapActivity.this, ImproveDisclosureActivity.class);
-//                    intent.putExtra("position", pst);
-//                    intent.putExtra("orderAddressInfo", mOrderAddressInfo);
-//                    intent.putExtra("type", type);
-//                    startActivityForResult(intent, 4);
-//                }
-//            });
         }
 
     }
@@ -392,35 +374,41 @@ public class MapActivity extends BaseActivity {
         @Override
         public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
             if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
+                showShortToastByString("未找到该地址");
                 return;
             }
-            PoiInfo poiInfo = result.getPoiList().get(0);
-            LatLng poiLatLng = poiInfo.location;
 
             LatLng location = result.getLocation();
             String address = result.getAddress();
-            double distance = DistanceUtil.getDistance(poiLatLng, location);
-            if (distance > 300) {
-                LogUtil.i("大于300米了！！！");
-                receiptAddress = address;
-
+            if (!isSuggest) {
+                if (result.getPoiList().size() != 0) {
+                    PoiInfo poiInfo = result.getPoiList().get(0);
+                    LatLng poiLatLng = poiInfo.location;
+                    double distance = DistanceUtil.getDistance(poiLatLng, location);
+                    LogUtil.i("distance" + distance);
+                    if (distance > 300) {
+                        receiptAddress = address;
+                    } else {
+                        LogUtil.i("小于300米了！！！");
+                        receiptAddress = poiInfo.name;
+                    }
+                } else {
+                    receiptAddress = address;
+                }
+                tv_map_name.setText(receiptAddress);
+                receiptAddress = receiptAddress + "   " + "(" + address + ")";
             } else {
-                LogUtil.i("小于300米了！！！");
-                receiptAddress = poiInfo.name;
+                tv_map_name.setText(receiptAddress);
+                receiptAddress = receiptAddress + "   " + "(" + address + ")";
+                isSuggest = false;
             }
-
             LogUtil.i(address);
-            tv_map_name.setText(receiptAddress);
             tv_map_detail.setText(address);
-            LatLng latLng = result.getLocation();
-
             MapStatus mapStatus = new MapStatus.Builder()
-                    .target(latLng)
+                    .target(location)
                     .build();
             MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mapStatus);
             mBaiduMap.animateMapStatus(mapStatusUpdate);
-            receiptAddress = "";
-            receiptAddress = receiptAddress + "   " + "(" + address + ")";
 
 
             if (mOrderAddressInfo.getState() == 3 && type == 2) {
@@ -432,18 +420,6 @@ public class MapActivity extends BaseActivity {
             mOrderAddressInfo.setReceiptAddress(receiptAddress);
             mOrderAddressInfo.setLat(location.latitude);
             mOrderAddressInfo.setLng(location.longitude);
-            mOrderAddressInfo.setReceiptAddress(receiptAddress);
-
-//            linearLayout.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent intent = new Intent(MapActivity.this, ImproveDisclosureActivity.class);
-//                    intent.putExtra("position", pst);
-//                    intent.putExtra("orderAddressInfo", mOrderAddressInfo);
-//                    intent.putExtra("type", type);
-//                    startActivityForResult(intent, 4);
-//                }
-//            });
         }
     };
 
@@ -456,8 +432,9 @@ public class MapActivity extends BaseActivity {
         }
 
         public void onMapStatusChangeFinish(MapStatus status) {
-            mSearch.reverseGeoCode(new ReverseGeoCodeOption().location(status.target));
-
+            if (status != null) {
+                mSearch.reverseGeoCode(new ReverseGeoCodeOption().location(status.target));
+            }
         }
     };
 
@@ -471,20 +448,17 @@ public class MapActivity extends BaseActivity {
                 mLocationClient.start();
                 return;
             }
+
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString("city", city);
             editor.apply();
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-
             MapStatus mapStatus = new MapStatus.Builder()
                     .target(latLng)
-                    .zoom(15.0f)
+                    .zoom(17.0f)
                     .build();
             MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mapStatus);
             mBaiduMap.animateMapStatus(mapStatusUpdate);
-
-            tv_map_name.setText("当前位置");
-            tv_map_detail.setText(location.getAddrStr());
 
         }
     }
