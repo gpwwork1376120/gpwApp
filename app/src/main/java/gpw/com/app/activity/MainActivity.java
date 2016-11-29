@@ -680,25 +680,25 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 break;
             case 0:
                 tvs_car.get(0).setTextColor(ContextCompat.getColor(this, R.color.color_red));
-                Visible(carInfo);
+                Visible(carInfo, 1);
                 vehideTypeId = 1;
                 cb_isRemove.setText("全拆座");
                 break;
             case 1:
                 tvs_car.get(1).setTextColor(ContextCompat.getColor(this, R.color.color_red));
-                Visible(carInfo);
+                Visible(carInfo, 2);
                 vehideTypeId = 2;
                 cb_isRemove.setText("全拆座");
                 break;
             case 2:
                 tvs_car.get(2).setTextColor(ContextCompat.getColor(this, R.color.color_red));
-                Visible(carInfo);
+                Visible(carInfo, 3);
                 vehideTypeId = 3;
                 cb_isRemove.setText("开顶");
                 break;
             case 3:
                 tvs_car.get(3).setTextColor(ContextCompat.getColor(this, R.color.color_red));
-                Visible(carInfo);
+                Visible(carInfo, 4);
                 vehideTypeId = 4;
                 cb_isRemove.setText("开顶");
                 break;
@@ -706,13 +706,13 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
 
     }
 
-    private void Visible(CarInfo carInfo) {
+    private void Visible(CarInfo carInfo, int type) {
         ll_0.setVisibility(View.GONE);
         ll_1.setVisibility(View.VISIBLE);
         ll_2.setVisibility(View.VISIBLE);
         cb_isRemove.setVisibility(View.VISIBLE);
 
-        if (vehideTypeId == 0) {
+        if (cofirmTypeId != type) {
             cb_isRemove.setChecked(false);
             cb_isMove.setChecked(false);
             cb_isToPayFreight.setChecked(false);
@@ -721,17 +721,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             cb_isSurcharge.setChecked(false);
             et_remark.setText("");
             et_toPayFreightTel.setText("");
-        } else {
-            cb_isRemove.setChecked(isRemove);
-            cb_isMove.setChecked(isMove);
-            cb_isToPayFreight.setChecked(isToPayFreight);
-            cb_isCollectionPayment.setChecked(isCollectionPayment);
-            cb_isMyFleet.setChecked(isMyFleet);
-            cb_isSurcharge.setChecked(isSurcharge);
-            et_remark.setText(remark);
-            et_toPayFreightTel.setText(payFreightTel);
         }
-
         tv_volume.setText(String.format("运输体积:%sm³", carInfo.getVolume()));
         tv_kg.setText(String.format("载重:%skg", carInfo.getLoadWeight()));
         tv_after.setText(String.format("后续:%s元/Km", carInfo.getFollowPrice()));
@@ -744,7 +734,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         ll_1.setVisibility(View.GONE);
         ll_2.setVisibility(View.GONE);
         cb_isRemove.setVisibility(View.GONE);
-        if (vehideTypeId != 0) {
+        if (cofirmTypeId != 0) {
             cb_isRemove.setChecked(false);
             cb_isMove.setChecked(false);
             cb_isToPayFreight.setChecked(false);

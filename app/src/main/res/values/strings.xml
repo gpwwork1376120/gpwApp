@@ -8,7 +8,6 @@
     <string name="hint_validate_code">请输入验证码</string>
     <string name="get_validate_code">获取验证码</string>
     <string name="hint_set_psd">请设置登录密码</string>
-    <string name="hint_input_psd1">请输入6-16位密码</string>
     <string name="hint_input_account1">请输入手机号,仅限大陆地区</string>
     <string name="booking_delivery">预约发货</string>
     <string name="car_1">零担</string>
