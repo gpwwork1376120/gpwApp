@@ -1,15 +1,31 @@
 package gpw.com.app.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import java.util.Map;
+
 import gpw.com.app.R;
 import gpw.com.app.base.BaseActivity;
+import gpw.com.app.base.Contants;
 import gpw.com.app.bean.UserInfo;
+import gpw.com.app.util.EncryptUtil;
+import gpw.com.app.util.HttpUtil;
+import gpw.com.app.util.LogUtil;
+import gpw.com.app.util.NetworkUtil;
+import gpw.com.app.util.VolleyInterface;
+import gpw.com.app.view.MyDialog;
 
 public class SettingActivity extends BaseActivity {
 
@@ -21,11 +37,16 @@ public class SettingActivity extends BaseActivity {
     private RelativeLayout rl_about_us;
     private CheckBox cb_vibrates;
     private CheckBox cb_sound;
+    private boolean IsVibrates;
+    private boolean IsSound;
     private TextView tv_title;
     private TextView tv_right;
     private ImageView iv_left_white;
-    private UserInfo userInfo;
-    private boolean isChange;
+    private MyDialog psdDialog;
+    private SharedPreferences prefs;
+    private Button bt_exit_login;
+
+
 
     @Override
     protected int getLayout() {
@@ -46,12 +67,15 @@ public class SettingActivity extends BaseActivity {
         rl_about_us = (RelativeLayout) findViewById(R.id.rl_about_us);
         cb_vibrates = (CheckBox) findViewById(R.id.cb_vibrates);
         cb_sound = (CheckBox) findViewById(R.id.cb_sound);
+        bt_exit_login = (Button) findViewById(R.id.bt_exit_login);
     }
 
     @Override
     protected void initData() {
-        isChange = false;
-        userInfo = getIntent().getParcelableExtra("userInfo");
+        prefs = getSharedPreferences(Contants.SHARED_NAME, MODE_PRIVATE);
+        IsVibrates = prefs.getBoolean("IsVibrates", true);
+        IsSound = prefs.getBoolean("IsSound",true);
+
     }
 
     @Override
@@ -64,6 +88,25 @@ public class SettingActivity extends BaseActivity {
         rl_faq.setOnClickListener(this);
         rl_about_us.setOnClickListener(this);
         iv_left_white.setOnClickListener(this);
+        cb_vibrates.setChecked(IsVibrates);
+        cb_sound.setChecked(IsSound);
+        final SharedPreferences.Editor editor = prefs.edit();
+        cb_sound.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                editor.putBoolean("IsSound", isChecked);
+                editor.apply();
+            }
+        });
+
+        cb_vibrates.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                editor.putBoolean("IsVibrates", isChecked);
+                editor.apply();
+            }
+        });
+
     }
 
     @Override
@@ -71,16 +114,60 @@ public class SettingActivity extends BaseActivity {
         Intent intent = new Intent();
         switch (v.getId()) {
             case R.id.iv_left_white:
-                if (isChange) {
-                    getIntent().putExtra("userInfo", userInfo);
-                    setResult(RESULT_OK, getIntent());
-                }
                 finish();
                 break;
             case R.id.rl_account_management:
-                intent.setClass(SettingActivity.this, PersonalInfoActivity.class);
-                intent.putExtra("userInfo", userInfo);
-                startActivityForResult(intent, 1);
+                psdDialog = MyDialog.psdDialog(SettingActivity.this);
+                psdDialog.show();
+                psdDialog.setOnSettingListener(new MyDialog.PsdListener() {
+                    @Override
+                    public void onSetting(String old, String new1, String new2) {
+                        if (old.isEmpty() || new1.isEmpty() || new2.isEmpty()) {
+                            showShortToastByString(getString(R.string.pas_null));
+                            return;
+                        }
+                        if (new1.length()<6||new1.length()>16){
+                            showShortToastByString(getString(R.string.psd_error));
+                            return;
+                        }
+                        if (!new1.equals(new2)) {
+                            showShortToastByString(getString(R.string.psd_no));
+                            return;
+                        }
+                        if (!NetworkUtil.isConnected(SettingActivity.this)) {
+                            showShortToastByString(getString(R.string.Neterror));
+                        }
+
+                        JsonObject jsonObject = new JsonObject();
+                        jsonObject.addProperty("Tel", Contants.userId);
+                        jsonObject.addProperty("UserType", 1);
+                        jsonObject.addProperty("PassWord", old);
+                        jsonObject.addProperty("NewPwd", new1);
+                        LogUtil.i(jsonObject.toString());
+                        Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
+
+                        HttpUtil.doPost(SettingActivity.this, Contants.url_editUserInfo, "editUserInfo", map, new VolleyInterface(SettingActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
+                            @Override
+                            public void onSuccess(JsonElement result) {
+                                LogUtil.i(result.toString());
+                                showShortToastByString(result.toString());
+                                psdDialog.dismiss();
+
+                            }
+
+                            @Override
+                            public void onError(VolleyError error) {
+                                showShortToastByString(getString(R.string.timeoutError));
+                    //                LogUtil.i("hint",error.networkResponse.headers.toString());
+                   //              LogUtil.i("hint",error.networkResponse.statusCode+"");
+                            }
+
+                            @Override
+                            public void onStateError() {
+                            }
+                        });
+                    }
+                });
                 break;
             case R.id.rl_fee_scale:
                 intent.setClass(SettingActivity.this, FeeScaleActivity.class);
@@ -103,21 +190,4 @@ public class SettingActivity extends BaseActivity {
     }
 
 
-    @Override
-    public void onBackPressed() {
-        if (isChange) {
-            getIntent().putExtra("userInfo", userInfo);
-            setResult(RESULT_OK, getIntent());
-        }
-        super.onBackPressed();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == RESULT_OK) {
-            isChange = true;
-            userInfo = data.getParcelableExtra("userInfo");
-        }
-    }
 }

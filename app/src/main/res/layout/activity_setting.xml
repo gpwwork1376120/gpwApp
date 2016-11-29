@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            android:text="@string/account_management"
+            android:text="@string/modify_password"
             android:textColor="@color/color_gary_font"
             android:textSize="@dimen/normal_font"/>
 

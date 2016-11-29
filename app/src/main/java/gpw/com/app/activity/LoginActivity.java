@@ -1,7 +1,13 @@
 package gpw.com.app.activity;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
+import android.support.v4.content.ContextCompat;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -21,6 +27,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 
 import gpw.com.app.R;
 import gpw.com.app.base.BaseActivity;
@@ -85,12 +92,37 @@ public class LoginActivity extends BaseActivity {
         tv_forget_psd.setOnClickListener(this);
         tv_register.setOnClickListener(this);
         bt_login.setOnClickListener(this);
+        if (!Objects.equals(account, "")){
+            bt_login.setBackground(ContextCompat.getDrawable(LoginActivity.this, R.drawable.button_red_bg));
+        }
+        et_account.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int size = s.length();
+                if (size != 0) {
+                    bt_login.setBackground(ContextCompat.getDrawable(LoginActivity.this, R.drawable.button_red_bg));
+                } else {
+                    bt_login.setBackground(ContextCompat.getDrawable(LoginActivity.this, R.drawable.button_login));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         cb_eye.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b){
+                if (b) {
                     et_password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                }else {
+                } else {
                     et_password.setTransformationMethod(PasswordTransformationMethod.getInstance());
                 }
             }
@@ -179,7 +211,6 @@ public class LoginActivity extends BaseActivity {
             }
         });
     }
-
 
 
     @Override

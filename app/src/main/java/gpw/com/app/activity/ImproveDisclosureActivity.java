@@ -89,12 +89,17 @@ public class ImproveDisclosureActivity extends BaseActivity {
         switch (mOrderAddressInfo.getState()) {
             case 1:
                 iv_address.setImageResource(R.mipmap.start);
+
                 break;
             case 2:
                 iv_address.setImageResource(R.mipmap.pass);
+                et_contact_name.setHint("请输入收货人姓名");
+                et_contact_tel.setHint("请输入收货人电话");
                 break;
             case 3:
                 iv_address.setImageResource(R.mipmap.arrive);
+                et_contact_name.setHint("请输入收货人姓名");
+                et_contact_tel.setHint("请输入收货人电话");
                 break;
         }
         tv_title.setText(R.string.improve_disclosure);
@@ -107,7 +112,7 @@ public class ImproveDisclosureActivity extends BaseActivity {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.iv_left_black:
+            case R.id.iv_left_white:
                 finish();
                 break;
             case R.id.ll_address:

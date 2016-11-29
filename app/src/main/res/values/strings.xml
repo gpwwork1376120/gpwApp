@@ -21,6 +21,7 @@
     <string name="rebuild_psd">重设密码</string>
     <string name="ok">确定</string>
     <string name="account_management">账户管理</string>
+    <string name="modify_password">修改密码</string>
     <string name="fee_scale">收费标准</string>
     <string name="faq">常见问题</string>
     <string name="feed_back">意见反馈</string>
@@ -28,7 +29,7 @@
     <string name="vibrates_hint">震动提示</string>
     <string name="exit_login">退出登录</string>
     <string name="sound_hint">声音提示</string>
-    <string name="setting">设置</string>
+
     <string name="hint_input_acc">请输入您的手机号或邮箱</string>
     <string name="hint_make_comments">欢迎您对我们提出宝贵的建议或意见！</string>
     <string name="propose">提交</string>
@@ -45,7 +46,7 @@
     <string name="news">消息通知</string>
     <string name="myNews">我的消息</string>
     <string name="benefit_activity">优惠活动</string>
-    <string name="charge_situation">收费明细</string>
+    <string name="charge_situation">收支明细</string>
     <string name="recharge">充值</string>
     <string name="recharge_hint">充值说明</string>
     <string name="balance">我的余额</string>
@@ -102,4 +103,12 @@
     <string name="minute">分</string>
     <string name="order_offers">查询报价</string>
     <string name="car_location">车辆定位</string>
+    <string name="query_rule">询价规则</string>
+    <string name="old_psd">请输入旧的密码</string>
+    <string name="hint_new_psd">请输入新的密码</string>
+    <string name="hint_new_psd1">确认新的密码</string>
+    <string name="psd_error">请输入6-16位的密码</string>
+    <string name="psd_no">两次输入的密码不一样</string>
+    <string name="pas_null">密码不能为空</string>
+    <string name="setting">设   置</string>
 </resources>

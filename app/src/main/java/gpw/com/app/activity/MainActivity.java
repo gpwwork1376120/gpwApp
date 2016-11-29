@@ -60,6 +60,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     private CircleImageView civ_head;
     private ImageView iv_below;
     private ImageView iv_confirm_order;
+    private ImageView iv_query;
     private CircleImageView iv_cir_head;
     private View view_status;
 
@@ -194,6 +195,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         tv_goods = (TextView) findViewById(R.id.tv_goods);
 
         rl_head = (RelativeLayout) findViewById(R.id.rl_head);
+        iv_query = (ImageView) findViewById(R.id.iv_query);
         civ_head = (CircleImageView) findViewById(R.id.civ_head);
         view_status = findViewById(R.id.view_status);
 
@@ -380,6 +382,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         tv_money_detail.setOnClickListener(this);
         bt_ok.setOnClickListener(this);
         ll_booking_delivery.setOnClickListener(this);
+        iv_query.setOnClickListener(this);
         cb_insurance.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -540,6 +543,10 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             case R.id.iv_cir_head:
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 break;
+            case R.id.iv_query:
+                intent = new Intent(MainActivity.this, QueryRuleActivity.class);
+                startActivity(intent);
+                break;
             case R.id.bt_ok:
                 if (vehideTypeId == 0) {
                     volume = et_volume.getText().toString().trim();
@@ -640,8 +647,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 break;
             case R.id.tv_setting:
                 intent = new Intent(MainActivity.this, SettingActivity.class);
-                intent.putExtra("userInfo", userInfo);
-                startActivityForResult(intent, 3);
+                startActivity(intent);
                 break;
             case R.id.rl_head:
                 intent = new Intent(MainActivity.this, PersonalInfoActivity.class);

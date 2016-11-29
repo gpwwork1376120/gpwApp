@@ -173,17 +173,24 @@ public class MyInvoiceActivity extends BaseActivity {
                 break;
             case R.id.bt_ok:
                 intent.setClass(MyInvoiceActivity.this, ApplyInvoiceActivity.class);
-                String orders = null;
+                String orders = "";
+                double money = 0;
                 int size = invoiceInfos.size();
                 for (int i = 0; i < size; i++) {
                     String orderId = invoiceInfos.get(i).getOrderNo();
                     boolean state = invoiceInfos.get(i).ischeck();
                     if (state) {
                         orders = orderId + ",";
+                        money = money+invoiceInfos.get(i).getOrderAmount();
                     }
                 }
-                intent.putExtra("orders",orders);
-                startActivityForResult(intent,1);
+                if (orders.equals("")) {
+                    showShortToastByString("请选择发票");
+                    return;
+                }
+                intent.putExtra("orders", orders);
+                intent.putExtra("money", money);
+                startActivityForResult(intent, 1);
                 break;
 
         }

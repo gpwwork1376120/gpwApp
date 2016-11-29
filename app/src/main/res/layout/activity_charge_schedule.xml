@@ -37,7 +37,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="12dp"
+            android:layout_height="16dp"
             android:layout_alignParentBottom="true"
             android:background="@color/color_gary_bck"
             />
@@ -50,7 +50,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="15dp"
             android:text="总支出：¥0元"
-            android:textSize="10.5sp"/>
+            android:textSize="11sp"/>
 
     </RelativeLayout>
     <LinearLayout

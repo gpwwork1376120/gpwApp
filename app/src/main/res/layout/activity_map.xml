@@ -6,6 +6,7 @@
     tools:context=".activity.MapActivity">
 
 
+
     <com.baidu.mapapi.map.MapView
         android:id="@+id/map_view"
         android:layout_width="match_parent"
@@ -27,7 +28,7 @@
         <ImageView
             android:id="@+id/iv_left_black"
             android:layout_width="21dp"
-            android:layout_height="21dp"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:paddingLeft="10dp"
             android:src="@mipmap/left_black" />
@@ -59,6 +60,43 @@
             android:textSize="14sp" />
     </LinearLayout>
 
+
+    <ImageView
+        android:id="@+id/iv_location"
+        android:layout_width="wrap_content"
+        android:paddingBottom="20dp"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/location"
+        android:layout_centerInParent="true"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/iv_location"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:background="@mipmap/bt_map_bck">
+        <TextView
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="8dp"
+            android:id="@+id/tv_map_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#1e1e1e"
+            android:textSize="15sp"
+            />
+        <TextView
+            android:layout_marginTop="3dp"
+            android:layout_marginLeft="8dp"
+            android:id="@+id/tv_map_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            />
+    </LinearLayout>
+
+
     <ListView
         android:id="@+id/lv_search"
         android:layout_width="match_parent"
@@ -67,6 +105,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="10dp"
+        android:visibility="gone"
         android:background="@color/color_white">
     </ListView>
     <View

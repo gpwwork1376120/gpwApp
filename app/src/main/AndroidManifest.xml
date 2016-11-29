@@ -29,6 +29,7 @@
         <activity
             android:name=".activity.MainActivity"
             android:theme="@style/GrayTranslucentTheme"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.SettingActivity"
@@ -74,6 +75,10 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.FeedbackActivity"
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.QueryRuleActivity"
             android:theme="@style/RedTranslucentTheme"
             android:screenOrientation="portrait"/>
         <activity

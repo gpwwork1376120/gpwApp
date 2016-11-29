@@ -1,7 +1,12 @@
 package gpw.com.app.activity;
 
+import android.annotation.TargetApi;
+import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -70,6 +75,29 @@ public class RegisterActivity extends BaseActivity {
 
         tv_get_code.setOnClickListener(this);
         bt_ok.setOnClickListener(this);
+
+        et_account.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int size = s.length();
+                if (size != 0) {
+                    bt_ok.setBackground(ContextCompat.getDrawable(RegisterActivity.this, R.drawable.button_red_bg));
+                } else {
+                    bt_ok.setBackground(ContextCompat.getDrawable(RegisterActivity.this, R.drawable.button_login));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         cb_eye.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {

@@ -1,5 +1,6 @@
 package gpw.com.app.activity;
 
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -62,6 +63,11 @@ public class ChargeScheduleActivity extends BaseActivity {
     protected void initView() {
         iv_left_white.setOnClickListener(this);
         getChargeSchedule(CurrentPage, 0);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        rv_charge_schedule.setLayoutManager(layoutManager);
+        rv_charge_schedule.setAdapter(chargeScheduleAdapter);
+
         rv_charge_schedule.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {

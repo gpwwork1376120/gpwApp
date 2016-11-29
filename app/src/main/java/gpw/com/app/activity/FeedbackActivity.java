@@ -66,10 +66,14 @@ public class FeedbackActivity extends BaseActivity {
             case R.id.tv_right:
                 String title = et_account.getText().toString();
                 String SContent = et_comment.getText().toString();
+                if (SContent.equals("")){
+                    showShortToastByString("信息不完整");
+                    return;
+                }
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("UserId", Contants.userId);
                 jsonObject.addProperty("Title", title);
-                jsonObject.addProperty("Password", SContent);
+                jsonObject.addProperty("SContent", SContent);
                 jsonObject.addProperty("UserType", 1);
                 Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
                 HttpUtil.doPost(FeedbackActivity.this, Contants.url_saveSuggest, "saveSuggest", map, new VolleyInterface(FeedbackActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {

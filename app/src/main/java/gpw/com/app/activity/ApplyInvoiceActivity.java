@@ -66,12 +66,13 @@ public class ApplyInvoiceActivity extends BaseActivity  {
     @Override
     protected void initData() {
         orders = getIntent().getStringExtra("orders");
-        invoiceAmount = getIntent().getIntExtra("invoiceAmount",0);
+        invoiceAmount = getIntent().getIntExtra("money",0);
     }
 
     @Override
     protected void initView() {
         tv_title.setText(R.string.apply_invoice);
+        tv_invoiceAmount.setText(String.format("¥%d元", invoiceAmount));
         tv_right.setVisibility(View.GONE);
         iv_left_white.setOnClickListener(this);
         bt_apply.setOnClickListener(this);

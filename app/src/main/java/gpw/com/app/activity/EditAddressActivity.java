@@ -84,10 +84,9 @@ public class EditAddressActivity extends BaseActivity {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.iv_left_black:
+            case R.id.iv_left_white:
                 finish();
                 break;
-
             case R.id.ll_address:
                 finish();
                 break;

@@ -46,6 +46,7 @@
             android:layout_marginRight="23dp"
             android:layout_marginTop="15dp"
             android:background="@null"
+            android:inputType="number"
             android:textSize="@dimen/normal_font"
             android:hint="@string/hint_input_account"
             android:layout_below="@+id/tv_login"/>
