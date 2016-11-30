@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:background="@color/color_red"
     android:fitsSystemWindows="true"
-    tools:context="gpw.com.app.activity.OrderDetailActivity">
+    tools:context="com.gpw.app.activity.OrderDetailActivity">
 
     <include
         android:layout_width="match_parent"

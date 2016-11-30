@@ -59,12 +59,12 @@
         android:layout_weight="1"
         android:background="@color/color_white">
 
-        <gpw.com.app.view.XRecyclerView
+        <com.gpw.app.view.XRecyclerView
             android:id="@+id/rv_charge_schedule"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        </gpw.com.app.view.XRecyclerView>
+        </com.gpw.app.view.XRecyclerView>
     </LinearLayout>
 
 

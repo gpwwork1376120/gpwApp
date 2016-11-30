@@ -7,7 +7,7 @@
     android:background="@color/color_red"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="gpw.com.app.activity.EditAddressActivity">
+    tools:context="com.gpw.app.activity.EditAddressActivity">
 
     <include
         android:id="@+id/in_head"

@@ -8,7 +8,7 @@
     android:background="@color/color_red"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="gpw.com.app.activity.ImproveDisclosureActivity">
+    tools:context="com.gpw.app.activity.ImproveDisclosureActivity">
 
     <include
         android:id="@+id/in_head"

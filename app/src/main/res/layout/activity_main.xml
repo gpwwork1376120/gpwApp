@@ -21,7 +21,7 @@
                 android:layout_height="160dp"
                 android:background="@color/color_white">
 
-                <gpw.com.app.view.ImageCycleView
+                <com.gpw.app.view.ImageCycleView
                     android:id="@+id/icv_banner"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -30,7 +30,7 @@
                     android:layout_alignParentTop="true" />
 
 
-                <gpw.com.app.view.CircleImageView
+                <com.gpw.app.view.CircleImageView
                     android:id="@+id/iv_cir_head"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
@@ -463,7 +463,7 @@
                 android:layout_height="150dp"
                 android:background="@color/color_white">
 
-                <gpw.com.app.view.CircleImageView
+                <com.gpw.app.view.CircleImageView
                     android:id="@+id/civ_head"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
