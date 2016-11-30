@@ -24,7 +24,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="20dp"
             android:gravity="center"
-            android:text="开票金额合计"
+            android:text="@string/apply_invoice_1"
             android:textColor="@color/color_gary_font" />
 
         <TextView
@@ -34,8 +34,8 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="20dp"
             android:gravity="center"
-            android:text="¥164元"
-            android:textColor="@color/color_gary_font" />
+            android:textColor="@color/color_gary_font"
+            tools:ignore="RelativeOverlap" />
     </RelativeLayout>
 
     <LinearLayout
@@ -58,7 +58,7 @@
             android:layout_height="40dp"
             android:layout_marginLeft="20dp"
             android:background="@null"
-            android:hint="请输入公司抬头"
+            android:hint="@string/apply_invoice_2"
             android:maxLines="1"
             android:textColor="@color/color_gary_font"
             android:textSize="@dimen/small_font" />
@@ -76,7 +76,7 @@
             android:layout_height="40dp"
             android:layout_marginLeft="20dp"
             android:background="@null"
-            android:hint="请输入收件地址"
+            android:hint="@string/apply_invoice_3"
             android:maxLines="1"
             android:textColor="@color/color_gary_font"
             android:textSize="@dimen/small_font" />
@@ -94,7 +94,7 @@
             android:layout_height="40dp"
             android:layout_marginLeft="20dp"
             android:background="@null"
-            android:hint="请输入联系人姓名"
+            android:hint="@string/apply_invoice_4"
             android:maxLines="1"
             android:textColor="@color/color_gary_font"
             android:textSize="@dimen/small_font" />
@@ -112,7 +112,7 @@
             android:layout_height="40dp"
             android:layout_marginLeft="20dp"
             android:background="@null"
-            android:hint="请输入联系人电话"
+            android:hint="@string/apply_invoice_5"
             android:maxLines="1"
             android:textColor="@color/color_gary_font"
             android:textSize="@dimen/small_font" />
@@ -132,7 +132,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="15dp"
             android:background="@drawable/button_red_style"
-            android:text="提交"
+            android:text="@string/apply"
             android:textColor="#4d4d4d"
             android:textSize="17sp" />
     </LinearLayout>

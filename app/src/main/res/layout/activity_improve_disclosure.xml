@@ -38,7 +38,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:src="@mipmap/arrive"
                 />
 
             <TextView
@@ -48,7 +47,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="7dp"
                 android:paddingRight="20dp"
-                android:text="天虹商场西丽店"
                 android:textSize="15sp"
                 />
             <ImageView
@@ -71,7 +69,7 @@
             android:paddingLeft="34dp"
             android:background="@null"
             android:textSize="14sp"
-            android:hint="请输入发货人姓名"/>
+            android:hint="@string/hint_contact_name"/>
         <View
             android:layout_width="match_parent"
             android:layout_height="0.6dp"
@@ -83,7 +81,7 @@
             android:paddingLeft="34dp"
             android:background="@null"
             android:textSize="14sp"
-            android:hint="请输入发货人电话"/>
+            android:hint="@string/hint_contact_tel"/>
         <View
             android:layout_width="match_parent"
             android:layout_height="0.6dp"
@@ -95,7 +93,7 @@
             android:paddingLeft="34dp"
             android:background="@null"
             android:textSize="14sp"
-            android:hint="请输入代收贷款金额"/>
+            android:hint="@string/hint_loan_money"/>
         <View
             android:layout_width="match_parent"
             android:layout_height="0.6dp"
@@ -108,7 +106,7 @@
             android:layout_height="wrap_content"
             android:button="@drawable/check1_style"
             android:paddingLeft="10dp"
-            android:text="设置为常用地址"
+            android:text="@string/setting_common_address"
             android:textColor="@color/color_gary_font"/>
         <Button
             android:id="@+id/bt_ok"

@@ -55,6 +55,7 @@ public class FeedbackActivity extends BaseActivity {
         tv_title.setText(R.string.feed_back);
         tv_right.setText(R.string.propose);
         iv_left_white.setOnClickListener(this);
+        tv_right.setOnClickListener(this);
     }
 
     @Override

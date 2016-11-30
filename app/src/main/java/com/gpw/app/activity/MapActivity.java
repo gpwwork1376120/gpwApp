@@ -65,6 +65,7 @@ import com.gpw.app.util.LogUtil;
 public class MapActivity extends BaseActivity implements OnGetSuggestionResultListener {
 
     private ImageView iv_left_black;
+    private ImageView iv_location1;
     private EditText et_search;
     private TextView tv_address;
     private TextView tv_map_name;
@@ -100,6 +101,7 @@ public class MapActivity extends BaseActivity implements OnGetSuggestionResultLi
     protected void findById() {
         mMapView = (MapView) findViewById(R.id.map_view);
         iv_left_black = (ImageView) findViewById(R.id.iv_left_black);
+        iv_location1 = (ImageView) findViewById(R.id.iv_location1);
         et_search = (EditText) findViewById(R.id.et_search);
         tv_address = (TextView) findViewById(R.id.tv_address);
         lv_search = (ListView) findViewById(R.id.lv_search);
@@ -215,9 +217,6 @@ public class MapActivity extends BaseActivity implements OnGetSuggestionResultLi
                 if (s.length()<=0){
                     return;
                 }
-
-                System.out.println("city" + city);
-
                 mSuggestionSearch.requestSuggestion((new SuggestionSearchOption())
                         .keyword(s.toString())
                         .city(city));
@@ -240,6 +239,7 @@ public class MapActivity extends BaseActivity implements OnGetSuggestionResultLi
         iv_left_black.setOnClickListener(this);
         tv_address.setOnClickListener(this);
         ll_location.setOnClickListener(this);
+        iv_location1.setOnClickListener(this);
     }
 
 
@@ -249,6 +249,11 @@ public class MapActivity extends BaseActivity implements OnGetSuggestionResultLi
         switch (v.getId()) {
             case R.id.iv_left_black:
                 finish();
+                break;
+            case R.id.iv_location1:
+                mLocationClient.stop();
+                mLocationClient.start();
+                LogUtil.i("loction");
                 break;
             case R.id.ll_location:
                 intent = new Intent(MapActivity.this, ImproveDisclosureActivity.class);
@@ -458,6 +463,7 @@ public class MapActivity extends BaseActivity implements OnGetSuggestionResultLi
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString("city", city);
             editor.apply();
+
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             MapStatus mapStatus = new MapStatus.Builder()
                     .target(latLng)
@@ -465,6 +471,7 @@ public class MapActivity extends BaseActivity implements OnGetSuggestionResultLi
                     .build();
             MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mapStatus);
             mBaiduMap.animateMapStatus(mapStatusUpdate);
+            mSearch.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
 
         }
     }

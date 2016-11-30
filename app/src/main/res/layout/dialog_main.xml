@@ -149,14 +149,14 @@
                 android:id="@+id/tv_volume"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/transport_volume" />
+              />
 
             <TextView
                 android:id="@+id/tv_start_money"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="起步价:55元/6Km" />
+               />
         </LinearLayout>
 
 
@@ -170,14 +170,14 @@
                 android:id="@+id/tv_kg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="载重:1000kg" />
+                 />
 
             <TextView
                 android:id="@+id/tv_after"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="后续:4元/Km" />
+              />
         </LinearLayout>
 
     </LinearLayout>
@@ -289,7 +289,7 @@
                     android:layout_height="23dp"
                     android:layout_marginLeft="10dp"
                     android:background="@drawable/edit_black_style"
-                    android:hint="请输入对方手机号码"
+                    android:hint="@string/hint_input_tel"
                     android:inputType="number"
                     android:maxLines="1"
                     android:paddingLeft="5dp"

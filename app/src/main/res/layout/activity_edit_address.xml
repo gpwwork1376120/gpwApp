@@ -40,7 +40,6 @@
                 android:layout_marginLeft="20dp"
                 android:layout_weight="1"
                 android:paddingRight="20dp"
-                android:text="天虹商场西丽店"
                 android:textSize="15sp" />
 
             <ImageView
@@ -62,7 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@null"
-            android:hint="请输入发货人姓名"
+            android:hint="@string/hint_contact_name"
             android:paddingLeft="34dp"
             android:textSize="14sp" />
 
@@ -76,7 +75,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@null"
-            android:hint="请输入发货人电话"
+            android:hint="@string/hint_contact_tel"
             android:paddingLeft="34dp"
             android:textSize="14sp" />
 

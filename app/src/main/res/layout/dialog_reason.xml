@@ -16,7 +16,7 @@
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:textColor="@color/color_gary_font"
-        android:text="温馨提示"/>
+        android:text="@string/hint_reason"/>
 
     <TextView
         android:gravity="center"
@@ -26,7 +26,7 @@
         android:layout_marginRight="20dp"
         android:textSize="13sp"
         android:textColor="@color/color_gary_font"
-        android:text="您确定要撤销该订单嘛？"/>
+        android:text="@string/hint_reason_0"/>
     <EditText
         android:id="@+id/et_reason"
         android:gravity="left"
@@ -40,7 +40,7 @@
         android:paddingLeft="9dp"
         android:lines="1"
         android:textSize="13sp"
-        android:hint="请输入撤销的原因"/>
+        android:hint="@string/hint_reason_1"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -53,7 +53,7 @@
             android:layout_width="100dp"
             android:layout_height="30dp"
             android:background="@drawable/button_login"
-            android:text="取消"
+            android:text="@string/cancle"
             android:id="@+id/bt_cancel"
            />
         <Button
@@ -61,7 +61,7 @@
             android:layout_width="100dp"
             android:layout_height="30dp"
             android:background="@drawable/button_login"
-            android:text="确定"
+            android:text="@string/ok"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"/>

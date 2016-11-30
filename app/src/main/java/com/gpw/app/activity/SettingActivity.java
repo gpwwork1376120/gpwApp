@@ -18,6 +18,7 @@ import java.util.Map;
 
 import com.gpw.app.R;
 import com.gpw.app.base.BaseActivity;
+import com.gpw.app.base.BaseApplication;
 import com.gpw.app.base.Contants;
 import com.gpw.app.util.EncryptUtil;
 import com.gpw.app.util.HttpUtil;
@@ -87,6 +88,7 @@ public class SettingActivity extends BaseActivity {
         rl_faq.setOnClickListener(this);
         rl_about_us.setOnClickListener(this);
         iv_left_white.setOnClickListener(this);
+        bt_exit_login.setOnClickListener(this);
         cb_vibrates.setChecked(IsVibrates);
         cb_sound.setChecked(IsSound);
         final SharedPreferences.Editor editor = prefs.edit();
@@ -139,8 +141,8 @@ public class SettingActivity extends BaseActivity {
 
                         JsonObject jsonObject = new JsonObject();
                         jsonObject.addProperty("Tel", Contants.userId);
-                        jsonObject.addProperty("UserType", 1);
                         jsonObject.addProperty("PassWord", old);
+                        jsonObject.addProperty("UserType", 1);
                         jsonObject.addProperty("NewPwd", new1);
                         LogUtil.i(jsonObject.toString());
                         Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
@@ -183,6 +185,10 @@ public class SettingActivity extends BaseActivity {
             case R.id.rl_about_us:
                 intent.setClass(SettingActivity.this, AboutUsActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.bt_exit_login:
+                setResult(RESULT_OK,getIntent());
+                finish();
                 break;
 
         }

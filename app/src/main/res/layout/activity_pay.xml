@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            android:text="罚金"
+            android:text="@string/forfeit"
             android:textColor="@color/color_red"
             android:textSize="@dimen/normal_font" />
 
@@ -35,9 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-
             android:textColor="@color/color_red"
-            android:text="44"
             android:textSize="18sp" />
         <TextView
             android:id="@+id/tv_yuan"

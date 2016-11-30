@@ -97,6 +97,17 @@
             />
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/iv_location1"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:background="@color/color_white"
+        android:src="@mipmap/location_black"
+        android:padding="5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginBottom="30dp"/>
+
 
     <ListView
         android:id="@+id/lv_search"
@@ -106,7 +117,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="10dp"
-        android:visibility="gone"
+
         android:background="@color/color_white">
     </ListView>
     <View

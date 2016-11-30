@@ -57,6 +57,7 @@ import com.gpw.app.util.LogUtil;
 public class AddMapActivity extends BaseActivity {
 
     private ImageView iv_left_black;
+    private ImageView iv_location1;
     private EditText et_search;
     private ListView lv_search;
     private LinearLayout ll_search;
@@ -118,7 +119,6 @@ public class AddMapActivity extends BaseActivity {
                     if (distance > 300) {
                         receiptAddress = address;
                     } else {
-                        LogUtil.i("小于300米了！！！");
                         receiptAddress = poiInfo.name;
                     }
                 } else {
@@ -184,6 +184,7 @@ public class AddMapActivity extends BaseActivity {
     protected void findById() {
         mMapView = (MapView) findViewById(R.id.map_view);
         iv_left_black = (ImageView) findViewById(R.id.iv_left_black);
+        iv_location1 = (ImageView) findViewById(R.id.iv_location1);
         et_search = (EditText) findViewById(R.id.et_search);
         lv_search = (ListView) findViewById(R.id.lv_search);
         ll_search = (LinearLayout) findViewById(R.id.ll_search);
@@ -322,6 +323,7 @@ public class AddMapActivity extends BaseActivity {
             }
         });
         iv_left_black.setOnClickListener(this);
+        iv_location1.setOnClickListener(this);
 
 
     }
@@ -343,6 +345,10 @@ public class AddMapActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.iv_left_black:
                 finish();
+                break;
+            case R.id.iv_location1:
+                mLocationClient.stop();
+                mLocationClient.start();
                 break;
             case R.id.tv_address:
                 Intent intent = new Intent(AddMapActivity.this, CommonAddressActivity.class);
@@ -423,6 +429,7 @@ public class AddMapActivity extends BaseActivity {
                     .build();
             MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mapStatus);
             mBaiduMap.animateMapStatus(mapStatusUpdate);
+            mSearch.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
         }
     }
 

@@ -76,6 +76,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     private TextView tv_car_1;
     private TextView tv_tel;
     private TextView tv_myOrder;
+    private TextView tv_myOrder1;
     private TextView tv_myWallet;
     private TextView tv_myConvoy;
     private TextView tv_common_address;
@@ -182,6 +183,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
 
         tv_tel = (TextView) findViewById(R.id.tv_tel);
         tv_myOrder = (TextView) findViewById(R.id.tv_myOrder);
+        tv_myOrder1 = (TextView) findViewById(R.id.tv_myOrder1);
         tv_myWallet = (TextView) findViewById(R.id.tv_myWallet);
         tv_myConvoy = (TextView) findViewById(R.id.tv_myConvoy);
         tv_common_address = (TextView) findViewById(R.id.tv_common_address);
@@ -370,6 +372,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         iv_confirm_order.setOnClickListener(this);
         tv_tel.setOnClickListener(this);
         tv_myOrder.setOnClickListener(this);
+        tv_myOrder1.setOnClickListener(this);
         tv_myWallet.setOnClickListener(this);
         tv_myConvoy.setOnClickListener(this);
         tv_common_address.setOnClickListener(this);
@@ -619,6 +622,11 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 intent.putExtra("UserId", userInfo.getUserId());
                 startActivity(intent);
                 break;
+            case R.id.tv_myOrder1:
+                intent = new Intent(MainActivity.this, OrderActivity.class);
+                intent.putExtra("UserId", userInfo.getUserId());
+                startActivity(intent);
+                break;
             case R.id.tv_myWallet:
                 intent = new Intent(MainActivity.this, MyWalletActivity.class);
                 startActivity(intent);
@@ -649,7 +657,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 break;
             case R.id.tv_setting:
                 intent = new Intent(MainActivity.this, SettingActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,6);
                 break;
             case R.id.rl_head:
                 intent = new Intent(MainActivity.this, PersonalInfoActivity.class);
@@ -731,6 +739,9 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             cb_isMyFleet.setChecked(isMyFleet);
             cb_isSurcharge.setChecked(isSurcharge);
             et_remark.setText(remark);
+            if (!isToPayFreight){
+                et_toPayFreightTel.setText("");
+            }
             et_toPayFreightTel.setText(payFreightTel);
         }
         tv_volume.setText(String.format("运输体积:%sm³", carInfo.getVolume()));
@@ -766,6 +777,9 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             et_amount.setText(quantity);
             et_kg.setText(kg);
             et_volume.setText(volume);
+            if (!isToPayFreight){
+                et_toPayFreightTel.setText("");
+            }
         }
     }
 
@@ -952,7 +966,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == 1) {
-
             int position = data.getIntExtra("position", 0);
             int type = data.getIntExtra("type", 0);
             OrderAddressInfo orderAddressInfo = data.getParcelableExtra("orderAddressInfo");
@@ -1001,6 +1014,12 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             initOrderData();
             Intent intent = new Intent(MainActivity.this, MyOrderActivity.class);
             startActivity(intent);
+        }
+
+        if (resultCode == RESULT_OK && requestCode == 6) {
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
         }
 
     }

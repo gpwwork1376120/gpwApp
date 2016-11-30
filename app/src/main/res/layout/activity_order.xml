@@ -45,12 +45,12 @@
                 android:background="@color/color_line" />
 
             <TextView
-                android:id="@+id/tv_new"
+                android:id="@+id/tv_wait"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/order_new" />
+                android:text="@string/order_wait" />
 
             <View
                 android:layout_width="0.6dp"
@@ -60,27 +60,14 @@
                 android:background="@color/color_line" />
 
             <TextView
-                android:id="@+id/tv_doing"
+                android:id="@+id/tv_have"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/order_doing" />
+                android:text="@string/order_have" />
 
-            <View
-                android:layout_width="0.6dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="7dp"
-                android:layout_marginTop="7dp"
-                android:background="@color/color_line" />
 
-            <TextView
-                android:id="@+id/tv_end"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/order_end" />
 
         </LinearLayout>
 
@@ -109,7 +96,7 @@
                     android:background="@color/color_red" />
 
                 <View
-                    android:id="@+id/view_new"
+                    android:id="@+id/view_wait"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="20dp"
@@ -119,7 +106,7 @@
                     android:visibility="invisible" />
 
                 <View
-                    android:id="@+id/view_doing"
+                    android:id="@+id/view_have"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="20dp"
@@ -128,15 +115,7 @@
                     android:background="@color/color_red"
                     android:visibility="invisible" />
 
-                <View
-                    android:id="@+id/view_end"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_weight="1"
-                    android:background="@color/color_red"
-                    android:visibility="invisible" />
+
 
             </LinearLayout>
 

@@ -84,6 +84,7 @@ public class PayActivity extends BaseActivity{
         tv_right.setVisibility(View.GONE);
         tv_title.setText("支付");
         tv_money.setText(String.format("¥%s", money));
+        tv_balance.setText(String.format("可用余额%s元", Contants.Balance));
         iv_left_white.setOnClickListener(this);
         bt_ok.setOnClickListener(this);
 

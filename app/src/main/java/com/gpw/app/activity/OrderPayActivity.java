@@ -132,6 +132,7 @@ public class OrderPayActivity extends BaseActivity {
         tv_money.setText(money);
         tv_time.setText(time);
         lv_address.setAdapter(orderAddAdapter);
+        tv_balance.setText(String.format("可用余额%s元", Contants.Balance));
         tv_title.setText(R.string.order_pay);
         tv_right.setVisibility(View.GONE);
         iv_left_white.setOnClickListener(this);

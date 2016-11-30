@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/iv"
         android:layout_centerHorizontal="true"
-        android:text="13312344321"
+
         android:textSize="15sp"/>
 
     <View

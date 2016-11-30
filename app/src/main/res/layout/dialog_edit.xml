@@ -43,7 +43,7 @@
             android:layout_width="100dp"
             android:layout_height="30dp"
             android:background="@drawable/button_login"
-            android:text="取消"
+            android:text="@string/cancle"
             android:id="@+id/bt_cancel"
            />
         <Button
@@ -51,7 +51,7 @@
             android:layout_width="100dp"
             android:layout_height="30dp"
             android:background="@drawable/button_login"
-            android:text="确定"
+            android:text="@string/ok"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"/>

@@ -20,7 +20,7 @@
 
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:text="选择性别"
+            android:text="@string/select_sex"
             android:gravity="center"
             android:textColor="@color/color_gary_font"
             android:textSize="13sp"
@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:background="@drawable/layout_click_style"
-            android:text="男"
+            android:text="@string/man"
             android:textColor="@color/color_gary_font"
             android:textSize="13sp"/>
 
@@ -48,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:background="@drawable/layout_click_style"
-            android:text="女"
+            android:text="@string/woman"
             android:textColor="@color/color_gary_font"
             android:textSize="13sp"
             />
@@ -62,7 +62,7 @@
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:background="@drawable/layout_click_style"
-            android:text="取消"
+            android:text="@string/cancle"
             android:textColor="@color/color_gary_font"
             android:textSize="13sp"
             />

@@ -15,6 +15,6 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:gravity="center"
-        android:text="暂无订单"/>
+        android:text="@string/not_order"/>
 
 </LinearLayout>

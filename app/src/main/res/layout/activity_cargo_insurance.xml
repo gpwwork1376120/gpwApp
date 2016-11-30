@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:textColor="@color/color_gary_font"
-            android:text="货物价值"/>
+            android:text="@string/cargo_insurance_1"/>
 
         <EditText
             android:id="@+id/et_goodsValue"
@@ -36,7 +36,7 @@
             android:layout_marginLeft="40dp"
             android:background="@null"
             android:textSize="@dimen/small_font"
-            android:hint="请输入货物价值，单位元"/>
+            android:hint="@string/hint_cargo"/>
     </LinearLayout>
 
     <View
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:textColor="@color/color_gary_font"
-            android:text="险保费"/>
+            android:text="@string/cargo_insurance_2"/>
 
         <TextView
             android:id="@+id/tv_premiums"

@@ -145,9 +145,10 @@ public class RebuildPsdActivity extends BaseActivity {
 
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("Tel",account);
-        jsonObject.addProperty("CheckCode",validateCode);
         jsonObject.addProperty("Password",password);
         jsonObject.addProperty("UserType",1);
+        jsonObject.addProperty("CheckCode",validateCode);
+        LogUtil.i(jsonObject.toString());
         Map<String,String> map = EncryptUtil.encryptDES(jsonObject.toString());
 
         HttpUtil.doPost(RebuildPsdActivity.this, Contants.url_updatePassWord, "updatePassWord", map, new VolleyInterface(RebuildPsdActivity.this,VolleyInterface.mListener,VolleyInterface.mErrorListener) {

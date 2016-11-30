@@ -27,15 +27,15 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="50dp"
-            android:src="@mipmap/ic_launcher"/>
+            android:src="@mipmap/ic_launcher"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/tv_msgtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_below="@+id/iv_logo"
-            android:text="1.1.1"/>
+            android:layout_below="@+id/iv_logo" />
 
 
         <TextView
@@ -44,7 +44,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:layout_centerHorizontal="true"
-            android:layout_below="@+id/tv_msgtitle"
-            android:text="文字介绍文字介绍文字介绍文字介绍文字介绍"/>
+            android:layout_below="@+id/tv_msgtitle" />
     </RelativeLayout>
 </LinearLayout>

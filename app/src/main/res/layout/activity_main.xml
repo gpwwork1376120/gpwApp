@@ -194,7 +194,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="10dp"
                             android:layout_toLeftOf="@+id/iv_left"
-                            android:text="≤1万" />
+                            android:text="@string/less_10000" />
 
                         <ImageView
                             android:id="@+id/iv_left"
@@ -245,7 +245,7 @@
                             android:layout_marginLeft="8dp"
                             android:layout_marginTop="2dp"
                             android:layout_toRightOf="@+id/tv_money"
-                            android:text="费用明细"
+                            android:text="@string/money_detail"
                             android:textColor="@color/color_red"
                             android:textSize="@dimen/small_font" />
 
@@ -255,7 +255,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignBottom="@+id/tv_money_detail"
                             android:layout_centerHorizontal="true"
-                            android:text="¥00.0"
+                            android:text="@string/money_0"
                             android:textColor="@color/color_red"
                             android:textSize="@dimen/big_font" />
                     </RelativeLayout>
@@ -352,7 +352,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
-                            android:text="@string/myOrder"
+                            android:text="@string/myOrder2"
                             android:textSize="@dimen/smallest_font" />
                     </LinearLayout>
 
@@ -362,7 +362,8 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        tools:ignore="UseCompoundDrawables">
 
                         <ImageView
                             android:layout_width="23dp"
@@ -408,7 +409,8 @@
                 android:layout_height="65dp"
                 android:layout_marginTop="162.5dp"
                 android:background="@color/color_white"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                tools:ignore="DisableBaselineAlignment">
 
                 <LinearLayout
                     android:id="@+id/ll_car_1"
@@ -416,7 +418,8 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    tools:ignore="UseCompoundDrawables">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -507,6 +510,17 @@
                 android:gravity="center_vertical"
                 android:paddingLeft="30dp"
                 android:text="@string/myOrder"
+                android:textColor="#3d3d3d"
+                android:textSize="@dimen/bigest_font" />
+
+            <TextView
+                android:id="@+id/tv_myOrder1"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@drawable/layout_click_style"
+                android:gravity="center_vertical"
+                android:paddingLeft="30dp"
+                android:text="@string/myOrder1"
                 android:textColor="#3d3d3d"
                 android:textSize="@dimen/bigest_font" />
 

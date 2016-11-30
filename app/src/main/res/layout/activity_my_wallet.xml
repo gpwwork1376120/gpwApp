@@ -45,7 +45,7 @@
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/tv_balance"
             android:layout_marginTop="10dp"
-            android:text="¥00.00"
+            android:text="@string/money_0"
             android:textColor="@color/color_red"
             android:textSize="22sp"/>
         <Button

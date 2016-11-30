@@ -11,42 +11,43 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#00000000"
-        android:clickable="true">
-    </com.baidu.mapapi.map.MapView>
+        android:clickable="true"></com.baidu.mapapi.map.MapView>
+
     <ImageView
         android:id="@+id/iv_location"
         android:layout_width="wrap_content"
-        android:paddingBottom="20dp"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:paddingBottom="20dp"
         android:src="@mipmap/location"
-        android:layout_centerInParent="true"/>
+        tools:ignore="ContentDescription" />
 
     <LinearLayout
         android:id="@+id/ll_location"
-        android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/iv_location"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
-        android:background="@mipmap/bt_map_bck">
+        android:background="@mipmap/bt_map_bck"
+        android:orientation="vertical">
+
         <TextView
-            android:layout_marginTop="4dp"
-            android:layout_marginLeft="8dp"
             android:id="@+id/tv_map_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#1e1e1e"
-            android:textSize="15sp"
-            />
-        <TextView
-            android:layout_marginTop="3dp"
             android:layout_marginLeft="8dp"
+            android:layout_marginTop="4dp"
+            android:textColor="#1e1e1e"
+            android:textSize="15sp" />
+
+        <TextView
             android:id="@+id/tv_map_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="13sp"
-            />
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="3dp"
+            android:textSize="13sp" />
     </LinearLayout>
 
 
@@ -66,7 +67,8 @@
             android:layout_height="21dp"
             android:layout_gravity="center_vertical"
             android:paddingLeft="10dp"
-            android:src="@mipmap/left_black" />
+            android:src="@mipmap/left_black"
+            tools:ignore="ContentDescription" />
 
         <EditText
             android:id="@+id/et_search"
@@ -75,10 +77,21 @@
             android:layout_weight="1"
             android:background="@null"
             android:gravity="center_vertical"
-            android:hint="请输入关键字查询"
+            android:hint="@string/hint_word_search"
             android:paddingLeft="13dp"
             android:textSize="14sp" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_location1"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"
+        android:layout_marginLeft="30dp"
+        android:background="@color/color_white"
+        android:padding="5dp"
+        android:src="@mipmap/location_black" />
 
     <ListView
         android:id="@+id/lv_search"
@@ -88,8 +101,8 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="10dp"
-        android:background="@color/color_white">
-    </ListView>
+        android:background="@color/color_white"></ListView>
+
     <View
         android:id="@+id/view_status"
         android:layout_width="match_parent"

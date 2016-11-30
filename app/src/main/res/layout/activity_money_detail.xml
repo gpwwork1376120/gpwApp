@@ -34,20 +34,21 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="运费"/>
+                android:text="@string/freight"/>
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:maxLines="1"
-                android:text="----------------------------------------------------------------------------------------------------"/>
+                android:text="@string/hint_money_detail"
+                android:id="@+id/textView2" />
 
             <TextView
                 android:id="@+id/tv_freight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="¥0元"/>
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -59,13 +60,13 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="险保费"/>
+                android:text="@string/tv_premiums"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
-                android:text="保单"
+                android:text="@string/protect"
                 android:textColor="@color/color_red"
                 android:textSize="@dimen/small_font"/>
 
@@ -74,13 +75,13 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:maxLines="1"
-                android:text="----------------------------------------------------------------------------------------------------"/>
+                android:text="@string/hint_money_detail"/>
 
             <TextView
                 android:id="@+id/tv_premiums"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="¥0元"/>
+                />
 
 
         </LinearLayout>
@@ -136,14 +137,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="总计"/>
+                android:text="@string/allMoney"/>
             <TextView
                 android:id="@+id/tv_total_money"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="20dp"
-                android:text="¥0元"/>
+                />
 
         </RelativeLayout>
 

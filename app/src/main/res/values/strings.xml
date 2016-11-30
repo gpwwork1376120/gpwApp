@@ -11,12 +11,7 @@
     <string name="hint_input_account1">请输入手机号,仅限大陆地区</string>
     <string name="booking_delivery">预约发货</string>
     <string name="car_1">零担</string>
-    <string name="car_2">小面包车</string>
-    <string name="car_3">中面包车</string>
-    <string name="car_4">小型货车</string>
-    <string name="car_5">中型货车</string>
     <string name="cargo_insurance">货运险</string>
-    <string name="transport_volume">运输体积:%1$fm³</string>
     <string name="rebuild_psd">重设密码</string>
     <string name="ok">确定</string>
     <string name="account_management">账户管理</string>
@@ -28,7 +23,6 @@
     <string name="vibrates_hint">震动提示</string>
     <string name="exit_login">退出登录</string>
     <string name="sound_hint">声音提示</string>
-
     <string name="hint_input_acc">请输入您的手机号或邮箱</string>
     <string name="hint_make_comments">欢迎您对我们提出宝贵的建议或意见！</string>
     <string name="propose">提交</string>
@@ -37,7 +31,9 @@
     <string name="sex">性别</string>
     <string name="name">姓名</string>
     <string name="head">头像</string>
-    <string name="myOrder">我的订单</string>
+    <string name="myOrder">发货订单</string>
+    <string name="myOrder1">收货订单</string>
+    <string name="myOrder2">我的订单</string>
     <string name="myWallet">我的钱包</string>
     <string name="myConvoy">我的车队</string>
     <string name="common_address">常用地址</string>
@@ -57,7 +53,6 @@
     <string name="wechat_pay">微信支付</string>
     <string name="wechat_hint">推荐安装微信6.0.2及以上版本的用户使用</string>
     <string name="hint_input_charge">请输入充值金额(元)</string>
-    <string name="money_yuan">金额</string>
     <string name="select">选择</string>
     <string name="invoice_rule">开票规则</string>
     <string name="apply_invoice">发票申请</string>
@@ -91,7 +86,6 @@
     <string name="query">询价</string>
     <string name="youCan">您也可以</string>
     <string name="hint_remark">请输入留言</string>
-
     <string name="cancle">取消</string>
     <string name="title">请选择时间</string>
     <string name="commit">确定</string>
@@ -109,5 +103,48 @@
     <string name="psd_error">请输入6-16位的密码</string>
     <string name="psd_no">两次输入的密码不一样</string>
     <string name="pas_null">密码不能为空</string>
-    <string name="setting">设   置</string>
+    <string name="setting">设    置</string>
+    <string name="hint_word_search">请输入关键字查询</string>
+    <string name="apply_invoice_1">开票金额合计</string>
+    <string name="apply_invoice_2">请输入公司抬头</string>
+    <string name="apply_invoice_3">请输入收件地址</string>
+    <string name="apply_invoice_4">请输入联系人姓名</string>
+    <string name="apply_invoice_5">请输入联系人电话</string>
+    <string name="apply">提交</string>
+    <string name="hint_cargo">请输入货物价值，单位元</string>
+    <string name="cargo_insurance_1">货物价值</string>
+    <string name="cargo_insurance_2">险保费</string>
+    <string name="hint_charge_1">总支出：¥0元</string>
+    <string name="money">金额</string>
+    <string name="hint_contact_name">请输入发货人姓名</string>
+    <string name="hint_contact_tel">请输入发货人电话</string>
+    <string name="hint_loan_money">请输入代收贷款金额</string>
+    <string name="setting_common_address">设置为常用地址</string>
+    <string name="money_0">¥00.0</string>
+    <string name="less_10000">≤1万</string>
+    <string name="freight">运费</string>
+    <string name="tv_premiums">险保费</string>
+    <string name="protect">保单</string>
+    <string name="hint_money_detail">----------------------------------------------------------------------------------------------------</string>
+    <string name="allMoney">总计</string>
+    <string name="not_convoy">暂无收藏车队</string>
+    <string name="order_all">全部</string>
+    <string name="order_new">新发布</string>
+    <string name="order_doing">进行中</string>
+    <string name="order_end">已结束</string>
+    <string name="not_order_offer">暂无车队报价</string>
+    <string name="forfeit">罚金</string>
+    <string name="hint_input_tel">请输入对方手机号码</string>
+    <string name="select_pic_type">选择照片方式</string>
+    <string name="takePhoto">拍照</string>
+    <string name="pickPhoto">从相册选择</string>
+    <string name="hint_reason_0">您确定要撤销该订单嘛？</string>
+    <string name="hint_reason_1">请输入撤销的原因</string>
+    <string name="hint_reason">温馨提示</string>
+    <string name="man">男</string>
+    <string name="woman">女</string>
+    <string name="select_sex">选择性别</string>
+    <string name="not_order">暂无订单</string>
+    <string name="order_have">已收货</string>
+    <string name="order_wait">待收货</string>
 </resources>
