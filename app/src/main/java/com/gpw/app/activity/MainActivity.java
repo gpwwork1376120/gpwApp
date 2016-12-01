@@ -123,8 +123,8 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     private int vehideTypeId;
     private double payment;
     private boolean isPublish;
-    private String startLngLat;
-    private String endLngLat;
+    private String startLatLng;
+    private String endLatLng;
     private double premiums;
     private double freight;
     private String volume;
@@ -1049,10 +1049,8 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
 
     private void getOrderInfo() {
         orderAddress = "";
-        startLngLat = "";
-      //  String startLatLng = "";
-        endLngLat = "";
-    //    String endLatLng  = "";
+        startLatLng = "";
+        endLatLng = "";
         payment = 0;
         isPublish = false;
 
@@ -1067,20 +1065,20 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             payment += orderAddressInfo.getMoney();
             if (i == 0) {
                 orderAddress = orderAddressInfo.toString() + "|";
-                startLngLat = String.valueOf(orderAddressInfo.getLat()) + "," + String.valueOf(orderAddressInfo.getLng());
+                startLatLng = String.valueOf(orderAddressInfo.getLat()) + "," + String.valueOf(orderAddressInfo.getLng());
 
             } else if (i == size - 1) {
                 orderAddress = orderAddress + orderAddressInfo.toString();
-                endLngLat = endLngLat + String.valueOf(orderAddressInfo.getLat()) + "," + String.valueOf(orderAddressInfo.getLng());
+                endLatLng = endLatLng + String.valueOf(orderAddressInfo.getLat()) + "," + String.valueOf(orderAddressInfo.getLng());
             } else {
                 orderAddress = orderAddress + orderAddressInfo.toString() + "|";
-                startLngLat = startLngLat + "|" + String.valueOf(orderAddressInfo.getLat()) + "," + String.valueOf(orderAddressInfo.getLng());
-                endLngLat = endLngLat + String.valueOf(orderAddressInfo.getLat()) + "," + String.valueOf(orderAddressInfo.getLng()) + "|";
+                startLatLng = startLatLng + "|" + String.valueOf(orderAddressInfo.getLat()) + "," + String.valueOf(orderAddressInfo.getLng());
+                endLatLng = endLatLng + String.valueOf(orderAddressInfo.getLat()) + "," + String.valueOf(orderAddressInfo.getLng()) + "|";
             }
         }
 
-        LogUtil.i("startLngLat" + startLngLat);
-        LogUtil.i("endLngLat" + endLngLat);
+        LogUtil.i("startLatLng" + startLatLng);
+        LogUtil.i("endLatLng" + endLatLng);
         LogUtil.i("orderAddress" + orderAddress);
         LogUtil.i("payment" + payment);
         LogUtil.i("isPublish" + isPublish);
@@ -1095,8 +1093,8 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("Volume", Double.valueOf(volume));
                 jsonObject.addProperty("Weight", Double.valueOf(kg));
-                jsonObject.addProperty("StartLngLat", startLngLat);
-                jsonObject.addProperty("EndLngLat", endLngLat);
+                jsonObject.addProperty("StartLatLng", startLatLng);
+                jsonObject.addProperty("EndLatLng", endLatLng);
                 LogUtil.i(jsonObject.toString());
                 Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
                 HttpUtil.doPost(MainActivity.this, Contants.url_lingDanFreight, "lingDanFreight", map, new VolleyInterface(MainActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
@@ -1124,9 +1122,8 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             } else {
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("VehicleType", vehideTypeId);
-                jsonObject.addProperty("StartLngLat", startLngLat);
-                jsonObject.addProperty("EndLngLat", endLngLat);
-                LogUtil.i("asdsad" + jsonObject.toString());
+                jsonObject.addProperty("StartLatLng", startLatLng);
+                jsonObject.addProperty("EndLatLng", endLatLng);
                 Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
                 HttpUtil.doPost(MainActivity.this, Contants.url_calculationFreight, "calculationFreight", map, new VolleyInterface(MainActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
                     @Override

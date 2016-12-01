@@ -7,7 +7,7 @@
     android:background="@color/color_red"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.gpw.app.activity.OrderDetailActivity">
+    tools:context="com.gpw.app.activity.OrderReceiptDetailActivity">
 
     <include
         android:id="@+id/in_head"
@@ -15,22 +15,22 @@
         android:layout_width="match_parent"
         android:layout_height="55dp" />
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#ffffff">
-
+        android:background="#ffffff"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
                 android:orientation="horizontal">
 
                 <RelativeLayout
@@ -39,17 +39,17 @@
                     android:layout_weight="1">
 
                     <ImageView
-                        android:id="@+id/iv_state"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_centerHorizontal="true"
-                        android:src="@mipmap/heart_gray" />
+                        android:src="@mipmap/start" />
 
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
+                        android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="100dp"
+                        android:layout_marginBottom="20dp"
                         android:src="@mipmap/below_gray" />
 
                     <View
@@ -87,10 +87,10 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="车主已接单，等待发货" />
+                                android:text="货主已发货，正在路上" />
 
                             <TextView
-                                android:id="@+id/tv_start_time"
+                                android:id="@+id/tv_time"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
@@ -105,72 +105,23 @@
                             android:layout_height="0.6dp"
                             android:background="@color/color_line" />
 
-                        <LinearLayout
+                        <TextView
+                            android:id="@+id/tv_address"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:paddingBottom="10dp"
+                            android:paddingBottom="5dp"
                             android:paddingLeft="10dp"
                             android:paddingRight="5dp"
-                            android:paddingTop="10dp">
+                            android:paddingTop="5dp">
 
-                            <TextView
-                                android:id="@+id/tv_money"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="#22" />
-
-                            <TextView
-                                android:id="@+id/tv_startState"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="20dp"
-                                android:text="小面包车 搬运 全拆座" />
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="20dp"
-                                android:src="@mipmap/comment_gray" />
-
-                        </LinearLayout>
+                        </TextView>
 
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="0.6dp"
                             android:background="@color/color_line" />
 
-                        <LinearLayout
-                            android:id="@+id/ll_carInfo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:paddingLeft="10dp">
-
-                            <TextView
-                                android:id="@+id/tv_name"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="马师傅" />
-
-                            <TextView
-                                android:id="@+id/tv_vehicleNo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="20dp"
-                                android:text="奥B.12345" />
-
-                            <RatingBar
-                                android:id="@+id/rb_score"
-                                style="@style/MyRatingBar"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_marginLeft="10dp"
-                                android:max="5"
-                                android:scaleX="0.75"
-                                android:scaleY="0.75" />
-
-                        </LinearLayout>
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -189,13 +140,13 @@
                                 android:textSize="13sp" />
 
                             <Button
-                                android:id="@+id/bt_cancel"
+                                android:id="@+id/bt_location"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_alignParentRight="true"
                                 android:layout_marginRight="10dp"
                                 android:background="@drawable/button_gray_bg"
-                                android:text="取消订单"
+                                android:text="车辆定位"
                                 android:textColor="@color/color_white"
                                 android:textSize="13sp" />
                         </RelativeLayout>
@@ -204,24 +155,23 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="15dp"
+                        android:layout_height="25dp"
                         android:background="@color/color_white" />
                 </LinearLayout>
 
+
             </LinearLayout>
 
+        </LinearLayout>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_order_detail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            </android.support.v7.widget.RecyclerView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:orientation="horizontal">
 
                 <RelativeLayout
@@ -230,10 +180,12 @@
                     android:layout_weight="1">
 
                     <ImageView
+
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_centerHorizontal="true"
-                        android:src="@mipmap/comment_red" />
+                        android:src="@mipmap/arrive" />
+
 
                 </RelativeLayout>
 
@@ -263,8 +215,16 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="您的评价，让我们做的更好!" />
+                                android:text="货物已到达，请查收" />
 
+                            <TextView
+                                android:id="@+id/tv_time1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginRight="10dp"
+                                android:text="2016-10-10 10:00"
+                                android:textSize="12sp" />
 
                         </RelativeLayout>
 
@@ -273,39 +233,17 @@
                             android:layout_height="0.6dp"
                             android:background="@color/color_line" />
 
-                        <LinearLayout
+                        <TextView
+                            android:id="@+id/tv_address1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:paddingBottom="10dp"
+                            android:paddingBottom="5dp"
                             android:paddingLeft="10dp"
                             android:paddingRight="5dp"
-                            android:paddingTop="10dp">
+                            android:paddingTop="5dp">
 
-                            <TextView
-                                android:id="@+id/tv_name1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="马师傅" />
-
-                            <TextView
-                                android:id="@+id/tv_vehicleNo1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="20dp"
-                                android:text="奥B.12345" />
-
-                            <RatingBar
-                                android:id="@+id/rb_score1"
-                                style="@style/MyRatingBar"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_marginLeft="10dp"
-                                android:max="5"
-                                android:scaleX="0.85"
-                                android:scaleY="0.85" />
-
-                        </LinearLayout>
+                        </TextView>
 
                         <View
                             android:layout_width="match_parent"
@@ -320,13 +258,23 @@
                             android:layout_marginTop="8dp">
 
                             <Button
-                                android:id="@+id/bt_keepConvey"
+                                android:id="@+id/bt_confirm"
+                                android:layout_width="80dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="50dp"
+                                android:background="@drawable/button_red_bg"
+                                android:text="确认卸货"
+                                android:textColor="@color/color_white"
+                                android:textSize="13sp" />
+
+                            <Button
+                                android:id="@+id/bt_apliy"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_alignParentRight="true"
                                 android:layout_marginRight="10dp"
-                                android:background="@drawable/button_red_bg"
-                                android:text="收藏至车队"
+                                android:background="@drawable/button_gray_bg"
+                                android:text="支付"
                                 android:textColor="@color/color_white"
                                 android:textSize="13sp" />
                         </RelativeLayout>
@@ -335,13 +283,14 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="15dp"
+                        android:layout_height="12dp"
                         android:background="@color/color_white" />
                 </LinearLayout>
 
+
             </LinearLayout>
 
-
         </LinearLayout>
-    </ScrollView>
+
+    </LinearLayout>
 </LinearLayout>

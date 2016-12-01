@@ -7,34 +7,30 @@
     <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal">
+        android:layout_weight="1">
+
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:src="@mipmap/below_gray" />
+
+        <View
+            android:layout_width="0.6dp"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="12dp"
+            android:background="@color/color_line" />
 
         <ImageView
             android:id="@+id/iv_state"
             android:layout_width="20dp"
             android:layout_height="20dp"
+            android:layout_centerHorizontal="true"
             android:src="@mipmap/heart_gray" />
-
-        <RelativeLayout
-            android:id="@+id/rl_line"
-            android:layout_width="20dp"
-            android:layout_height="match_parent"
-            android:layout_marginTop="15dp"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginTop="100dp"
-                android:src="@mipmap/below_gray" />
-            <View
-                android:layout_width="0.6dp"
-                android:layout_height="match_parent"
-                android:background="@color/color_line"
-                android:layout_centerInParent="true"/>
-        </RelativeLayout>
-
-
     </RelativeLayout>
 
 
@@ -55,17 +51,15 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
+                android:layout_marginBottom="7dp"
                 android:layout_marginLeft="5dp"
-                android:paddingLeft="4dp"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="7dp"
+                android:paddingLeft="4dp">
 
                 <TextView
                     android:id="@+id/tv_state"
-
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:text="车主已接单，等待发货" />
 
                 <TextView
@@ -82,161 +76,53 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.6dp"
-                android:layout_marginTop="5dp"
                 android:background="@color/color_line" />
 
-
-            <RelativeLayout
+            <TextView
+                android:id="@+id/tv_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
                 android:orientation="horizontal"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:paddingLeft="4dp">
+                android:paddingBottom="5dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="5dp"
+                android:paddingTop="5dp">
 
-                <LinearLayout
-                    android:id="@+id/type_1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/tv_money"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="#22" />
-
-                    <TextView
-                        android:id="@+id/tv_startState"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:text="小面包车 搬运 全拆座" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:src="@mipmap/comment_gray" />
-
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/type_2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:visibility="gone" />
-                <LinearLayout
-                    android:id="@+id/type_3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:id="@+id/tv_name1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="马师傅" />
-
-                    <TextView
-                        android:id="@+id/tv_vehicleNo1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:text="奥B.12345" />
-
-                    <RatingBar
-                        android:id="@+id/rb_score1"
-                        style="@style/MyRatingBar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="10dp"
-                        android:isIndicator="true"
-                        android:max="5"
-                        android:progress="4"
-                        android:scaleX="0.75"
-                        android:scaleY="0.75" />
-                </LinearLayout>
-
-            </RelativeLayout>
-
+            </TextView>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.6dp"
                 android:background="@color/color_line" />
 
-            <LinearLayout
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="5dp"
-                android:orientation="vertical">
+                android:layout_height="30dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp">
 
-                <LinearLayout
-                    android:id="@+id/ll_carInfo"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:paddingLeft="4dp"
-                    android:layout_weight="1">
+                <Button
+                    android:id="@+id/bt_confirm"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="50dp"
+                    android:background="@drawable/button_red_bg"
+                    android:text="确认卸货"
+                    android:textColor="@color/color_white"
+                    android:textSize="13sp" />
 
-                    <TextView
-                        android:id="@+id/tv_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="马师傅" />
-
-                    <TextView
-                        android:id="@+id/tv_vehicleNo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:text="奥B.12345" />
-
-                    <RatingBar
-                        android:id="@+id/rb_score"
-                        style="@style/MyRatingBar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="10dp"
-                        android:max="5"
-                        android:scaleX="0.75"
-                        android:scaleY="0.75" />
-
-                </LinearLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="32dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="10dp">
-
-                    <Button
-                        android:id="@+id/bt_1"
-                        android:layout_width="80dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="50dp"
-                        android:background="@drawable/button_red_bg"
-                        android:text="呼叫车主"
-                        android:textColor="@color/color_white"
-                        android:textSize="13sp" />
-
-                    <Button
-                        android:id="@+id/bt_2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="10dp"
-                        android:background="@drawable/button_gray_bg"
-                        android:text="取消订单"
-                        android:textColor="@color/color_white"
-                        android:textSize="13sp" />
-                </RelativeLayout>
-
-            </LinearLayout>
+                <Button
+                    android:id="@+id/bt_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/button_gray_bg"
+                    android:text="车辆定位"
+                    android:textColor="@color/color_white"
+                    android:textSize="13sp" />
+            </RelativeLayout>
 
         </LinearLayout>
 

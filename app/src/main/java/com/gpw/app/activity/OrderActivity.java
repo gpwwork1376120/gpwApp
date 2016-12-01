@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.gpw.app.R;
 import com.gpw.app.base.BaseActivity;
 import com.gpw.app.fragment.OrderFragment;
+import com.gpw.app.fragment.ReceiptOrderFragment;
 
 public class OrderActivity extends BaseActivity {
     private TextView tv_title;
@@ -27,9 +28,9 @@ public class OrderActivity extends BaseActivity {
     private View view_wait;
 
 
-    private OrderFragment fg_total;
-    private OrderFragment fg_wait;
-    private OrderFragment fg_have;
+    private ReceiptOrderFragment fg_total;
+    private ReceiptOrderFragment fg_wait;
+    private ReceiptOrderFragment fg_have;
 
 
     @Override
@@ -63,7 +64,7 @@ public class OrderActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        tv_title.setText(R.string.myOrder);
+        tv_title.setText(R.string.myOrder1);
         tv_right.setVisibility(View.GONE);
         iv_left_white.setOnClickListener(this);
 
@@ -96,42 +97,42 @@ public class OrderActivity extends BaseActivity {
 
     private void choiceState(int i) {
         initState();
-//        FragmentManager fManager = getSupportFragmentManager();
-//        FragmentTransaction transaction = fManager.beginTransaction();
-//        hideFragments(transaction);
+        FragmentManager fManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fManager.beginTransaction();
+        hideFragments(transaction);
         switch (i) {
             case 1:
                 tv_all.setTextColor(ContextCompat.getColor(OrderActivity.this, R.color.color_red));
                 view_all.setVisibility(View.VISIBLE);
-//                if (fg_total == null) {
-//                    fg_total = OrderFragment.newInstance(0);
-//                    transaction.add(R.id.fl_content, fg_total);
-//                } else {
-//                    transaction.show(fg_total);
-//                }
+                if (fg_total == null) {
+                    fg_total = ReceiptOrderFragment.newInstance(0);
+                    transaction.add(R.id.fl_content, fg_total);
+                } else {
+                    transaction.show(fg_total);
+                }
                 break;
             case 2:
                 tv_wait.setTextColor(ContextCompat.getColor(OrderActivity.this, R.color.color_red));
                 view_wait.setVisibility(View.VISIBLE);
-//                if (fg_wait == null) {
-//                    fg_wait = OrderFragment.newInstance(1);
-//                    transaction.add(R.id.fl_content, fg_wait);
-//                } else {
-//                    transaction.show(fg_wait);
-//                }
+                if (fg_wait == null) {
+                    fg_wait = ReceiptOrderFragment.newInstance(1);
+                    transaction.add(R.id.fl_content, fg_wait);
+                } else {
+                    transaction.show(fg_wait);
+                }
                 break;
             case 3:
                 tv_have.setTextColor(ContextCompat.getColor(OrderActivity.this, R.color.color_red));
                 view_have.setVisibility(View.VISIBLE);
-//                if (fg_have == null) {
-//                    fg_have = OrderFragment.newInstance(2);
-//                    transaction.add(R.id.fl_content, fg_have);
-//                } else {
-//                    transaction.show(fg_have);
-//                }
+                if (fg_have == null) {
+                    fg_have = ReceiptOrderFragment.newInstance(2);
+                    transaction.add(R.id.fl_content, fg_have);
+                } else {
+                    transaction.show(fg_have);
+                }
                 break;
         }
-//        transaction.commit();
+        transaction.commit();
     }
 
     private void initState() {

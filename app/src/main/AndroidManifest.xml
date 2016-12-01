@@ -214,6 +214,11 @@
             android:theme="@style/RedTranslucentTheme"
             android:screenOrientation="portrait">
         </activity>
+        <activity
+            android:name=".activity.OrderReceiptDetailActivity"
+            android:theme="@style/RedTranslucentTheme"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>

@@ -3,9 +3,13 @@ package com.gpw.app.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,11 +41,23 @@ public class OrderDetailActivity extends BaseActivity {
     private TextView tv_right;
     private ImageView iv_left_white;
     private String orderId;
-    private ListView lv_order_detail;
+    private RecyclerView rv_order_detail;
     private OrderDetailInfo orderDetailInfo;
     private OrderDetailAdapter orderDetailAdapter;
     private MyDialog endDialog;
     private OrderDetailInfo.OrderAddressBean orderAddressBean;
+    private TextView tv_money;
+    private TextView tv_name;
+    private TextView tv_name1;
+    private RatingBar rb_score;
+    private RatingBar rb_score1;
+    private TextView tv_vehicleNo;
+    private TextView tv_vehicleNo1;
+    private TextView tv_start_time;
+    private TextView tv_startState;
+    private Button bt_call;
+    private Button bt_cancel;
+    private Button bt_keepConvey;
 
     @Override
     protected int getLayout() {
@@ -55,14 +71,25 @@ public class OrderDetailActivity extends BaseActivity {
         tv_title = (TextView) rl_head.findViewById(R.id.tv_title);
         tv_right = (TextView) rl_head.findViewById(R.id.tv_right);
         iv_left_white = (ImageView) rl_head.findViewById(R.id.iv_left_white);
-        lv_order_detail = (ListView) findViewById(R.id.lv_order_detail);
+        rv_order_detail = (RecyclerView) findViewById(R.id.rv_order_detail);
+        tv_money = (TextView) findViewById(R.id.tv_money);
+        tv_name = (TextView) findViewById(R.id.tv_name);
+        tv_name1 = (TextView) findViewById(R.id.tv_name1);
+        tv_vehicleNo = (TextView) findViewById(R.id.tv_vehicleNo);
+        tv_vehicleNo1 = (TextView) findViewById(R.id.tv_vehicleNo1);
+        tv_start_time = (TextView) findViewById(R.id.tv_start_time);
+        tv_startState = (TextView) findViewById(R.id.tv_startState);
+        rb_score = (RatingBar) findViewById(R.id.rb_score);
+        rb_score1 = (RatingBar) findViewById(R.id.rb_score1);
+        bt_call = (Button) findViewById(R.id.bt_call);
+        bt_keepConvey = (Button) findViewById(R.id.bt_keepConvey);
+        bt_cancel = (Button) findViewById(R.id.bt_cancel);
 
     }
 
     @Override
     protected void initData() {
         orderId = getIntent().getStringExtra("orderId");
-
     }
 
 
@@ -70,6 +97,7 @@ public class OrderDetailActivity extends BaseActivity {
     protected void initView() {
 
         tv_title.setText(R.string.order_detail);
+
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("UserId", Contants.userId);
         jsonObject.addProperty("OrderNo", orderId);
@@ -83,22 +111,49 @@ public class OrderDetailActivity extends BaseActivity {
                 }.getType();
                 ArrayList<OrderDetailInfo> OrderDetailInfos = gson.fromJson(result, listType);
                 orderDetailInfo = OrderDetailInfos.get(0);
-                orderDetailAdapter = new OrderDetailAdapter(orderDetailInfo, OrderDetailActivity.this);
+                tv_start_time.setText(orderDetailInfo.getGrabTime());
+                tv_name.setText(orderDetailInfo.getTransporterName());
+                tv_vehicleNo.setText(orderDetailInfo.getVehicleNo());
+                rb_score.setProgress(orderDetailInfo.getTransporterScore());
+                tv_name1.setText(orderDetailInfo.getTransporterName());
+                tv_vehicleNo1.setText(orderDetailInfo.getVehicleNo());
+
+                tv_money.setText(String.format("¥ %s", orderDetailInfo.getFreight()));
+
+                String startState = orderDetailInfo.getVehicleTypeName();
+                if (orderDetailInfo.getRemove().equals("True")) {
+                    if (startState.equals("小型货车") || startState.equals("中型货车")) {
+                        startState = startState + " 开顶";
+                    } else if (startState.equals("小面包车") || startState.equals("中面包车")) {
+                        startState = startState + "  全拆座";
+                    } else {
+                        startState = startState + orderDetailInfo.getVolume() + "km  " + orderDetailInfo.getWeight() + "kg";
+                    }
+                }
+                if (orderDetailInfo.getMove().equals("True")) {
+                    startState = startState + "  搬运";
+                }
+                if (orderDetailInfo.getIsToPay().equals("True")) {
+                    startState = startState + "  货到付款";
+                }
+                tv_startState.setText(startState);
+
+
+                orderDetailAdapter = new OrderDetailAdapter((ArrayList<OrderDetailInfo.OrderAddressBean>) orderDetailInfo.getOrderAddress(), OrderDetailActivity.this);
+                LinearLayoutManager layoutManager = new LinearLayoutManager(OrderDetailActivity.this);
+                layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                rv_order_detail.setLayoutManager(layoutManager);
+                rv_order_detail.setAdapter(orderDetailAdapter);
                 orderDetailAdapter.setOnBtnClickListener(new OrderDetailAdapter.OnBtnClickListener() {
                     @Override
                     public void onBtnClick(int position, String viewName) {
                         switch (viewName) {
-                            case "呼叫车主":
-                                break;
-                            case "取消订单":
-                                confirmCancel();
-                                break;
                             case "确认卸货":
-                                orderAddressBean = orderDetailInfo.getOrderAddress().get(position - 2);
+                                orderAddressBean = orderDetailInfo.getOrderAddress().get(position);
                                 updateOrder(2, orderAddressBean.getAIndex());
                                 break;
                             case "确认收货":
-                                orderAddressBean = orderDetailInfo.getOrderAddress().get(position - 2);
+                                orderAddressBean = orderDetailInfo.getOrderAddress().get(position);
                                 updateOrder(3, orderAddressBean.getAIndex());
                                 break;
                             case "车辆定位":
@@ -107,15 +162,11 @@ public class OrderDetailActivity extends BaseActivity {
                                 intent.putExtra("TransporterName", orderDetailInfo.getTransporterName());
                                 startActivity(intent);
                                 break;
-                            case "收藏至车队":
-                                keepTransporter(orderDetailInfo.getTransporterId());
-                                break;
+
                         }
                     }
                 });
 
-                System.out.println(OrderDetailInfos.size());
-                lv_order_detail.setAdapter(orderDetailAdapter);
             }
 
             @Override
@@ -131,68 +182,28 @@ public class OrderDetailActivity extends BaseActivity {
         });
         tv_right.setVisibility(View.GONE);
         iv_left_white.setOnClickListener(this);
+        bt_call.setOnClickListener(this);
+        bt_cancel.setOnClickListener(this);
+        bt_keepConvey.setOnClickListener(this);
+
 
     }
 
-    private void updateOrder(int type, int index) {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("OrderNo", orderDetailInfo.getOrderNo());
-        jsonObject.addProperty("OperationType", type);
-        jsonObject.addProperty("UserId", Contants.userId);
-        jsonObject.addProperty("UserType", 1);
-        jsonObject.addProperty("Aindex", index);
-        Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
-        HttpUtil.doPost(OrderDetailActivity.this, Contants.url_updateOrder, "updateOrder", map, new VolleyInterface(OrderDetailActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
-            @Override
-            public void onSuccess(JsonElement result) {
-                LogUtil.i(result.toString());
-                showShortToastByString("确认成功");
-            }
-
-            @Override
-            public void onError(VolleyError error) {
-                showShortToastByString(getString(R.string.timeoutError));
-//                LogUtil.i("hint",error.networkResponse.headers.toString());
-//                LogUtil.i("hint",error.networkResponse.statusCode+"");
-            }
-
-            @Override
-            public void onStateError() {
-            }
-        });
-
-    }
-
-    private void keepTransporter(String transportUserId) {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("SendUserId", Contants.userId);
-        jsonObject.addProperty("TransportUserId", transportUserId);
-        Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
-        HttpUtil.doPost(OrderDetailActivity.this, Contants.url_keepTransporter, "keepTransporter", map, new VolleyInterface(OrderDetailActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
-            @Override
-            public void onSuccess(JsonElement result) {
-                LogUtil.i(result.toString());
-                showShortToastByString("收藏成功");
-            }
-
-            @Override
-            public void onError(VolleyError error) {
-                showShortToastByString(getString(R.string.timeoutError));
-//                LogUtil.i("hint",error.networkResponse.headers.toString());
-//                LogUtil.i("hint",error.networkResponse.statusCode+"");
-            }
-
-            @Override
-            public void onStateError() {
-            }
-        });
-    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_left_white:
                 finish();
+                break;
+            case R.id.bt_cancel:
+                confirmCancel();
+                break;
+            case R.id.bt_call:
+
+                break;
+            case R.id.bt_keepConvey:
+                keepTransporter(orderDetailInfo.getTransporterId());
                 break;
         }
     }
@@ -271,4 +282,59 @@ public class OrderDetailActivity extends BaseActivity {
             }
         });
     }
+
+
+    private void updateOrder(int type, int index) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("OrderNo", orderDetailInfo.getOrderNo());
+        jsonObject.addProperty("OperationType", type);
+        jsonObject.addProperty("UserId", Contants.userId);
+        jsonObject.addProperty("UserType", 1);
+        jsonObject.addProperty("Aindex", index);
+        Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
+        HttpUtil.doPost(OrderDetailActivity.this, Contants.url_updateOrder, "updateOrder", map, new VolleyInterface(OrderDetailActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
+            @Override
+            public void onSuccess(JsonElement result) {
+                LogUtil.i(result.toString());
+                showShortToastByString("确认成功");
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                showShortToastByString(getString(R.string.timeoutError));
+//                LogUtil.i("hint",error.networkResponse.headers.toString());
+//                LogUtil.i("hint",error.networkResponse.statusCode+"");
+            }
+
+            @Override
+            public void onStateError() {
+            }
+        });
+
+    }
+
+    private void keepTransporter(String transportUserId) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("SendUserId", Contants.userId);
+        jsonObject.addProperty("TransportUserId", transportUserId);
+        Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
+        HttpUtil.doPost(OrderDetailActivity.this, Contants.url_keepTransporter, "keepTransporter", map, new VolleyInterface(OrderDetailActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
+            @Override
+            public void onSuccess(JsonElement result) {
+                LogUtil.i(result.toString());
+                showShortToastByString("收藏成功");
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                showShortToastByString(getString(R.string.timeoutError));
+
+            }
+
+            @Override
+            public void onStateError() {
+            }
+        });
+    }
+
 }

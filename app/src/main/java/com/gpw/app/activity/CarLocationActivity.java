@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.ZoomControls;
 
 import com.android.volley.VolleyError;
 import com.baidu.mapapi.map.BaiduMap;
@@ -45,6 +46,7 @@ public class CarLocationActivity extends BaseActivity {
     MapView mMapView = null;
     private String TransporterId;
     private String TransporterName;
+    private ImageView iv_location1;
 
 
     @Override
@@ -60,6 +62,7 @@ public class CarLocationActivity extends BaseActivity {
         tv_right = (TextView) rl_head.findViewById(R.id.tv_right);
         iv_left_white = (ImageView) rl_head.findViewById(R.id.iv_left_white);
         mMapView = (MapView) findViewById(R.id.map_view);
+        iv_location1 = (ImageView) findViewById(R.id.iv_location1);
 
     }
 
@@ -72,7 +75,15 @@ public class CarLocationActivity extends BaseActivity {
     @Override
     protected void initView() {
         mBaiduMap = mMapView.getMap();
+        View child = mMapView.getChildAt(1);
+        if (child != null && (child instanceof ImageView || child instanceof ZoomControls)) {
+            child.setVisibility(View.INVISIBLE);
+        }
+        mMapView.showScaleControl(false);
+        mMapView.showZoomControls(false);
+
         iv_left_white.setOnClickListener(this);
+        iv_location1.setOnClickListener(this);
         tv_title.setText(R.string.car_location);
         tv_right.setVisibility(View.GONE);
         carLocation();
@@ -195,6 +206,9 @@ public class CarLocationActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.iv_left_white:
                 finish();
+                break;
+            case R.id.iv_location1:
+                carLocation();
                 break;
             case R.id.tv_address:
                 Intent intent = new Intent(CarLocationActivity.this, CommonAddressActivity.class);

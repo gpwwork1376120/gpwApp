@@ -60,7 +60,8 @@
     <string name="volume">货物总体积(m³)</string>
     <string name="kg">货物总重量(Kg)</string>
     <string name="amount">货物总件数</string>
-    <string name="order_detail">订单详情</string>
+    <string name="order_detail">发货订单详情</string>
+    <string name="order_detail1">收货订单详情</string>
     <string name="improve_disclosure">完善发货信息</string>
     <string name="confirm_order">确认订单</string>
     <string name="order_pay">订单支付</string>

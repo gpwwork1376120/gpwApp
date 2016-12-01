@@ -26,6 +26,7 @@ public class OrderInfo {
     private String PlanSendTime;
     private String IsToPay;
     private double Freight;
+    private double Premiums;
     private int OrderStatus;
     private int FinanceStatus;
     private int LogisticStatus;
@@ -119,7 +120,13 @@ public class OrderInfo {
         IsToPay = isToPay;
     }
 
+    public double getPremiums() {
+        return Premiums;
+    }
 
+    public void setPremiums(double premiums) {
+        Premiums = premiums;
+    }
 
     @Override
     public String toString() {
