@@ -108,14 +108,18 @@ public class AddMapActivity extends BaseActivity {
                 Toast.makeText(AddMapActivity.this, "没有检索到结果", Toast.LENGTH_SHORT).show();
                 return;
             }
+            if (!result.getAddressDetail().city.equals(city)){
+                city = result.getAddressDetail().city;
+                showShortToastByString("已切换至:"+city);
+            }
             LatLng location = result.getLocation();
             final String address = result.getAddress();
             if (!isSuggest) {
-                if (result.getPoiList().size() != 0) {
+                if (result.getPoiList() != null) {
                     PoiInfo poiInfo = result.getPoiList().get(0);
                     LatLng poiLatLng = poiInfo.location;
                     double distance = DistanceUtil.getDistance(poiLatLng, location);
-                    LogUtil.i("distance" + distance);
+
                     if (distance > 300) {
                         receiptAddress = address;
                     } else {
@@ -125,13 +129,12 @@ public class AddMapActivity extends BaseActivity {
                     receiptAddress = address;
                 }
                 tv_map_name.setText(receiptAddress);
-                receiptAddress = receiptAddress + "   " + "(" + address + ")";
 
             } else {
                 tv_map_name.setText(receiptAddress);
-                receiptAddress = receiptAddress + "   " + "(" + address + ")";
                 isSuggest = false;
             }
+            receiptAddress = receiptAddress + "   " + "(" + address + ")";
             tv_map_detail.setText(address);
             MapStatus mapStatus = new MapStatus.Builder()
                     .target(location)
@@ -143,13 +146,8 @@ public class AddMapActivity extends BaseActivity {
             commonAdInfo.setReceiptAddress(receiptAddress);
             commonAdInfo.setLat(location.latitude);
             commonAdInfo.setLng(location.longitude);
-
-
-
-            lv_search.setVisibility(View.GONE);
-
-           city = result.getAddressDetail().city;
-           final String province =  result.getAddressDetail().province;
+            city = result.getAddressDetail().city;
+            final String province =  result.getAddressDetail().province;
 
             ll_location.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -299,14 +297,15 @@ public class AddMapActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                System.out.println("sadsad11" + s.toString());
+                if (s.length() <= 0) {
+                    mSuggestionInfos.clear();
+                    mAddressNameAdapter.notifyDataSetChanged();
+                    return;
+                }
                 mSuggestionSearch.requestSuggestion((new SuggestionSearchOption())
                         .keyword(s.toString())
                         .city(city));
-                if (s.toString().isEmpty()) {
-                    mSuggestionInfos.clear();
-                    mAddressNameAdapter.notifyDataSetChanged();
-                }
+
             }
         });
         lv_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -315,6 +314,10 @@ public class AddMapActivity extends BaseActivity {
                 mBaiduMap.clear();
                 LatLng pt = mSuggestionInfos.get(position).pt;
                 receiptAddress = mSuggestionInfos.get(position).key;
+                if (pt==null){
+                    showShortToastByString("地图上无法查询到该地点");
+                    return;
+                }
                 isSuggest = true;
                 mSearch.reverseGeoCode(new ReverseGeoCodeOption()
                         .location(pt));
@@ -347,8 +350,7 @@ public class AddMapActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.iv_location1:
-                mLocationClient.stop();
-                mLocationClient.start();
+                mLocationClient.requestLocation();
                 break;
             case R.id.tv_address:
                 Intent intent = new Intent(AddMapActivity.this, CommonAddressActivity.class);

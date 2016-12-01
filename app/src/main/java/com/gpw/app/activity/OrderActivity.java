@@ -21,16 +21,16 @@ public class OrderActivity extends BaseActivity {
     private TextView tv_all;
     private TextView tv_have;
     private TextView tv_wait;
-    
+
     private View view_all;
     private View view_have;
     private View view_wait;
-   
+
 
     private OrderFragment fg_total;
     private OrderFragment fg_wait;
     private OrderFragment fg_have;
-   
+
 
     @Override
     protected int getLayout() {
@@ -49,11 +49,11 @@ public class OrderActivity extends BaseActivity {
         tv_all = (TextView) findViewById(R.id.tv_all);
         tv_have = (TextView) findViewById(R.id.tv_have);
         tv_wait = (TextView) findViewById(R.id.tv_wait);
-       
+
         view_all = findViewById(R.id.view_all);
-        view_have = findViewById(R.id.view_new);
-        view_wait = findViewById(R.id.view_doing);
-       
+        view_have = findViewById(R.id.view_have);
+        view_wait = findViewById(R.id.view_wait);
+
     }
 
     @Override
@@ -70,7 +70,7 @@ public class OrderActivity extends BaseActivity {
         tv_all.setOnClickListener(this);
         tv_have.setOnClickListener(this);
         tv_wait.setOnClickListener(this);
-     
+
 
         choiceState(1);
     }
@@ -96,53 +96,53 @@ public class OrderActivity extends BaseActivity {
 
     private void choiceState(int i) {
         initState();
-        FragmentManager fManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fManager.beginTransaction();
-        hideFragments(transaction);
+//        FragmentManager fManager = getSupportFragmentManager();
+//        FragmentTransaction transaction = fManager.beginTransaction();
+//        hideFragments(transaction);
         switch (i) {
             case 1:
                 tv_all.setTextColor(ContextCompat.getColor(OrderActivity.this, R.color.color_red));
                 view_all.setVisibility(View.VISIBLE);
-                if (fg_total == null) {
-                    fg_total = OrderFragment.newInstance(0);
-                    transaction.add(R.id.fl_content, fg_total);
-                } else {
-                    transaction.show(fg_total);
-                }
+//                if (fg_total == null) {
+//                    fg_total = OrderFragment.newInstance(0);
+//                    transaction.add(R.id.fl_content, fg_total);
+//                } else {
+//                    transaction.show(fg_total);
+//                }
                 break;
             case 2:
                 tv_wait.setTextColor(ContextCompat.getColor(OrderActivity.this, R.color.color_red));
                 view_wait.setVisibility(View.VISIBLE);
-                if (fg_wait == null) {
-                    fg_wait = OrderFragment.newInstance(1);
-                    transaction.add(R.id.fl_content, fg_wait);
-                } else {
-                    transaction.show(fg_wait);
-                }
+//                if (fg_wait == null) {
+//                    fg_wait = OrderFragment.newInstance(1);
+//                    transaction.add(R.id.fl_content, fg_wait);
+//                } else {
+//                    transaction.show(fg_wait);
+//                }
                 break;
             case 3:
                 tv_have.setTextColor(ContextCompat.getColor(OrderActivity.this, R.color.color_red));
                 view_have.setVisibility(View.VISIBLE);
-                if (fg_have == null) {
-                    fg_have = OrderFragment.newInstance(2);
-                    transaction.add(R.id.fl_content, fg_have);
-                } else {
-                    transaction.show(fg_have);
-                }
+//                if (fg_have == null) {
+//                    fg_have = OrderFragment.newInstance(2);
+//                    transaction.add(R.id.fl_content, fg_have);
+//                } else {
+//                    transaction.show(fg_have);
+//                }
                 break;
         }
-        transaction.commit();
+//        transaction.commit();
     }
 
     private void initState() {
         view_all.setVisibility(View.INVISIBLE);
         view_wait.setVisibility(View.INVISIBLE);
         view_have.setVisibility(View.INVISIBLE);
-       
+
         tv_all.setTextColor(ContextCompat.getColor(OrderActivity.this, R.color.color_gary_font));
         tv_have.setTextColor(ContextCompat.getColor(OrderActivity.this, R.color.color_gary_font));
         tv_wait.setTextColor(ContextCompat.getColor(OrderActivity.this, R.color.color_gary_font));
-      
+
     }
 
     private void hideFragments(FragmentTransaction transaction) {

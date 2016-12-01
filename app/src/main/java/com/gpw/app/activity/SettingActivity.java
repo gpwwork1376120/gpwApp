@@ -2,6 +2,7 @@ package com.gpw.app.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -140,7 +141,7 @@ public class SettingActivity extends BaseActivity {
                         }
 
                         JsonObject jsonObject = new JsonObject();
-                        jsonObject.addProperty("Tel", Contants.userId);
+                        jsonObject.addProperty("Tel",Contants.Tel);
                         jsonObject.addProperty("PassWord", old);
                         jsonObject.addProperty("UserType", 1);
                         jsonObject.addProperty("NewPwd", new1);

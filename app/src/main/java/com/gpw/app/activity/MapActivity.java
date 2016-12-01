@@ -128,21 +128,16 @@ public class MapActivity extends BaseActivity implements OnGetSuggestionResultLi
         initLocation();
 
         mSuggestionInfos = new ArrayList<>();
-
         mSearch = GeoCoder.newInstance();
-
         mSuggestionSearch = SuggestionSearch.newInstance();
-
-
-
         mSuggestionSearch.setOnGetSuggestionResultListener(this);
         mSearch.setOnGetGeoCodeResultListener(listener1);
-
         mAddressNameAdapter = new AddressNameAdapter(mSuggestionInfos, this);
         prefs = getSharedPreferences(Contants.SHARED_NAME, MODE_PRIVATE);
         city = prefs.getString("city", "深圳市");
         pst = getIntent().getIntExtra("position", 0);
         type = getIntent().getIntExtra("type", 0);
+
         mOrderAddressInfo = getIntent().getParcelableExtra("orderAddressInfo");
 
 
@@ -170,6 +165,8 @@ public class MapActivity extends BaseActivity implements OnGetSuggestionResultLi
         if (child != null && (child instanceof ImageView || child instanceof ZoomControls)) {
             child.setVisibility(View.INVISIBLE);
         }
+        mMapView.showScaleControl(false);
+        mMapView.showZoomControls(false);
         mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
         lv_search.setAdapter(mAddressNameAdapter);
         mBaiduMap.setOnMapStatusChangeListener(listener2);
@@ -183,7 +180,6 @@ public class MapActivity extends BaseActivity implements OnGetSuggestionResultLi
             } else {
                 mLocationClient.start();
             }
-
 
         } else {
             LatLng latLng = new LatLng(mOrderAddressInfo.getLat(), mOrderAddressInfo.getLng());
@@ -214,28 +210,40 @@ public class MapActivity extends BaseActivity implements OnGetSuggestionResultLi
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length()<=0){
+                if (s.length() <= 0) {
+                    mSuggestionInfos.clear();
+                    mAddressNameAdapter.notifyDataSetChanged();
                     return;
                 }
                 mSuggestionSearch.requestSuggestion((new SuggestionSearchOption())
                         .keyword(s.toString())
                         .city(city));
 
-                if (s.toString().isEmpty()) {
-                    mSuggestionInfos.clear();
-                    mAddressNameAdapter.notifyDataSetChanged();
-                }
             }
         });
         lv_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 LatLng pt = mSuggestionInfos.get(position).pt;
                 receiptAddress = mSuggestionInfos.get(position).key;
+                if (pt==null){
+                    showShortToastByString("地图上无法查询到该地点");
+                    return;
+                }
                 isSuggest = true;
+
                 mSearch.reverseGeoCode(new ReverseGeoCodeOption().location(pt));
+                lv_search.setVisibility(View.GONE);
             }
         });
+
+        if (mOrderAddressInfo.getState() == 3 && type == 2) {
+            mOrderAddressInfo = new OrderAddressInfo();
+            mOrderAddressInfo.setState(2);
+            mOrderAddressInfo.setAction(2);
+        }
+
         iv_left_black.setOnClickListener(this);
         tv_address.setOnClickListener(this);
         ll_location.setOnClickListener(this);
@@ -251,9 +259,7 @@ public class MapActivity extends BaseActivity implements OnGetSuggestionResultLi
                 finish();
                 break;
             case R.id.iv_location1:
-                mLocationClient.stop();
-                mLocationClient.start();
-                LogUtil.i("loction");
+                mLocationClient.requestLocation();
                 break;
             case R.id.ll_location:
                 intent = new Intent(MapActivity.this, ImproveDisclosureActivity.class);
@@ -289,6 +295,8 @@ public class MapActivity extends BaseActivity implements OnGetSuggestionResultLi
         MyApp.removeActivity(this);
         mMapView.onDestroy();
         mSuggestionSearch.destroy();
+        mSearch.destroy();
+
         mLocationClient.unRegisterLocationListener(myListener);
     }
 
@@ -311,18 +319,17 @@ public class MapActivity extends BaseActivity implements OnGetSuggestionResultLi
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == 4) {
             int position = data.getIntExtra("position", 0);
-            int type = data.getIntExtra("type", 0);
+            int type1 = data.getIntExtra("type", 0);
             OrderAddressInfo orderAddressInfo = data.getParcelableExtra("orderAddressInfo");
             getIntent().putExtra("position", position);
             getIntent().putExtra("orderAddressInfo", orderAddressInfo);
-            getIntent().putExtra("type", type);
+            getIntent().putExtra("type", type1);
             setResult(RESULT_OK, getIntent());
             finish();
         }
         if (resultCode == RESULT_OK && requestCode == 7) {
 
             CommonAdInfo commonAdInfo = data.getParcelableExtra("commonAdInfo");
-            System.out.println(commonAdInfo.toString());
             LatLng latLng = new LatLng(commonAdInfo.getLat(), commonAdInfo.getLng());
 
 
@@ -347,6 +354,7 @@ public class MapActivity extends BaseActivity implements OnGetSuggestionResultLi
                 mOrderAddressInfo = new OrderAddressInfo();
                 mOrderAddressInfo.setState(2);
                 mOrderAddressInfo.setAction(2);
+
             }
 
             mOrderAddressInfo.setLat(latLng.latitude);
@@ -354,12 +362,10 @@ public class MapActivity extends BaseActivity implements OnGetSuggestionResultLi
             mOrderAddressInfo.setReceiptAddress(receiptAddress);
             mOrderAddressInfo.setReceipter(commonAdInfo.getReceipter());
             mOrderAddressInfo.setReceiptTel(commonAdInfo.getReceiptTel());
-            System.out.println(mOrderAddressInfo.toString());
+
         }
 
     }
-
-
 
 
     OnGetGeoCoderResultListener listener1 = new OnGetGeoCoderResultListener() {
@@ -377,32 +383,34 @@ public class MapActivity extends BaseActivity implements OnGetSuggestionResultLi
                 return;
             }
 
+
+            if (!result.getAddressDetail().city.equals(city)) {
+                city = result.getAddressDetail().city;
+                showShortToastByString("已切换至:" + city);
+            }
             LatLng location = result.getLocation();
             String address = result.getAddress();
             if (!isSuggest) {
-                if (result.getPoiList().size() != 0) {
+                if (result.getPoiList() != null) {
                     PoiInfo poiInfo = result.getPoiList().get(0);
                     LatLng poiLatLng = poiInfo.location;
                     double distance = DistanceUtil.getDistance(poiLatLng, location);
-                    LogUtil.i("distance" + distance);
                     if (distance > 300) {
                         receiptAddress = address;
                     } else {
-                        LogUtil.i("小于300米了！！！");
                         receiptAddress = poiInfo.name;
                     }
                 } else {
                     receiptAddress = address;
                 }
                 tv_map_name.setText(receiptAddress);
-                receiptAddress = receiptAddress + "   " + "(" + address + ")";
             } else {
                 tv_map_name.setText(receiptAddress);
-                receiptAddress = receiptAddress + "   " + "(" + address + ")";
-                isSuggest = false;
+
             }
-            LogUtil.i(address);
+            receiptAddress = receiptAddress + "   " + "(" + address + ")";
             tv_map_detail.setText(address);
+
             MapStatus mapStatus = new MapStatus.Builder()
                     .target(location)
                     .build();
@@ -410,32 +418,29 @@ public class MapActivity extends BaseActivity implements OnGetSuggestionResultLi
             mBaiduMap.animateMapStatus(mapStatusUpdate);
 
 
-            if (mOrderAddressInfo.getState() == 3 && type == 2) {
-                mOrderAddressInfo = new OrderAddressInfo();
-                mOrderAddressInfo.setState(2);
-                mOrderAddressInfo.setAction(2);
-            }
 
             mOrderAddressInfo.setReceiptAddress(receiptAddress);
             mOrderAddressInfo.setLat(location.latitude);
             mOrderAddressInfo.setLng(location.longitude);
+            isSuggest = false;
         }
     };
 
     BaiduMap.OnMapStatusChangeListener listener2 = new BaiduMap.OnMapStatusChangeListener() {
         public void onMapStatusChangeStart(MapStatus status) {
+
         }
 
         public void onMapStatusChange(MapStatus status) {
-        }
-
-        public void onMapStatusChangeFinish(MapStatus status) {
             if (status != null) {
                 mSearch.reverseGeoCode(new ReverseGeoCodeOption().location(status.target));
             }
         }
-    };
 
+        public void onMapStatusChangeFinish(MapStatus status) {
+
+        }
+    };
 
 
     @Override
@@ -444,7 +449,6 @@ public class MapActivity extends BaseActivity implements OnGetSuggestionResultLi
             return;
         }
         lv_search.setVisibility(View.VISIBLE);
-        System.out.println(suggestionResult.getAllSuggestions().toString());
         mSuggestionInfos.clear();
         mSuggestionInfos.addAll(suggestionResult.getAllSuggestions());
         mAddressNameAdapter.notifyDataSetChanged();
@@ -460,6 +464,7 @@ public class MapActivity extends BaseActivity implements OnGetSuggestionResultLi
                 mLocationClient.start();
                 return;
             }
+            showShortToastByString("当前城市:" + city);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString("city", city);
             editor.apply();
@@ -472,6 +477,7 @@ public class MapActivity extends BaseActivity implements OnGetSuggestionResultLi
             MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mapStatus);
             mBaiduMap.animateMapStatus(mapStatusUpdate);
             mSearch.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
+
 
         }
     }

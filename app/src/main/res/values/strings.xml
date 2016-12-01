@@ -103,7 +103,7 @@
     <string name="psd_error">请输入6-16位的密码</string>
     <string name="psd_no">两次输入的密码不一样</string>
     <string name="pas_null">密码不能为空</string>
-    <string name="setting">设    置</string>
+    <string name="setting">设&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;置</string>
     <string name="hint_word_search">请输入关键字查询</string>
     <string name="apply_invoice_1">开票金额合计</string>
     <string name="apply_invoice_2">请输入公司抬头</string>
@@ -114,13 +114,13 @@
     <string name="hint_cargo">请输入货物价值，单位元</string>
     <string name="cargo_insurance_1">货物价值</string>
     <string name="cargo_insurance_2">险保费</string>
-    <string name="hint_charge_1">总支出：¥0元</string>
+    <string name="hint_charge_1">总支出：¥00.00元</string>
     <string name="money">金额</string>
     <string name="hint_contact_name">请输入发货人姓名</string>
     <string name="hint_contact_tel">请输入发货人电话</string>
     <string name="hint_loan_money">请输入代收贷款金额</string>
     <string name="setting_common_address">设置为常用地址</string>
-    <string name="money_0">¥00.0</string>
+    <string name="money_0">¥00.00</string>
     <string name="less_10000">≤1万</string>
     <string name="freight">运费</string>
     <string name="tv_premiums">险保费</string>
@@ -147,4 +147,5 @@
     <string name="not_order">暂无订单</string>
     <string name="order_have">已收货</string>
     <string name="order_wait">待收货</string>
+    <string name="not_charge_schedule">暂无收支明细</string>
 </resources>

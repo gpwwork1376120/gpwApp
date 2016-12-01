@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.text.DecimalFormat;
 import java.util.Map;
 
 import com.gpw.app.R;
@@ -74,7 +75,8 @@ public class MyWalletActivity extends BaseActivity {
                 LogUtil.i(result.toString());
                 Gson gson = new Gson();
                 MoneyInfo moneyInfo = gson.fromJson(result, MoneyInfo.class);
-                tv_balance_money.setText(String.format("¥%s", moneyInfo.getBalance()));
+                DecimalFormat df = new DecimalFormat("#00.00");
+                tv_balance_money.setText(String.format("¥%s", df.format(moneyInfo.getBalance())));
             }
 
             @Override

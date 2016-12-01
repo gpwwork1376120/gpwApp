@@ -37,7 +37,7 @@
             android:layout_alignBottom="@+id/tv_money"
             android:layout_marginBottom="2dp"
             android:layout_toRightOf="@+id/tv_money"
-
+            android:text="@string/yuan"
             android:textColor="@color/color_red"
             android:textSize="17sp" />
 

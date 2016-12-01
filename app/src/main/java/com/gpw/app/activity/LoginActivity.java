@@ -183,6 +183,7 @@ public class LoginActivity extends BaseActivity {
                 SharedPreferences.Editor editor = prefs.edit();
                 Contants.userId = userInfo.getUserId();
                 Contants.Balance = userInfo.getBalance();
+                Contants.Tel = userInfo.getTel();
                 editor.putString("account", account);
                 editor.putString("password", password);
                 editor.putString("UserId", userInfo.getUserId());

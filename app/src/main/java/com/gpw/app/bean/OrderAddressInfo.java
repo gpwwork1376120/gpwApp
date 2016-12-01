@@ -88,8 +88,8 @@ public class OrderAddressInfo implements Parcelable {
         return ReceiptAddress + "," +
                 Receipter + "," +
                 ReceiptTel + "," +
-                Lat + "," +
-                Lng + "," + money;
+                Lng + "," +
+                Lat + "," + money;
     }
 
 

@@ -29,6 +29,7 @@ import com.google.gson.reflect.TypeToken;
 import com.nineoldandroids.view.ViewHelper;
 
 import java.lang.reflect.Type;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -151,6 +152,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     private String remark;
     private long mExitTime;
     private CustomDatePicker timePickerView;
+    private DecimalFormat df;
 
 
     @Override
@@ -250,6 +252,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         adInfos = getIntent().getParcelableArrayListExtra("adInfos");
         tvs_car = new ArrayList<>();
         mOrderAddressInfos = new ArrayList<>();
+        df = new DecimalFormat("#00.00");
         isStart = true;
         initOrderData();
 
@@ -283,6 +286,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         volume="";
 
 
+
         mOrderAddressInfos.clear();
         OrderAddressInfo orderAddressInfo = new OrderAddressInfo();
         orderAddressInfo.setAction(0);
@@ -296,13 +300,15 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
 
         mOrderAddressInfos.add(orderAddressInfo);
         mOrderAddressInfos.add(orderAddressInfo1);
+
         if (isStart) {
             mOrderAddressAdapter = new OrderAddressAdapter(mOrderAddressInfos, this);
             isStart = false;
         } else {
-            tv_money.setText("¥00.0");
+            tv_money.setText("¥00.00");
             mOrderAddressAdapter.notifyDataSetChanged();
         }
+        getOrderInfo();
 
         isRemove = false;
         isMove = false;
@@ -398,7 +404,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                     premiums = 100;
                     if (isPublish) {
                         double money = freight + premiums;
-                        tv_money.setText(String.format("¥%s", money));
+                        tv_money.setText(String.format("¥%s", df.format(money)));
                     }
 
                 } else {
@@ -407,7 +413,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                     premiums = 0;
                     if (isPublish) {
                         double money = freight + premiums;
-                        tv_money.setText(String.format("¥%s", money));
+                        tv_money.setText(String.format("¥%s", df.format(money)));
                     }
                 }
             }
@@ -607,6 +613,19 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 break;
             case R.id.iv_below:
                 int gray = 0x77000000;
+                if (cofirmTypeId == -1) {
+                    cb_isRemove.setChecked(false);
+                    cb_isMove.setChecked(false);
+                    cb_isToPayFreight.setChecked(false);
+                    cb_isCollectionPayment.setChecked(false);
+                    cb_isMyFleet.setChecked(false);
+                    cb_isSurcharge.setChecked(false);
+                    et_remark.setText("");
+                    et_toPayFreightTel.setText("");
+                    et_amount.setText("");
+                    et_kg.setText("");
+                    et_volume.setText("");
+                }
                 rl_car.setBackgroundColor(gray);
                 rl_car.setClickable(true);
                 dialog_car.setVisibility(View.VISIBLE);
@@ -765,6 +784,9 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             cb_isSurcharge.setChecked(false);
             et_remark.setText("");
             et_toPayFreightTel.setText("");
+            et_amount.setText("");
+            et_kg.setText("");
+            et_volume.setText("");
         }else {
             cb_isRemove.setChecked(isRemove);
             cb_isMove.setChecked(isMove);
@@ -972,12 +994,14 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
 
             if (type == 2) {
                 OrderAddressInfo old = mOrderAddressInfos.get(position);
+
                 mOrderAddressInfos.set(position, orderAddressInfo);
                 mOrderAddressInfos.add(old);
                 mOrderAddressAdapter.notifyDataSetChanged();
             } else {
                 mOrderAddressInfos.set(position, orderAddressInfo);
             }
+
             mOrderAddressAdapter.notifyDataSetChanged();
             if (mOrderAddressInfos.size() > 2) {
                 ll_isToPayFreight.setVisibility(View.GONE);
@@ -985,9 +1009,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 ll_isToPayFreight.setVisibility(View.VISIBLE);
             }
             LogUtil.i(mOrderAddressInfos.toString());
-
             getOrderInfo();
-
             if (cofirmTypeId != -1)
                 calculateFreight();
         }
@@ -998,7 +1020,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             tv_goods.setText(String.format("%s元", goods));
             double money = freight + premiums;
             if (isPublish) {
-                tv_money.setText(String.format("¥%s", money));
+                tv_money.setText(String.format("¥%s", df.format(money)));
             }
         }
 
@@ -1028,7 +1050,9 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     private void getOrderInfo() {
         orderAddress = "";
         startLngLat = "";
+      //  String startLatLng = "";
         endLngLat = "";
+    //    String endLatLng  = "";
         payment = 0;
         isPublish = false;
 
@@ -1044,6 +1068,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             if (i == 0) {
                 orderAddress = orderAddressInfo.toString() + "|";
                 startLngLat = String.valueOf(orderAddressInfo.getLat()) + "," + String.valueOf(orderAddressInfo.getLng());
+
             } else if (i == size - 1) {
                 orderAddress = orderAddress + orderAddressInfo.toString();
                 endLngLat = endLngLat + String.valueOf(orderAddressInfo.getLat()) + "," + String.valueOf(orderAddressInfo.getLng());
@@ -1082,7 +1107,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                         freight = freightInfo.getFreight();
 
                         double money = freight + premiums;
-                        tv_money.setText(String.format("¥%s", money));
+                        tv_money.setText(String.format("¥%s", df.format(money)));
 
                         LogUtil.i("lingDanFreight" + result.toString());
                     }
@@ -1111,7 +1136,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                         FreightInfo freightInfo = gson.fromJson(result, FreightInfo.class);
                         freight = freightInfo.getFreight();
                         double money = freight + premiums;
-                        tv_money.setText(String.format("¥%s", money));
+                        tv_money.setText(String.format("¥%s", df.format(money)));
                     }
 
                     @Override

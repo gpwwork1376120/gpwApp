@@ -7,6 +7,7 @@ package com.gpw.app.base;
 
 public class Contants {
     public static String userId;
+    public static String Tel;
     public static double Balance;
     public final static String SHARED_NAME = "gpwsp";
     public static String imagehost = "http://121.40.212.89:8009";

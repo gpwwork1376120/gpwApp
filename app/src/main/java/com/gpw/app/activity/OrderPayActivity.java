@@ -13,6 +13,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -129,10 +130,11 @@ public class OrderPayActivity extends BaseActivity {
             tv_orderType.setText("预");
         }
 
+        DecimalFormat df = new DecimalFormat("#00.00");
         tv_money.setText(money);
         tv_time.setText(time);
         lv_address.setAdapter(orderAddAdapter);
-        tv_balance.setText(String.format("可用余额%s元", Contants.Balance));
+        tv_balance.setText(String.format("可用余额%s元", df.format(Contants.Balance)));
         tv_title.setText(R.string.order_pay);
         tv_right.setVisibility(View.GONE);
         iv_left_white.setOnClickListener(this);
@@ -153,7 +155,9 @@ public class OrderPayActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_left_white:
-                setResult(RESULT_OK,getIntent());
+                if (isAfterPay) {
+                    setResult(RESULT_OK,getIntent());
+                }
                 finish();
                 break;
             case R.id.rl_wallet:
@@ -193,6 +197,7 @@ public class OrderPayActivity extends BaseActivity {
 
     private void publishOrder() {
         jsonObject.addProperty("PayWay", payType);
+        LogUtil.i(jsonObject.toString());
         Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
         if (carType == 1) {
 
@@ -280,7 +285,9 @@ public class OrderPayActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        setResult(RESULT_OK,getIntent());
+        if (isAfterPay) {
+            setResult(RESULT_OK,getIntent());
+        }
         super.onBackPressed();
 
     }

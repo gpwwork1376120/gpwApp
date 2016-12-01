@@ -145,7 +145,7 @@ public class RebuildPsdActivity extends BaseActivity {
 
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("Tel",account);
-        jsonObject.addProperty("Password",password);
+        jsonObject.addProperty("PassWord",password);
         jsonObject.addProperty("UserType",1);
         jsonObject.addProperty("CheckCode",validateCode);
         LogUtil.i(jsonObject.toString());

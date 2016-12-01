@@ -29,9 +29,9 @@ public class ChargeScheduleActivity extends BaseActivity {
 
     private ImageView iv_left_white;
     private ChargeScheduleAdapter chargeScheduleAdapter;
-    private BalanceInfo balanceInfo;
     private ArrayList<BalanceInfo.ListBean> listBean;
     private TextView tv_sumConsum;
+    private TextView tv_empty;
     private XRecyclerView rv_charge_schedule;
     private int CurrentPage = 1;
 
@@ -44,6 +44,7 @@ public class ChargeScheduleActivity extends BaseActivity {
     protected void findById() {
         iv_left_white = (ImageView) findViewById(R.id.iv_left_white);
         tv_sumConsum = (TextView) findViewById(R.id.tv_sumConsum);
+        tv_empty = (TextView) findViewById(R.id.tv_empty);
         rv_charge_schedule = (XRecyclerView) findViewById(R.id.rv_charge_schedule);
     }
 
@@ -60,6 +61,7 @@ public class ChargeScheduleActivity extends BaseActivity {
         getChargeSchedule(CurrentPage, 0);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        rv_charge_schedule.setEmptyView(tv_empty);
         rv_charge_schedule.setLayoutManager(layoutManager);
         rv_charge_schedule.setAdapter(chargeScheduleAdapter);
 

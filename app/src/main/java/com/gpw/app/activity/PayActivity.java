@@ -11,6 +11,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.text.DecimalFormat;
 import java.util.Map;
 
 import com.gpw.app.R;
@@ -83,8 +84,9 @@ public class PayActivity extends BaseActivity{
     protected void initView() {
         tv_right.setVisibility(View.GONE);
         tv_title.setText("支付");
-        tv_money.setText(String.format("¥%s", money));
-        tv_balance.setText(String.format("可用余额%s元", Contants.Balance));
+        DecimalFormat df = new DecimalFormat("#.00");
+        tv_money.setText(String.format("¥%s", df.format(money)));
+        tv_balance.setText(String.format("可用余额%s元", df.format(Contants.Balance)));
         iv_left_white.setOnClickListener(this);
         bt_ok.setOnClickListener(this);
 

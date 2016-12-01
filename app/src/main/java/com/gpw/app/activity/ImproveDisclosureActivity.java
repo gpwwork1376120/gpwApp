@@ -77,10 +77,18 @@ public class ImproveDisclosureActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        if (!mOrderAddressInfo.getReceiptAddress().equals("start")) {
+
+//        if (!mOrderAddressInfo.getReceiptAddress().equals("start")) {
+//            et_contact_name.setText(mOrderAddressInfo.getReceipter());
+//            et_contact_tel.setText(mOrderAddressInfo.getReceiptTel());
+//        }
+        if (mOrderAddressInfo.getReceipter()!=null){
             et_contact_name.setText(mOrderAddressInfo.getReceipter());
+        }
+        if (mOrderAddressInfo.getReceiptTel()!=null){
             et_contact_tel.setText(mOrderAddressInfo.getReceiptTel());
         }
+
         tv_address.setText(mOrderAddressInfo.getReceiptAddress());
         switch (mOrderAddressInfo.getState()) {
             case 1:
