@@ -127,8 +127,36 @@ public class OrderReceiptDetailActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.bt_apliy:
+                double money = 0;
+                int type = 0;
+                if (receiptOrderDetailInfo.getIsToPay().equals("True")) {
+                    money = receiptOrderDetailInfo.getPremium() + receiptOrderDetailInfo.getFreight();
+                }
+                if (receiptOrderDetailInfo.getIsCollectionPayment().equals("True")) {
+                    money = money + receiptOrderDetailInfo.getPayment();
+                }
+                if (receiptOrderDetailInfo.getIsToPay().equals("True")&&receiptOrderDetailInfo.getIsCollectionPayment().equals("False")) {
+                    type =2;
+                }
+                if (receiptOrderDetailInfo.getIsToPay().equals("True")&&receiptOrderDetailInfo.getIsCollectionPayment().equals("True")) {
+                    type =4;
+                }
+                if (receiptOrderDetailInfo.getIsToPay().equals("False")&&receiptOrderDetailInfo.getIsCollectionPayment().equals("True")) {
+                    type =3;
+                }
+
+                if (receiptOrderDetailInfo.getIsToPay().equals("True") || receiptOrderDetailInfo.getIsCollectionPayment().equals("True")) {
+                    Intent intent = new Intent(OrderReceiptDetailActivity.this,PayActivity.class);
+                    intent.putExtra("money",money);
+                    intent.putExtra("orderNo",receiptOrderDetailInfo.getOrderNo());
+                    intent.putExtra("type",type);
+                    startActivity(intent);
+                } else {
+                    showShortToastByString("无需支付");
+                }
                 break;
             case R.id.bt_confirm:
+                updateOrder();
                 break;
             case R.id.bt_location:
                 Intent intent = new Intent(OrderReceiptDetailActivity.this, CarLocationActivity.class);
@@ -137,6 +165,34 @@ public class OrderReceiptDetailActivity extends BaseActivity {
                 startActivity(intent);
                 break;
         }
+    }
+
+    private void updateOrder() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("OrderNo", receiptOrderDetailInfo.getOrderNo());
+        jsonObject.addProperty("UserId", Contants.userId);
+        jsonObject.addProperty("UserType", 1);
+        jsonObject.addProperty("Aindex", 1);
+        Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
+        HttpUtil.doPost(OrderReceiptDetailActivity.this, Contants.url_updateOrder, "updateOrder", map, new VolleyInterface(OrderReceiptDetailActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
+            @Override
+            public void onSuccess(JsonElement result) {
+                LogUtil.i(result.toString());
+                showShortToastByString("确认成功");
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                showShortToastByString(getString(R.string.timeoutError));
+//                LogUtil.i("hint",error.networkResponse.headers.toString());
+//                LogUtil.i("hint",error.networkResponse.statusCode+"");
+            }
+
+            @Override
+            public void onStateError() {
+            }
+        });
+
     }
 
 

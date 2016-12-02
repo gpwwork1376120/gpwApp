@@ -43,10 +43,10 @@ public class ReceiptOrderDetailInfo {
     private int OrderStatus;
     private int FinanceStatus;
     private int LogisticStatus;
-    private int Weight;
-    private int Volume;
-    private int Freight;
-    private int Premium;
+    private double Weight;
+    private double Volume;
+    private double Freight;
+    private double Premium;
     private String SureNo;
     private String TransporterId;
     private String TransporterName;
@@ -60,7 +60,7 @@ public class ReceiptOrderDetailInfo {
     private String IsToPay;
     private String ToPayTel;
     private String IsCollectionPayment;
-    private int Payment;
+    private double Payment;
     private int SendScore;
     private String SendComment;
     private int TransporterScore;
@@ -100,35 +100,35 @@ public class ReceiptOrderDetailInfo {
         this.LogisticStatus = LogisticStatus;
     }
 
-    public int getWeight() {
+    public double getWeight() {
         return Weight;
     }
 
-    public void setWeight(int Weight) {
+    public void setWeight(double Weight) {
         this.Weight = Weight;
     }
 
-    public int getVolume() {
+    public double getVolume() {
         return Volume;
     }
 
-    public void setVolume(int Volume) {
+    public void setVolume(double Volume) {
         this.Volume = Volume;
     }
 
-    public int getFreight() {
+    public double getFreight() {
         return Freight;
     }
 
-    public void setFreight(int Freight) {
+    public void setFreight(double Freight) {
         this.Freight = Freight;
     }
 
-    public int getPremium() {
+    public double getPremium() {
         return Premium;
     }
 
-    public void setPremium(int Premium) {
+    public void setPremium(double Premium) {
         this.Premium = Premium;
     }
 
@@ -236,11 +236,11 @@ public class ReceiptOrderDetailInfo {
         this.IsCollectionPayment = IsCollectionPayment;
     }
 
-    public int getPayment() {
+    public double getPayment() {
         return Payment;
     }
 
-    public void setPayment(int Payment) {
+    public void setPayment(double Payment) {
         this.Payment = Payment;
     }
 

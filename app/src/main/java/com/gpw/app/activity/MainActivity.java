@@ -70,7 +70,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
 
     private UserInfo userInfo;
     private ArrayList<ADInfo> adInfos;
-    private ArrayList<CarInfo> carInfos;
+    private ArrayList<CarInfo.VehicleTypeListBean> carInfos;
     private ArrayList<TextView> tvs_car;
     private ArrayList<OrderAddressInfo> mOrderAddressInfos;
 
@@ -127,6 +127,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     private String endLatLng;
     private double premiums;
     private double freight;
+    private double ReturnPayRate;
     private String volume;
     private String kg;
     private String quantity;
@@ -281,10 +282,9 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         premiums = 100;
         cofirmTypeId = -1;
         freight = 0;
-        kg="";
-        quantity="";
-        volume="";
-
+        kg = "";
+        quantity = "";
+        volume = "";
 
 
         mOrderAddressInfos.clear();
@@ -468,9 +468,9 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             public void onSuccess(JsonElement result) {
                 LogUtil.i(result.toString());
                 Gson gson = new Gson();
-                Type listType = new TypeToken<ArrayList<CarInfo>>() {
-                }.getType();
-                carInfos = gson.fromJson(result, listType);
+                CarInfo carInfo1 = gson.fromJson(result, CarInfo.class);
+                ReturnPayRate = carInfo1.getReturnPayRate();
+                carInfos = (ArrayList<CarInfo.VehicleTypeListBean>) carInfo1.getVehicleTypeList();
                 int size = carInfos.size();
                 for (int i = 0; i < size; i++) {
                     LinearLayout.LayoutParams car_params = new LinearLayout.LayoutParams(
@@ -478,7 +478,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                     LinearLayout.LayoutParams view_params = new LinearLayout.LayoutParams(
                             DensityUtil.dip2px(MainActivity.this, 0.5f), LinearLayout.LayoutParams.MATCH_PARENT);
                     view_params.setMargins(0, DensityUtil.dip2px(MainActivity.this, 5.0f), 0, DensityUtil.dip2px(MainActivity.this, 5.0f));
-                    final CarInfo carInfo = carInfos.get(i);
+                    final CarInfo.VehicleTypeListBean carInfo = carInfos.get(i);
                     LinearLayout linearLayout = (LinearLayout) View.inflate(MainActivity.this, R.layout.view_ll_car, null);
                     ImageView iv_car = (ImageView) linearLayout.findViewById(R.id.iv_car);
                     TextView tv_car = (TextView) linearLayout.findViewById(R.id.tv_car);
@@ -676,7 +676,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 break;
             case R.id.tv_setting:
                 intent = new Intent(MainActivity.this, SettingActivity.class);
-                startActivityForResult(intent,6);
+                startActivityForResult(intent, 6);
                 break;
             case R.id.rl_head:
                 intent = new Intent(MainActivity.this, PersonalInfoActivity.class);
@@ -697,7 +697,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
 
     private void choiceCar(int i) {
         initColor();
-        CarInfo carInfo = null;
+        CarInfo.VehicleTypeListBean carInfo = null;
         if (i != 4) {
             carInfo = carInfos.get(i);
         }
@@ -735,7 +735,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
 
     }
 
-    private void Visible(CarInfo carInfo, int type) {
+    private void Visible(CarInfo.VehicleTypeListBean carInfo, int type) {
         ll_0.setVisibility(View.GONE);
         ll_1.setVisibility(View.VISIBLE);
         ll_2.setVisibility(View.VISIBLE);
@@ -750,7 +750,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             cb_isSurcharge.setChecked(false);
             et_remark.setText("");
             et_toPayFreightTel.setText("");
-        }else {
+        } else {
             cb_isRemove.setChecked(isRemove);
             cb_isMove.setChecked(isMove);
             cb_isToPayFreight.setChecked(isToPayFreight);
@@ -758,7 +758,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             cb_isMyFleet.setChecked(isMyFleet);
             cb_isSurcharge.setChecked(isSurcharge);
             et_remark.setText(remark);
-            if (!isToPayFreight){
+            if (!isToPayFreight) {
                 et_toPayFreightTel.setText("");
             }
             et_toPayFreightTel.setText(payFreightTel);
@@ -787,7 +787,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             et_amount.setText("");
             et_kg.setText("");
             et_volume.setText("");
-        }else {
+        } else {
             cb_isRemove.setChecked(isRemove);
             cb_isMove.setChecked(isMove);
             cb_isToPayFreight.setChecked(isToPayFreight);
@@ -799,7 +799,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             et_amount.setText(quantity);
             et_kg.setText(kg);
             et_volume.setText(volume);
-            if (!isToPayFreight){
+            if (!isToPayFreight) {
                 et_toPayFreightTel.setText("");
             }
         }
@@ -958,9 +958,9 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     public void onActionClick(int position, int type) {
 
         if (type == 1) {
-            if (isToPayFreight && cofirmTypeId != -1){
+            if (isToPayFreight && cofirmTypeId != -1) {
                 showShortToastByString("您已勾选运费到付，不可以增设中途点");
-            }else {
+            } else {
                 Intent intent = new Intent(MainActivity.this, MapActivity.class);
                 intent.putExtra("position", position);
                 intent.putExtra("orderAddressInfo", mOrderAddressInfos.get(position));
@@ -1103,7 +1103,9 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                         Gson gson = new Gson();
                         FreightInfo freightInfo = gson.fromJson(result, FreightInfo.class);
                         freight = freightInfo.getFreight();
-
+                        if (isSurcharge) {
+                            freight = freight + freight * 30 / 100;
+                        }
                         double money = freight + premiums;
                         tv_money.setText(String.format("¥%s", df.format(money)));
 
@@ -1132,6 +1134,9 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                         Gson gson = new Gson();
                         FreightInfo freightInfo = gson.fromJson(result, FreightInfo.class);
                         freight = freightInfo.getFreight();
+                        if (isSurcharge) {
+                            freight = freight + freight * 30 / 100;
+                        }
                         double money = freight + premiums;
                         tv_money.setText(String.format("¥%s", df.format(money)));
                     }

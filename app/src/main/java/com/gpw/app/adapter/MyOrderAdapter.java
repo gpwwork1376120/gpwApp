@@ -59,10 +59,10 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHold
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         viewHolder.rv_order_address.setLayoutManager(layoutManager);
         viewHolder.rv_order_address.setAdapter(addInfoAdapter);
-        viewHolder.tv_money.setText(String.format("¥%s", orderInfo.getFreight()));
+        double allMoney = orderInfo.getFreight() + orderInfo.getPremiums();
+        viewHolder.tv_money.setText(String.format("¥%s", allMoney));
         viewHolder.tv_orderId.setText(String.format("订单号：%s", orderInfo.getOrderNo()));
         viewHolder.tv_time.setText(orderInfo.getPlanSendTime());
-
 
 
         if (orderInfo.getCancelFee() > 0) {
@@ -70,6 +70,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHold
             viewHolder.bt_query.setVisibility(View.VISIBLE);
             viewHolder.tv_money.setVisibility(View.VISIBLE);
             viewHolder.bt_pay.setVisibility(View.VISIBLE);
+            viewHolder.tv_money.setText(String.format("¥%s", orderInfo.getCancelFee()));
             viewHolder.bt_query.setVisibility(View.GONE);
             viewHolder.tv_state.setText("违约金");
             viewHolder.tv_noDriver.setVisibility(View.GONE);
@@ -132,7 +133,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHold
             public void onClick(View view) {
                 Button button = (Button) view;
                 String text = button.getText().toString();
-                mOnBtnClickListener.onBtnClick(position,text);
+                mOnBtnClickListener.onBtnClick(position, text);
             }
         });
         viewHolder.bt_pay.setOnClickListener(new View.OnClickListener() {
@@ -140,7 +141,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHold
             public void onClick(View view) {
                 Button button = (Button) view;
                 String text = button.getText().toString();
-                mOnBtnClickListener.onBtnClick(position,text);
+                mOnBtnClickListener.onBtnClick(position, text);
             }
         });
     }
@@ -189,7 +190,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHold
     }
 
     public interface OnBtnClickListener {
-        void onBtnClick(int position,String viewName);
+        void onBtnClick(int position, String viewName);
     }
 
     private OnBtnClickListener mOnBtnClickListener;

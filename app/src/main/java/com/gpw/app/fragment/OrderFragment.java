@@ -195,12 +195,13 @@ public class OrderFragment extends Fragment implements MyOrderAdapter.OnBtnClick
             case "支付":
                 if (orderInfo.getCancelFee() > 0) {
                     intent.setClass(getActivity(), PayActivity.class);
-                    intent.putExtra("orderId", orderInfo.getOrderNo());
+                    intent.putExtra("orderNo", orderInfo.getOrderNo());
+                    intent.putExtra("money", orderInfo.getCancelFee());
+                    intent.putExtra("type", 5);
                     getActivity().startActivityForResult(intent,1);
                 } else {
                     double allMoney = orderInfo.getFreight()+orderInfo.getPremiums();
                     String money = String.format("¥%s", allMoney);
-
 
                     intent.setClass(getActivity(), OrderPayActivity.class);
                     intent.putExtra("orderId", orderInfo.getOrderNo());

@@ -287,7 +287,6 @@ public class OrderDetailActivity extends BaseActivity {
     private void updateOrder(int type, int index) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("OrderNo", orderDetailInfo.getOrderNo());
-        jsonObject.addProperty("OperationType", type);
         jsonObject.addProperty("UserId", Contants.userId);
         jsonObject.addProperty("UserType", 1);
         jsonObject.addProperty("Aindex", index);
