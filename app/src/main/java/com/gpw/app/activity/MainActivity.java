@@ -2,6 +2,8 @@ package com.gpw.app.activity;
 
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -26,6 +28,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.gpw.app.util.FastBlurUtil;
+import com.gpw.app.view.LoginPopupWindow;
+import com.gpw.app.view.MyDialog;
 import com.nineoldandroids.view.ViewHelper;
 
 import java.lang.reflect.Type;
@@ -154,6 +159,8 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     private long mExitTime;
     private CustomDatePicker timePickerView;
     private DecimalFormat df;
+
+    private LoginPopupWindow loginPopupWindow;
 
 
     @Override
@@ -539,8 +546,22 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 choiceCar(4);
                 break;
             case R.id.ll_my_order:
-                intent = new Intent(MainActivity.this, MyOrderActivity.class);
-                startActivity(intent);
+                MyDialog loginPicDialog = MyDialog.loginPicDialog(MainActivity.this, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+                loginPicDialog.show();
+//                loginPopupWindow = new LoginPopupWindow(MainActivity.this, new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//
+//                    }
+//                });
+//                loginPopupWindow.showAtLocation(mDrawerLayout, Gravity.CENTER, 0, 0);
+//                intent = new Intent(MainActivity.this, MyOrderActivity.class);
+//                startActivity(intent);
                 break;
             case R.id.bt_query:
                 if (vehideTypeId == 1) {
@@ -667,7 +688,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 break;
             case R.id.tv_news:
                 intent = new Intent(MainActivity.this, MyNewsActivity.class);
-
                 startActivity(intent);
                 break;
             case R.id.tv_benefit_activity:

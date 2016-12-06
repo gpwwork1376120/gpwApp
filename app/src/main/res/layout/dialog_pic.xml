@@ -1,73 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pop_layout"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/color_white"
     android:gravity="center_horizontal"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/pop_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/color_white"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+    <TextView
 
-        <TextView
+        android:id="@+id/textView6"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:text="@string/select_pic_type"
+        android:textColor="@color/color_gary_font"
+        android:textSize="13sp" />
 
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:text="@string/select_pic_type"
-            android:gravity="center"
-            android:textColor="@color/color_gary_font"
-            android:textSize="13sp"
-            android:id="@+id/textView6" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.6dp"
+        android:background="@color/color_line" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.6dp"
-            android:background="@color/color_line"/>
-        <Button
-            android:id="@+id/takePhotoBtn"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="@drawable/layout_click_style"
-            android:text="@string/takePhoto"
-            android:textColor="@color/color_gary_font"
-            android:textSize="13sp"/>
+    <Button
+        android:id="@+id/takePhotoBtn"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@drawable/layout_click_style"
+        android:text="@string/takePhoto"
+        android:textColor="@color/color_gary_font"
+        android:textSize="13sp" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.6dp"
-            android:background="@color/color_line"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.6dp"
+        android:background="@color/color_line" />
 
-        <Button
-            android:id="@+id/pickPhotoBtn"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="@drawable/layout_click_style"
-            android:text="@string/pickPhoto"
-            android:textColor="@color/color_gary_font"
-            android:textSize="13sp"
-            />
+    <Button
+        android:id="@+id/pickPhotoBtn"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@drawable/layout_click_style"
+        android:text="@string/pickPhoto"
+        android:textColor="@color/color_gary_font"
+        android:textSize="13sp" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="7dp"
-            android:background="@color/color_gary_bck"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="7dp"
+        android:background="@color/color_gary_bck" />
 
-        <Button
-            android:id="@+id/cancelBtn"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="@drawable/layout_click_style"
-            android:text="@string/cancle"
-            android:textColor="@color/color_gary_font"
-            android:textSize="13sp"
-            />
-    </LinearLayout>
+    <Button
+        android:id="@+id/cancelBtn"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@drawable/layout_click_style"
+        android:text="@string/cancle"
+        android:textColor="@color/color_gary_font"
+        android:textSize="13sp" />
 
-</RelativeLayout>
+</LinearLayout>

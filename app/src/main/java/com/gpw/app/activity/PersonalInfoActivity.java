@@ -12,7 +12,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -37,8 +36,6 @@ import com.gpw.app.util.LogUtil;
 import com.gpw.app.util.VolleyInterface;
 import com.gpw.app.view.CircleImageView;
 import com.gpw.app.view.MyDialog;
-import com.gpw.app.view.SelectPicPopupWindow;
-import com.gpw.app.view.SelectSexPopupWindow;
 
 public class PersonalInfoActivity extends BaseActivity {
 
@@ -56,8 +53,9 @@ public class PersonalInfoActivity extends BaseActivity {
     private MyDialog nickDialog;
     private TextView tv_sex;
     private ImageView iv_left_white;
-    private SelectPicPopupWindow menuWindow;
-    private SelectSexPopupWindow sexWindow;
+
+    private MyDialog selectSexDialog;
+    private MyDialog selectPicDialog;
     private UserInfo userInfo;
     private boolean isChange;
     private static final int REQUESTCODE_PICK = 0;        // 相册选图标记
@@ -120,8 +118,6 @@ public class PersonalInfoActivity extends BaseActivity {
     }
 
 
-
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -149,18 +145,17 @@ public class PersonalInfoActivity extends BaseActivity {
 
                 break;
             case R.id.rl_sex:
-                sexWindow = new SelectSexPopupWindow(PersonalInfoActivity.this, itemsOnClick);
-                sexWindow.showAtLocation(findViewById(R.id.activity_personal_info), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+                selectSexDialog = MyDialog.selectSexDialog(PersonalInfoActivity.this, itemsOnClick);
+                selectSexDialog.show();
                 break;
             case R.id.rl_address:
                 Intent intent = new Intent(PersonalInfoActivity.this, AddMapActivity.class);
                 intent.putExtra("type", 3);
                 startActivityForResult(intent, 44);
-
                 break;
             case R.id.rl_head:
-                menuWindow = new SelectPicPopupWindow(PersonalInfoActivity.this, itemsOnClick);
-                menuWindow.showAtLocation(findViewById(R.id.activity_personal_info), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+                selectPicDialog = MyDialog.selectPicDialog(PersonalInfoActivity.this, itemsOnClick);
+                selectPicDialog.show();
                 break;
 
         }
@@ -172,7 +167,7 @@ public class PersonalInfoActivity extends BaseActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.takePhotoBtn:
-                    menuWindow.dismiss();
+                    selectPicDialog.dismiss();
                     if (ContextCompat.checkSelfPermission(PersonalInfoActivity.this, Manifest.permission.CAMERA)
                             != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(PersonalInfoActivity.this,
@@ -190,7 +185,7 @@ public class PersonalInfoActivity extends BaseActivity {
                     break;
                 // 相册选择图片
                 case R.id.pickPhotoBtn:
-                    menuWindow.dismiss();
+                    selectPicDialog.dismiss();
                     if (ContextCompat.checkSelfPermission(PersonalInfoActivity.this, Manifest.permission.CAMERA)
                             != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(PersonalInfoActivity.this,
@@ -204,11 +199,11 @@ public class PersonalInfoActivity extends BaseActivity {
                     }
                     break;
                 case R.id.manBtn:
-                    sexWindow.dismiss();
+                    selectSexDialog.dismiss();
                     EditUserInfo("sex", "男");
                     break;
                 case R.id.womanBtn:
-                    sexWindow.dismiss();
+                    selectSexDialog.dismiss();
                     EditUserInfo("sex", "女");
                     break;
                 default:
@@ -377,7 +372,7 @@ public class PersonalInfoActivity extends BaseActivity {
 
                 break;
             case 44:
-                if (resultCode==RESULT_OK) {
+                if (resultCode == RESULT_OK) {
                     city = data.getStringExtra("City");
                     province = data.getStringExtra("Province");
                     address = data.getStringExtra("Address");
