@@ -32,17 +32,17 @@
 
                 <com.gpw.app.view.CircleImageView
                     android:id="@+id/iv_cir_head"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="35dp"
                     android:scaleType="centerCrop"
-                    android:src="@mipmap/account"
+                    android:src="@mipmap/account1"
                     app:border_color="#ff0000"
                     app:border_width="1.5dp" />
 
-
             </RelativeLayout>
+
 
             <View
                 android:id="@+id/view2"
@@ -473,7 +473,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="30dp"
                     android:scaleType="centerCrop"
-                    android:src="@mipmap/account"
+                    android:src="@mipmap/account1"
                     app:border_color="#ff0000"
                     app:border_width="1.5dp" />
 

@@ -50,7 +50,6 @@ public class LoginActivity extends BaseActivity {
     private CheckBox cb_eye;
 
     private SharedPreferences prefs;
-
     private String password;
     private String account;
 
@@ -136,7 +135,6 @@ public class LoginActivity extends BaseActivity {
                     showShortToastByString(getString(R.string.Neterror));
                 }
                 break;
-
             case R.id.iv_close:
                 break;
             case R.id.tv_forget_psd:
@@ -208,6 +206,7 @@ public class LoginActivity extends BaseActivity {
             }
         });
     }
+
 
 
     @Override

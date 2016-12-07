@@ -105,9 +105,9 @@ public class PersonalInfoActivity extends BaseActivity {
         tv_sex.setText(userInfo.getSex());
         tv_address.setText(userInfo.getAddress());
 
-        HttpUtil.setImageLoader(Contants.imagehost + userInfo.getHeadIco(), civ_head, R.mipmap.account, R.mipmap.account);
+        HttpUtil.setImageLoader(Contants.imagehost + userInfo.getHeadIco(), civ_head, R.mipmap.account2, R.mipmap.account2);
 
-        HttpUtil.setImageLoader(Contants.imagehost + userInfo.getHeadIco(), civ_head1, R.mipmap.account, R.mipmap.account);
+        HttpUtil.setImageLoader(Contants.imagehost + userInfo.getHeadIco(), civ_head1, R.mipmap.account1, R.mipmap.account1);
 
         iv_left_white.setOnClickListener(this);
         rl_address.setOnClickListener(this);
@@ -235,7 +235,7 @@ public class PersonalInfoActivity extends BaseActivity {
             @Override
             public void onSuccess(JsonElement result) {
                 LogUtil.i(result.toString());
-                showShortToastByString(result.toString());
+                showShortToastByString("提交成功");
                 if (type.equals("sex")) {
                     tv_sex.setText(value);
                     userInfo.setSex(value);
@@ -409,7 +409,7 @@ public class PersonalInfoActivity extends BaseActivity {
                     url = url.substring(1);
                     url = url.substring(0, url.length() - 1);
                     userInfo.setHeadIco(url);
-                    showShortToastByString(result.toString());
+                    showShortToastByString("提交成功");
                 }
 
                 @Override

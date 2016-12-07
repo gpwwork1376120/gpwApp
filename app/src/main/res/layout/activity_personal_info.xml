@@ -30,7 +30,7 @@
             android:layout_height="70dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
-            android:src="@mipmap/ic_launcher"
+            android:src="@mipmap/account2"
             app:border_color="@color/color_white"
             app:border_width="1dp"
             />
@@ -88,7 +88,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="7dp"
             android:layout_toLeftOf="@+id/iv_right"
-            android:src="@mipmap/ic_launcher"
+            android:src="@mipmap/account1"
             app:border_color="@color/color_red"
             app:border_width="1dp"
             />

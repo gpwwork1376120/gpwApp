@@ -4,22 +4,35 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gpw.app.R;
+import com.gpw.app.activity.LoginActivity;
 import com.gpw.app.activity.MainActivity;
+import com.gpw.app.activity.RebuildPsdActivity;
+import com.gpw.app.base.BaseApplication;
 import com.gpw.app.util.DensityUtil;
 import com.gpw.app.util.FastBlurUtil;
 import com.gpw.app.util.LogUtil;
@@ -37,18 +50,22 @@ public class MyDialog extends Dialog {
     private static MyDialog selectSexDialog;
     private static MyDialog selectPicDialog;
     private static MyDialog loginPicDialog;
+    private static MyDialog registerDialog;
 
     public static NickListener nickListener;
     public static EndListener endListener;
     public static PsdListener psdListener;
+    public static LoginListener loginListener;
+    public static RegisterListener registerListener;
 
     public MyDialog(Activity activity) {
         super(activity, R.style.myDialog);
     }
 
-    public MyDialog(Activity activity,int style) {
+    public MyDialog(Activity activity, int style) {
         super(activity, style);
     }
+
     public static MyDialog nickDialog(Activity activity) {
         nickDialog = new MyDialog(activity);
 
@@ -173,7 +190,7 @@ public class MyDialog extends Dialog {
 
         Button manBtn = (Button) v.findViewById(R.id.manBtn);
         Button womanBtn = (Button) v.findViewById(R.id.womanBtn);
-        Button  cancelBtn = (Button) v.findViewById(R.id.cancelBtn);
+        Button cancelBtn = (Button) v.findViewById(R.id.cancelBtn);
 
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -194,7 +211,7 @@ public class MyDialog extends Dialog {
         dialogWindow.setWindowAnimations(R.style.PopupAnimation); //设置窗口弹出动画
         WindowManager.LayoutParams lp = dialogWindow.getAttributes(); // 获取对话框当前的参数值
         dialogWindow.setGravity(Gravity.BOTTOM);
-        lp.height = DensityUtil.dip2px(activity,183.2f);
+        lp.height = DensityUtil.dip2px(activity, 183.2f);
         lp.width = width;
         dialogWindow.setAttributes(lp);
         return selectSexDialog;
@@ -228,36 +245,92 @@ public class MyDialog extends Dialog {
         WindowManager.LayoutParams lp = dialogWindow.getAttributes(); // 获取对话框当前的参数值
         dialogWindow.setGravity(Gravity.BOTTOM);
 
-        lp.height = DensityUtil.dip2px(activity,183.2f);
+        lp.height = DensityUtil.dip2px(activity, 183.2f);
         lp.width = width;
         dialogWindow.setAttributes(lp);
         return selectPicDialog;
     }
 
 
-
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static MyDialog loginPicDialog(final Activity activity, View.OnClickListener loginOnClick) {
-        loginPicDialog = new MyDialog(activity,R.style.fullDialog);
+    public static MyDialog loginDialog(final Activity activity, String name, String password) {
+        loginPicDialog = new MyDialog(activity, R.style.fullDialog);
         View v = View.inflate(activity, R.layout.dialog_login, null);
-
-//        Button takePhotoBtn = (Button) v.findViewById(R.id.takePhotoBtn);
-//        Button pickPhotoBtn = (Button) v.findViewById(R.id.pickPhotoBtn);
-//        Button cancelBtn = (Button) v.findViewById(R.id.cancelBtn);
-//
-//        pickPhotoBtn.setOnClickListener(loginOnClick);
-//        takePhotoBtn.setOnClickListener(loginOnClick);
-//        cancelBtn.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//                selectPicDialog.dismiss();
-//            }
-//        });
-
+        final EditText et_account = (EditText) v.findViewById(R.id.et_account);
+        final EditText et_password = (EditText) v.findViewById(R.id.et_password);
+        ImageView iv_close = (ImageView) v.findViewById(R.id.iv_close);
+        TextView tv_forget_psd = (TextView) v.findViewById(R.id.tv_forget_psd);
+        TextView tv_register = (TextView) v.findViewById(R.id.tv_register);
+        final Button bt_login = (Button) v.findViewById(R.id.bt_login);
+        CheckBox cb_eye = (CheckBox) v.findViewById(R.id.cb_eye);
         RelativeLayout login_layout = (RelativeLayout) v.findViewById(R.id.login_layout);
+        et_account.setText(name);
+        et_password.setText(password);
+        if (name.length() > 2) {
+            bt_login.setBackground(ContextCompat.getDrawable(activity, R.drawable.button_red_bg));
+        }
+        et_account.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int size = s.length();
+                if (size != 0) {
+                    bt_login.setBackground(ContextCompat.getDrawable(activity, R.drawable.button_red_bg));
+                } else {
+                    bt_login.setBackground(ContextCompat.getDrawable(activity, R.drawable.button_login));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        cb_eye.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    et_password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                } else {
+                    et_password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                }
+            }
+        });
+
         Bitmap bmp = FastBlurUtil.getBlurBackgroundDrawer(activity);
-        LogUtil.i("bmp"+bmp);
+
+        tv_register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loginListener.onLoginClick(0);
+            }
+        });
+
+        tv_forget_psd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loginListener.onLoginClick(1);
+            }
+        });
+        iv_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loginListener.onLoginClick(2);
+            }
+        });
+        bt_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loginListener.onSetting(et_account.getText().toString(), et_password.getText().toString());
+            }
+        });
+
+
         login_layout.setBackground(new BitmapDrawable(activity.getResources(), bmp));
         Point size = new Point();
         activity.getWindowManager().getDefaultDisplay().getSize(size);
@@ -276,6 +349,94 @@ public class MyDialog extends Dialog {
         return loginPicDialog;
     }
 
+
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public static MyDialog registerDialog(final Activity activity) {
+        registerDialog = new MyDialog(activity, R.style.fullDialog);
+        View v = View.inflate(activity, R.layout.dialog_register, null);
+        final EditText et_account = (EditText) v.findViewById(R.id.et_account);
+        final EditText et_password = (EditText) v.findViewById(R.id.et_password);
+        final EditText et_validate_code = (EditText) v.findViewById(R.id.et_validate_code);
+        TextView tv_get_code = (TextView) v.findViewById(R.id.tv_get_code);
+        final Button bt_ok = (Button) v.findViewById(R.id.bt_ok);
+        CheckBox cb_eye = (CheckBox) v.findViewById(R.id.cb_eye);
+        ImageView iv_close = (ImageView) v.findViewById(R.id.iv_close);
+        iv_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                registerListener.onRegisterClose();
+            }
+        });
+        RelativeLayout register_layout = (RelativeLayout) v.findViewById(R.id.register_layout);
+        et_account.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int size = s.length();
+                if (size != 0) {
+                    bt_ok.setBackground(ContextCompat.getDrawable(activity, R.drawable.button_red_bg));
+                } else {
+                    bt_ok.setBackground(ContextCompat.getDrawable(activity, R.drawable.button_login));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        cb_eye.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    et_password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                } else {
+                    et_password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                }
+            }
+        });
+
+        Bitmap bmp = FastBlurUtil.getBlurBackgroundDrawer(activity);
+
+
+        bt_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                registerListener.onRegister(et_account.getText().toString(), et_password.getText().toString(),et_validate_code.getText().toString());
+            }
+        });
+
+        tv_get_code.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                registerListener.onRegisterCode(et_account.getText().toString());
+            }
+        });
+
+
+        register_layout.setBackground(new BitmapDrawable(activity.getResources(), bmp));
+        Point size = new Point();
+        activity.getWindowManager().getDefaultDisplay().getSize(size);
+        int width = size.x;
+        int height = size.y;
+        registerDialog.setContentView(v);
+        registerDialog.setCancelable(true);
+        Window dialogWindow = registerDialog.getWindow();
+        assert dialogWindow != null;
+        dialogWindow.setWindowAnimations(R.style.AnimationFade); //设置窗口弹出动画
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes(); // 获取对话框当前的参数值
+        dialogWindow.setGravity(Gravity.BOTTOM);
+        lp.height = height;
+        lp.width = width;
+        dialogWindow.setAttributes(lp);
+        return registerDialog;
+    }
 
 
     public interface NickListener {
@@ -300,6 +461,28 @@ public class MyDialog extends Dialog {
 
     public void setOnSettingListener(EndListener listener) {
         endListener = listener;
+    }
+
+
+    public interface LoginListener {
+        void onSetting(String name, String psd);
+        void onLoginClick(int type);
+    }
+
+    public void setOnLoginListener(LoginListener listener) {
+        loginListener = listener;
+    }
+
+
+
+    public interface RegisterListener {
+        void onRegister(String name, String psd,String code);
+        void onRegisterCode(String name);
+        void onRegisterClose();
+    }
+
+    public void setRegisterListener(RegisterListener listener) {
+        registerListener = listener;
     }
 
 }

@@ -2,9 +2,9 @@ package com.gpw.app.activity;
 
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
+import android.content.SharedPreferences;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -24,12 +24,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.baidu.mapapi.common.SysOSUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import com.gpw.app.util.FastBlurUtil;
-import com.gpw.app.view.LoginPopupWindow;
+import com.gpw.app.base.BaseApplication;
+import com.gpw.app.util.MD5Util;
+import com.gpw.app.view.CustomProgressDialog;
 import com.gpw.app.view.MyDialog;
 import com.nineoldandroids.view.ViewHelper;
 
@@ -58,7 +60,7 @@ import com.gpw.app.view.CustomDatePicker;
 import com.gpw.app.view.ImageCycleView;
 
 
-public class MainActivity extends BaseActivity implements OrderAddressAdapter.OnItemClickListener {
+public class MainActivity extends BaseActivity implements OrderAddressAdapter.OnItemClickListener, MyDialog.LoginListener {
 
     private DrawerLayout mDrawerLayout;
     private ImageCycleView icv_banner;
@@ -159,8 +161,18 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     private long mExitTime;
     private CustomDatePicker timePickerView;
     private DecimalFormat df;
+    private MyDialog loginDialog;
+    private MyDialog registerDialog;
 
-    private LoginPopupWindow loginPopupWindow;
+    private boolean isLogin = false;
+    private boolean isFirstLogin;
+
+    private boolean isAgainLogin = false;
+
+
+    private SharedPreferences prefs;
+    private String password;
+    private String account;
 
 
     @Override
@@ -256,32 +268,18 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
 
     @Override
     protected void initData() {
-        userInfo = getIntent().getParcelableExtra("userInfo");
-        adInfos = getIntent().getParcelableArrayListExtra("adInfos");
         tvs_car = new ArrayList<>();
         mOrderAddressInfos = new ArrayList<>();
+
+        adInfos = new ArrayList<>();
+        carInfos = new ArrayList<>();
         df = new DecimalFormat("#00.00");
         isStart = true;
         initOrderData();
+        prefs = getSharedPreferences(Contants.SHARED_NAME, MODE_PRIVATE);
+        isFirstLogin = prefs.getBoolean("isFirstLogin", true);
 
-
-    }
-
-
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if ((System.currentTimeMillis() - mExitTime) > 2000) {
-
-                Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
-                mExitTime = System.currentTimeMillis();
-
-            } else {
-                finish();
-            }
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
+        LogUtil.i("isFirstLogin" + isFirstLogin);
     }
 
 
@@ -329,19 +327,20 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     @Override
     protected void initView() {
 
+
         initAdverVerType();
-        tv_tel.setText(userInfo.getUserName());
-        HttpUtil.setImageLoader(Contants.imagehost + userInfo.getHeadIco(), civ_head, R.mipmap.account, R.mipmap.account);
-        HttpUtil.setImageLoader(Contants.imagehost + userInfo.getHeadIco(), iv_cir_head, R.mipmap.account, R.mipmap.account);
+        if (!isFirstLogin) {
+            account = prefs.getString("account", "");
+            password = prefs.getString("password", "");
+            login(account, password);
+        }
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setAutoMeasureEnabled(true);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_main_address.setLayoutManager(layoutManager);
         rv_main_address.setAdapter(mOrderAddressAdapter);
-
-
-        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED,
-                Gravity.LEFT);
+        tv_tel.setText("未登录");
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.LEFT);
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerStateChanged(int newState) {
@@ -374,7 +373,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 iv_cir_head.setVisibility(View.VISIBLE);
             }
         });
-
 
         mOrderAddressAdapter.setOnItemClickListener(this);
         ll_my_order.setOnClickListener(this);
@@ -415,7 +413,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                     }
 
                 } else {
-
                     rl_insurance.setVisibility(View.GONE);
                     premiums = 0;
                     if (isPublish) {
@@ -460,8 +457,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             @Override
             public void onError(VolleyError error) {
                 showShortToastByString(getString(R.string.timeoutError));
-//                LogUtil.i("hint",error.networkResponse.headers.toString());
-//                LogUtil.i("hint",error.networkResponse.statusCode+"");
             }
 
             @Override
@@ -505,7 +500,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                             choiceCar(type - 1);
                         }
                     });
-
                 }
                 choiceCar(4);
             }
@@ -541,27 +535,24 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     @Override
     public void onClick(View v) {
         Intent intent = null;
+        if (!isLogin && v.getId() != R.id.ll_car_1) {
+            showShortToastByString("请您先登录！");
+            if (loginDialog != null) {
+                loginDialog.dismiss();
+            }
+            loginDialog = MyDialog.loginDialog(MainActivity.this, "", "");
+            loginDialog.setOnLoginListener(MainActivity.this);
+            loginDialog.show();
+            return;
+        }
         switch (v.getId()) {
             case R.id.ll_car_1:
                 choiceCar(4);
                 break;
             case R.id.ll_my_order:
-                MyDialog loginPicDialog = MyDialog.loginPicDialog(MainActivity.this, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                });
-                loginPicDialog.show();
-//                loginPopupWindow = new LoginPopupWindow(MainActivity.this, new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//
-//                    }
-//                });
-//                loginPopupWindow.showAtLocation(mDrawerLayout, Gravity.CENTER, 0, 0);
-//                intent = new Intent(MainActivity.this, MyOrderActivity.class);
-//                startActivity(intent);
+                intent = new Intent(MainActivity.this, MyOrderActivity.class);
+                intent.putExtra("UserId", userInfo.getUserId());
+                startActivity(intent);
                 break;
             case R.id.bt_query:
                 if (vehideTypeId == 1) {
@@ -697,6 +688,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             case R.id.tv_setting:
                 intent = new Intent(MainActivity.this, SettingActivity.class);
                 startActivityForResult(intent, 6);
+                mDrawerLayout.closeDrawers();
                 break;
             case R.id.rl_head:
                 intent = new Intent(MainActivity.this, PersonalInfoActivity.class);
@@ -967,6 +959,16 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
 
     @Override
     public void onItemClick(int position) {
+        if (!isLogin) {
+            showShortToastByString("请您先登录！");
+            if (loginDialog != null) {
+                loginDialog.dismiss();
+            }
+            loginDialog = MyDialog.loginDialog(MainActivity.this, "", "");
+            loginDialog.setOnLoginListener(MainActivity.this);
+            loginDialog.show();
+            return;
+        }
         Intent intent = new Intent(MainActivity.this, MapActivity.class);
         intent.putExtra("position", position);
         intent.putExtra("orderAddressInfo", mOrderAddressInfos.get(position));
@@ -977,6 +979,16 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     @Override
     public void onActionClick(int position, int type) {
 
+        if (!isLogin) {
+            showShortToastByString("请您先登录！");
+            if (loginDialog != null) {
+                loginDialog.dismiss();
+            }
+            loginDialog = MyDialog.loginDialog(MainActivity.this, "", "");
+            loginDialog.setOnLoginListener(MainActivity.this);
+            loginDialog.show();
+            return;
+        }
         if (type == 1) {
             if (isToPayFreight && cofirmTypeId != -1) {
                 showShortToastByString("您已勾选运费到付，不可以增设中途点");
@@ -1048,8 +1060,8 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         if (resultCode == RESULT_OK && requestCode == 3) {
             userInfo = data.getParcelableExtra("userInfo");
             tv_tel.setText(userInfo.getUserName());
-            HttpUtil.setImageLoader(Contants.imagehost + userInfo.getHeadIco(), civ_head, R.mipmap.account, R.mipmap.account);
-            HttpUtil.setImageLoader(Contants.imagehost + userInfo.getHeadIco(), iv_cir_head, R.mipmap.account, R.mipmap.account);
+            HttpUtil.setImageLoader(Contants.imagehost + userInfo.getHeadIco(), civ_head, R.mipmap.account1, R.mipmap.account1);
+            HttpUtil.setImageLoader(Contants.imagehost + userInfo.getHeadIco(), iv_cir_head, R.mipmap.account1, R.mipmap.account1);
         }
 
         if (resultCode == RESULT_OK && requestCode == 5) {
@@ -1059,9 +1071,27 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         }
 
         if (resultCode == RESULT_OK && requestCode == 6) {
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(intent);
-            finish();
+
+            showShortToastByString("已退出");
+            isLogin = false;
+            isAgainLogin = true;
+            civ_head.setImageResource(R.mipmap.account1);
+            iv_cir_head.setImageResource(R.mipmap.account1);
+            initOrderData();
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean("isFirstLogin", true);
+            editor.apply();
+        }
+
+        if (resultCode == RESULT_OK && requestCode == 10) {
+            account = data.getStringExtra("Phone");
+            password = data.getStringExtra("Password");
+            if (loginDialog != null) {
+                loginDialog.dismiss();
+            }
+            loginDialog = MyDialog.loginDialog(MainActivity.this, account, password);
+            loginDialog.setOnLoginListener(MainActivity.this);
+            loginDialog.show();
         }
 
     }
@@ -1177,5 +1207,225 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         }
     }
 
+
+    private void login(final String account, final String password) {
+
+        this.account = account;
+        this.password = password;
+        final CustomProgressDialog customProgressDialog = new CustomProgressDialog(MainActivity.this);
+        String time = DateUtil.getPsdCurrentDate();
+        if (account.equals("") || password.equals("")) {
+            showShortToastByString("信息不完整");
+            return;
+        }
+        customProgressDialog.show();
+        customProgressDialog.setText("登录中..");
+        String finalPassword = MD5Util.encrypt(time + password);
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("LoginName", account);
+        jsonObject.addProperty("Time", time);
+        jsonObject.addProperty("Password", finalPassword);
+        jsonObject.addProperty("UserType", 1);
+        Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
+
+        HttpUtil.doPost(MainActivity.this, Contants.url_userLogin, "login", map, new VolleyInterface(MainActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
+            @Override
+            public void onSuccess(JsonElement result) {
+
+                customProgressDialog.dismiss();
+
+                if (isFirstLogin) {
+                    loginDialog.dismiss();
+                } else {
+                    if (isAgainLogin) {
+                        loginDialog.dismiss();
+                    }
+                }
+
+                isLogin = true;
+
+                showShortToastByString("登录成功");
+
+                if (carInfos.size() <= 0 || adInfos.size() <= 0) {
+                    initAdverVerType();
+                }
+                LogUtil.i("hint", carInfos.size() + "");
+                LogUtil.i("hint", adInfos.size() + "");
+
+                Gson gson = new Gson();
+                userInfo = gson.fromJson(result, UserInfo.class);
+                LogUtil.i("hint", userInfo.toString());
+                tv_tel.setText(userInfo.getUserName());
+                HttpUtil.setImageLoader(Contants.imagehost + userInfo.getHeadIco(), civ_head, R.mipmap.account1, R.mipmap.account1);
+                HttpUtil.setImageLoader(Contants.imagehost + userInfo.getHeadIco(), iv_cir_head, R.mipmap.account1, R.mipmap.account1);
+
+                SharedPreferences.Editor editor = prefs.edit();
+                Contants.userId = userInfo.getUserId();
+                Contants.Balance = userInfo.getBalance();
+                Contants.Tel = userInfo.getTel();
+                editor.putBoolean("isFirstLogin", false);
+                editor.putString("account", account);
+                editor.putString("password", password);
+                editor.putString("UserId", userInfo.getUserId());
+                editor.apply();
+
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                customProgressDialog.dismiss();
+                showShortToastByString(getString(R.string.timeoutError));
+                if (!isFirstLogin) {
+                    if (loginDialog == null) {
+                        loginDialog = MyDialog.loginDialog(MainActivity.this, account, password);
+                        loginDialog.setOnLoginListener(MainActivity.this);
+                    }
+                    loginDialog.show();
+                    isAgainLogin = true;
+                }
+                LogUtil.i("hint", error.toString());
+            }
+
+            @Override
+            public void onStateError() {
+                customProgressDialog.dismiss();
+                if (!isFirstLogin) {
+                    if (loginDialog == null) {
+                        loginDialog = MyDialog.loginDialog(MainActivity.this, account, password);
+                        loginDialog.setOnLoginListener(MainActivity.this);
+                    }
+                    isAgainLogin = true;
+                    loginDialog.show();
+                }
+                LogUtil.i("hint", "Asdasdsad");
+            }
+        });
+    }
+
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+
+            if ((System.currentTimeMillis() - mExitTime) > 2000) {
+
+                Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                mExitTime = System.currentTimeMillis();
+
+            } else {
+                finish();
+            }
+
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onSetting(String name, String psd) {
+        login(name, psd);
+    }
+
+    @Override
+    public void onLoginClick(int type) {
+        Intent intent = new Intent();
+        if (type == 2) {
+            loginDialog.dismiss();
+        }
+        if (type == 1) {
+            intent.setClass(MainActivity.this, RebuildPsdActivity.class);
+            startActivityForResult(intent, 10);
+        }
+        if (type == 0) {
+            loginDialog.dismiss();
+            new Handler().postDelayed(null, 1000);
+            registerDialog = MyDialog.registerDialog(MainActivity.this);
+            registerDialog.setRegisterListener(new MyDialog.RegisterListener() {
+                @Override
+                public void onRegister(String name, String psd, String code) {
+                    register(name, psd, code);
+                }
+
+                @Override
+                public void onRegisterCode(String name) {
+                    getCheckCode(name);
+                }
+
+                @Override
+                public void onRegisterClose() {
+                    registerDialog.dismiss();
+                    new Handler().postDelayed(null, 1000);
+                    loginDialog.show();
+                }
+            });
+            registerDialog.show();
+        }
+    }
+
+
+    private void getCheckCode(String name) {
+        if (name.isEmpty()) {
+            showShortToastByString("信息不完整");
+            return;
+        }
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("Tel", name);
+        Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
+
+        HttpUtil.doPost(MainActivity.this, Contants.url_obtainCheckCode, "obtainCheckCode", map, new VolleyInterface(MainActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
+            @Override
+            public void onSuccess(JsonElement result) {
+                showShortToastByString("获取成功");
+                LogUtil.i("register", result.toString());
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                LogUtil.i("hint", error.toString());
+            }
+
+            @Override
+            public void onStateError() {
+
+            }
+        });
+
+
+    }
+
+    private void register(String name, String psd, String code) {
+        if (name.isEmpty() || psd.isEmpty() || code.isEmpty()) {
+            showShortToastByString("信息不完整");
+            return;
+        }
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("Phone", name);
+        jsonObject.addProperty("VerificationCode", code);
+        jsonObject.addProperty("Password", psd);
+        jsonObject.addProperty("UserType", 1);
+        Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
+
+        HttpUtil.doPost(MainActivity.this, Contants.url_register, "register", map, new VolleyInterface(MainActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
+            @Override
+            public void onSuccess(JsonElement result) {
+                LogUtil.i(result.toString());
+                showShortToastByString("注册成功");
+                registerDialog.dismiss();
+                new Handler().postDelayed(null, 1000);
+                loginDialog.show();
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                showShortToastByString(getString(R.string.timeoutError));
+            }
+
+            @Override
+            public void onStateError() {
+
+            }
+        });
+
+    }
 
 }

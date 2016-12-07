@@ -167,7 +167,6 @@ public class RegisterActivity extends BaseActivity {
             showShortToastByString("信息不完整");
             return;
         }
-
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("Phone",account);
         jsonObject.addProperty("VerificationCode",validateCode);
@@ -185,12 +184,9 @@ public class RegisterActivity extends BaseActivity {
                 setResult(RESULT_OK,getIntent());
                 finish();
             }
-
             @Override
             public void onError(VolleyError error) {
                 showShortToastByString(getString(R.string.timeoutError));
-//                LogUtil.i("hint",error.networkResponse.headers.toString());
-//                LogUtil.i("hint",error.networkResponse.statusCode+"");
             }
 
             @Override
