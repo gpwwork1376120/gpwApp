@@ -81,7 +81,7 @@ public class FeedbackActivity extends BaseActivity {
                     @Override
                     public void onSuccess(JsonElement result) {
                         LogUtil.i(result.toString());
-                        showShortToastByString(result.toString());
+                        showShortToastByString("提交成功");
                         et_account.setText("");
                         et_comment.setText("");
                     }

@@ -24,12 +24,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
-import com.baidu.mapapi.common.SysOSUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import com.gpw.app.base.BaseApplication;
+
 import com.gpw.app.util.MD5Util;
 import com.gpw.app.view.CustomProgressDialog;
 import com.gpw.app.view.MyDialog;
@@ -688,7 +687,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             case R.id.tv_setting:
                 intent = new Intent(MainActivity.this, SettingActivity.class);
                 startActivityForResult(intent, 6);
-                mDrawerLayout.closeDrawers();
                 break;
             case R.id.rl_head:
                 intent = new Intent(MainActivity.this, PersonalInfoActivity.class);
@@ -1071,7 +1069,12 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         }
 
         if (resultCode == RESULT_OK && requestCode == 6) {
-
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mDrawerLayout.closeDrawers();
+                }
+            }, 500);
             showShortToastByString("已退出");
             isLogin = false;
             isAgainLogin = true;
@@ -1297,7 +1300,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                     isAgainLogin = true;
                     loginDialog.show();
                 }
-                LogUtil.i("hint", "Asdasdsad");
             }
         });
     }
@@ -1338,7 +1340,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         }
         if (type == 0) {
             loginDialog.dismiss();
-            new Handler().postDelayed(null, 1000);
+            new Handler().postDelayed(null, 500);
             registerDialog = MyDialog.registerDialog(MainActivity.this);
             registerDialog.setRegisterListener(new MyDialog.RegisterListener() {
                 @Override
@@ -1354,7 +1356,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 @Override
                 public void onRegisterClose() {
                     registerDialog.dismiss();
-                    new Handler().postDelayed(null, 1000);
+                    new Handler().postDelayed(null, 500);
                     loginDialog.show();
                 }
             });

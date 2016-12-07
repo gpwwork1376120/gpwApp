@@ -29,13 +29,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gpw.app.R;
-import com.gpw.app.activity.LoginActivity;
-import com.gpw.app.activity.MainActivity;
-import com.gpw.app.activity.RebuildPsdActivity;
-import com.gpw.app.base.BaseApplication;
 import com.gpw.app.util.DensityUtil;
 import com.gpw.app.util.FastBlurUtil;
-import com.gpw.app.util.LogUtil;
 
 
 /**
@@ -472,7 +467,6 @@ public class MyDialog extends Dialog {
     public void setOnLoginListener(LoginListener listener) {
         loginListener = listener;
     }
-
 
 
     public interface RegisterListener {

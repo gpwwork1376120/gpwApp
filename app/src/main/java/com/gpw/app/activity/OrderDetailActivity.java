@@ -1,7 +1,14 @@
 package com.gpw.app.activity;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,7 +43,7 @@ import com.gpw.app.util.LogUtil;
 import com.gpw.app.util.VolleyInterface;
 import com.gpw.app.view.MyDialog;
 
-public class OrderDetailActivity extends BaseActivity {
+public class OrderDetailActivity extends BaseActivity implements RatingBar.OnRatingBarChangeListener {
     private TextView tv_title;
     private TextView tv_right;
     private ImageView iv_left_white;
@@ -84,6 +91,7 @@ public class OrderDetailActivity extends BaseActivity {
         bt_call = (Button) findViewById(R.id.bt_call);
         bt_keepConvey = (Button) findViewById(R.id.bt_keepConvey);
         bt_cancel = (Button) findViewById(R.id.bt_cancel);
+        rb_score1.setOnRatingBarChangeListener(this);
 
     }
 
@@ -117,8 +125,8 @@ public class OrderDetailActivity extends BaseActivity {
                 rb_score.setProgress(orderDetailInfo.getTransporterScore());
                 tv_name1.setText(orderDetailInfo.getTransporterName());
                 tv_vehicleNo1.setText(orderDetailInfo.getVehicleNo());
-
-                tv_money.setText(String.format("¥ %s", orderDetailInfo.getFreight()));
+                double money = orderDetailInfo.getFreight()+orderDetailInfo.getPremium();
+                tv_money.setText(String.format("¥ %s", money));
 
                 String startState = orderDetailInfo.getVehicleTypeName();
                 if (orderDetailInfo.getRemove().equals("True")) {
@@ -147,6 +155,10 @@ public class OrderDetailActivity extends BaseActivity {
                 orderDetailAdapter.setOnBtnClickListener(new OrderDetailAdapter.OnBtnClickListener() {
                     @Override
                     public void onBtnClick(int position, String viewName) {
+                        if (orderDetailInfo.getOrderStatus() == 4) {
+                            showShortToastByString("订单已完成");
+                            return;
+                        }
                         switch (viewName) {
                             case "确认卸货":
                                 orderAddressBean = orderDetailInfo.getOrderAddress().get(position);
@@ -197,15 +209,68 @@ public class OrderDetailActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.bt_cancel:
+                if (orderDetailInfo.getOrderStatus() == 4) {
+                    showShortToastByString("订单已完成");
+                    return;
+                }
                 confirmCancel();
                 break;
             case R.id.bt_call:
+                if (orderDetailInfo.getOrderStatus() == 4) {
+                    showShortToastByString("订单已完成");
+                    return;
+                }
+                if (ContextCompat.checkSelfPermission(OrderDetailActivity.this, Manifest.permission.CALL_PHONE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(OrderDetailActivity.this,
+                            new String[]{Manifest.permission.CALL_PHONE}, 200);
+                } else {
+                    call();
+                }
+
 
                 break;
             case R.id.bt_keepConvey:
                 keepTransporter(orderDetailInfo.getTransporterId());
                 break;
         }
+    }
+
+    private void call() {
+        new AlertDialog.Builder(OrderDetailActivity.this).
+                setTitle("提示").
+                setMessage("是否拨打电话:" + orderDetailInfo.getTransporterTel()).
+                setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Intent.ACTION_CALL);
+                        Uri data = Uri.parse("tel:" + orderDetailInfo.getTransporterTel());
+                        intent.setData(data);
+                        if (ActivityCompat.checkSelfPermission(OrderDetailActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                            return;
+                        }
+                        startActivity(intent);
+                    }
+                }).
+                setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // TODO Auto-generated method stub
+                    }
+                }).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == 200) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                call();
+            } else {
+                Toast.makeText(OrderDetailActivity.this, "Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     private void confirmCancel() {
@@ -336,4 +401,29 @@ public class OrderDetailActivity extends BaseActivity {
         });
     }
 
+    @Override
+    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("OrderNo", orderDetailInfo.getOrderNo());
+        jsonObject.addProperty("UserId", Contants.userId);
+        jsonObject.addProperty("TransporterScore", (int) rating);
+        jsonObject.addProperty("TransporterComment", "");
+        Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
+        HttpUtil.doPost(OrderDetailActivity.this, Contants.url_commentTransporter, "commentTransporter", map, new VolleyInterface(OrderDetailActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
+            @Override
+            public void onSuccess(JsonElement result) {
+                LogUtil.i(result.toString());
+                showShortToastByString("评论成功");
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                showShortToastByString(getString(R.string.timeoutError));
+            }
+
+            @Override
+            public void onStateError() {
+            }
+        });
+    }
 }

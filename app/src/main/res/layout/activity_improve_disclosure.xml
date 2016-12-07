@@ -80,6 +80,7 @@
             android:layout_height="40dp"
             android:paddingLeft="34dp"
             android:background="@null"
+            android:inputType="number"
             android:textSize="14sp"
             android:hint="@string/hint_contact_tel"/>
         <View
@@ -93,6 +94,7 @@
             android:paddingLeft="34dp"
             android:background="@null"
             android:textSize="14sp"
+            android:inputType="numberDecimal"
             android:hint="@string/hint_loan_money"/>
         <View
             android:layout_width="match_parent"

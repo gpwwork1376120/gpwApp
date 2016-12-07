@@ -38,6 +38,7 @@
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
+            android:inputType="numberDecimal"
             android:layout_toRightOf="@+id/tv_money"
             android:background="@null"
             android:hint="@string/hint_input_charge"

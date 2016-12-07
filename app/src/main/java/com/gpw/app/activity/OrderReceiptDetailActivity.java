@@ -1,11 +1,19 @@
 package com.gpw.app.activity;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
@@ -156,15 +164,55 @@ public class OrderReceiptDetailActivity extends BaseActivity {
                 }
                 break;
             case R.id.bt_confirm:
+                if (receiptOrderDetailInfo.getLogisticStatus()!=1){
+                    showShortToastByString("已经收过货");
+                    return;
+                }
                 updateOrder();
                 break;
+            case R.id.bt_call:
+                if (receiptOrderDetailInfo.getOrderStatus()==4){
+                    showShortToastByString("订单已完成");
+                    return;
+                }
+                call();
+                break;
             case R.id.bt_location:
+                if (receiptOrderDetailInfo.getOrderStatus()==4){
+                    showShortToastByString("订单已完成");
+                    return;
+                }
                 Intent intent = new Intent(OrderReceiptDetailActivity.this, CarLocationActivity.class);
                 intent.putExtra("TransporterId", receiptOrderDetailInfo.getTransporterId());
                 intent.putExtra("TransporterName", receiptOrderDetailInfo.getTransporterName());
                 startActivity(intent);
                 break;
         }
+    }
+
+
+    private void call() {
+        new AlertDialog.Builder(OrderReceiptDetailActivity.this).
+                setTitle("提示").
+                setMessage("是否拨打电话:" + receiptOrderDetailInfo.getTransporterTel()).
+                setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Intent.ACTION_CALL);
+                        Uri data = Uri.parse("tel:" + receiptOrderDetailInfo.getTransporterTel());
+                        intent.setData(data);
+                        if (ActivityCompat.checkSelfPermission(OrderReceiptDetailActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                            return;
+                        }
+                        startActivity(intent);
+                    }
+                }).
+                setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // TODO Auto-generated method stub
+                    }
+                }).show();
     }
 
     private void updateOrder() {
@@ -193,6 +241,19 @@ public class OrderReceiptDetailActivity extends BaseActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == 200) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                call();
+            } else {
+                Toast.makeText(OrderReceiptDetailActivity.this, "Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
 

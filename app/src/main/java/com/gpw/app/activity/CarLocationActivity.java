@@ -104,21 +104,22 @@ public class CarLocationActivity extends BaseActivity {
 
                 mBaiduMap.clear();
                 LatLng latLng = new LatLng(carLoactionInfo.getLat(), carLoactionInfo.getLng());
-                BitmapDescriptor bitmap = getBitmapDescriptor(carLoactionInfo.getAngle());
-                OverlayOptions option = new MarkerOptions()
-                        .position(latLng)
-                        .icon(bitmap);
-                mBaiduMap.addOverlay(option);
+            //    BitmapDescriptor bitmap = getBitmapDescriptor(carLoactionInfo.getAngle());
+//                OverlayOptions option = new MarkerOptions()
+//                        .position(latLng)
+//                        .icon(bitmap)
+//                        .alpha(0.7f);
+//
+//                mBaiduMap.addOverlay(option);
 
-                LinearLayout linearLayout = (LinearLayout) View.inflate(CarLocationActivity.this, R.layout.view_map_bck, null);
+                LinearLayout linearLayout = (LinearLayout) View.inflate(CarLocationActivity.this, R.layout.view_car_location, null);
                 TextView tv_map_name = (TextView) linearLayout.findViewById(R.id.tv_map_name);
-                TextView tv_map_detail = (TextView) linearLayout.findViewById(R.id.tv_map_detail);
-                tv_map_name.setVisibility(View.GONE);
-                tv_map_name.setPadding(0,10,0,0);
-                tv_map_detail.setText(TransporterName+"  "+carLoactionInfo.getVehicleNo());
-                tv_map_detail.setGravity(Gravity.CENTER);
+                ImageView iv_location = (ImageView) linearLayout.findViewById(R.id.iv_location);
 
-                InfoWindow mInfoWindow = new InfoWindow(linearLayout, latLng, -55);
+                tv_map_name.setText(TransporterName+"  "+carLoactionInfo.getVehicleNo());
+                iv_location.setImageResource(getBitmapId(carLoactionInfo.getAngle()));
+
+                InfoWindow mInfoWindow = new InfoWindow(linearLayout, latLng, -20);
                 mBaiduMap.showInfoWindow(mInfoWindow);
 
                 MapStatus mapStatus = new MapStatus.Builder()
@@ -196,10 +197,64 @@ public class CarLocationActivity extends BaseActivity {
                 resource=R.mipmap.r_vehicle315_0;
                 break;
         }
-        return BitmapDescriptorFactory
-                            .fromResource(resource);
+        return BitmapDescriptorFactory.fromResource(resource);
     }
 
+
+    private int getBitmapId(int angle) {
+        int resource = 0;
+        switch (angle){
+            case 0:
+                resource=R.mipmap.r_vehicle0;
+                break;
+            case 22:
+                resource=R.mipmap.r_vehicle0_45;
+                break;
+            case 45:
+                resource=R.mipmap.r_vehicle45;
+                break;
+            case 67:
+                resource=R.mipmap.r_vehicle45_90;
+                break;
+            case 90:
+                resource=R.mipmap.r_vehicle90;
+                break;
+            case 112:
+                resource=R.mipmap.r_vehicle90_135;
+                break;
+            case 135:
+                resource=R.mipmap.r_vehicle135;
+                break;
+            case 157:
+                resource=R.mipmap.r_vehicle135_180;
+                break;
+            case 180:
+                resource=R.mipmap.r_vehicle180;
+                break;
+            case 202:
+                resource=R.mipmap.r_vehicle180_225;
+                break;
+            case 225:
+                resource=R.mipmap.r_vehicle225;
+                break;
+            case 247:
+                resource=R.mipmap.r_vehicle225_270;
+                break;
+            case 270:
+                resource=R.mipmap.r_vehicle270;
+                break;
+            case 292:
+                resource=R.mipmap.r_vehicle270_315;
+                break;
+            case 315:
+                resource=R.mipmap.r_vehicle315;
+                break;
+            case 337:
+                resource=R.mipmap.r_vehicle315_0;
+                break;
+        }
+        return resource;
+    }
 
     @Override
     public void onClick(View v) {

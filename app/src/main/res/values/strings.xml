@@ -139,7 +139,7 @@
     <string name="select_pic_type">选择照片方式</string>
     <string name="takePhoto">拍照</string>
     <string name="pickPhoto">从相册选择</string>
-    <string name="hint_reason_0">您确定要撤销该订单嘛？</string>
+    <string name="hint_reason_0">您确定要撤销该订单吗？</string>
     <string name="hint_reason_1">请输入撤销的原因</string>
     <string name="hint_reason">温馨提示</string>
     <string name="man">男</string>

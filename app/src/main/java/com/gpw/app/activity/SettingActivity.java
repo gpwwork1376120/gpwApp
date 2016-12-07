@@ -160,8 +160,6 @@ public class SettingActivity extends BaseActivity {
                             @Override
                             public void onError(VolleyError error) {
                                 showShortToastByString(getString(R.string.timeoutError));
-                    //                LogUtil.i("hint",error.networkResponse.headers.toString());
-                   //              LogUtil.i("hint",error.networkResponse.statusCode+"");
                             }
 
                             @Override
