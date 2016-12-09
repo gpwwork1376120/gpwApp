@@ -10,8 +10,8 @@ public class Contants {
     public static String Tel;
     public static double Balance;
     public final static String SHARED_NAME = "gpwsp";
-    public static String imagehost = "http://121.40.212.89:8009";
-    private static String localhost = "http://121.40.212.89:8009/";
+    public static String imagehost = "http://101.201.74.192:8018";
+    private static String localhost = "http://101.201.74.192:8018/";
     public static String url_register = localhost + "Register/Register";
     public static String url_editPassWord= localhost + "Users/EditPassWord";
     public static String url_updatePassWord= localhost + "Users/UpdatePassWord";

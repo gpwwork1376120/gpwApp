@@ -1,5 +1,6 @@
 package com.gpw.app.activity;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -47,6 +48,7 @@ public class OrderPayActivity extends BaseActivity {
     private CheckBox cb_card;
     private Button bt_recharge;
     private TextView tv_balance;
+    private TextView money_detail;
     private ListView lv_address;
     private OrderAddAdapter orderAddAdapter;
     private int orderType;
@@ -56,7 +58,9 @@ public class OrderPayActivity extends BaseActivity {
     private String time;
     private int payType = 1;
     private boolean isAfterPay;
-    private String orderId;
+    private String orderId = "0";
+    private double freight;
+    private double premiums;
 
     @Override
     protected int getLayout() {
@@ -85,6 +89,7 @@ public class OrderPayActivity extends BaseActivity {
         tv_orderType = (TextView) findViewById(R.id.tv_orderType);
         tv_money = (TextView) findViewById(R.id.tv_money);
         tv_time = (TextView) findViewById(R.id.tv_time);
+        money_detail = (TextView) findViewById(R.id.money_detail);
 
 
     }
@@ -94,6 +99,7 @@ public class OrderPayActivity extends BaseActivity {
 
         isAfterPay = getIntent().getBooleanExtra("isAfterPay", false);
 
+        System.out.println("isAfterPay" + isAfterPay);
 
         ArrayList<OrderAddressBean> orderAddressBeen = new ArrayList<>();
         if (isAfterPay) {
@@ -115,9 +121,13 @@ public class OrderPayActivity extends BaseActivity {
             jsonObject = new JsonParser().parse(mapJson).getAsJsonObject();
         }
 
+
         orderType = getIntent().getIntExtra("type", 0);
         money = getIntent().getStringExtra("money");
         time = getIntent().getStringExtra("time");
+        freight = getIntent().getDoubleExtra("freight", 0);
+        premiums = getIntent().getDoubleExtra("premiums", 0);
+
         orderAddAdapter = new OrderAddAdapter(orderAddressBeen, this);
     }
 
@@ -149,6 +159,7 @@ public class OrderPayActivity extends BaseActivity {
         cb_alipay.setOnClickListener(this);
         cb_card.setOnClickListener(this);
         bt_recharge.setOnClickListener(this);
+        money_detail.setOnClickListener(this);
     }
 
     @Override
@@ -156,9 +167,15 @@ public class OrderPayActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.iv_left_white:
                 if (isAfterPay) {
-                    setResult(RESULT_OK,getIntent());
+                    setResult(RESULT_OK, getIntent());
                 }
                 finish();
+                break;
+            case R.id.money_detail:
+                Intent intent = new Intent(OrderPayActivity.this, MoneyDetailActivity.class);
+                intent.putExtra("freight", freight);
+                intent.putExtra("premiums", premiums);
+                startActivity(intent);
                 break;
             case R.id.rl_wallet:
             case R.id.cb_wallet:
@@ -206,7 +223,7 @@ public class OrderPayActivity extends BaseActivity {
                 public void onSuccess(JsonElement result) {
                     LogUtil.i(result.toString());
                     showShortToastByString("货源发布成功");
-                    setResult(RESULT_OK,getIntent());
+                    setResult(RESULT_OK, getIntent());
                     finish();
 
                 }
@@ -229,7 +246,7 @@ public class OrderPayActivity extends BaseActivity {
                 public void onSuccess(JsonElement result) {
                     LogUtil.i(result.toString());
                     showShortToastByString("货源发布成功");
-                    setResult(RESULT_OK,getIntent());
+                    setResult(RESULT_OK, getIntent());
                     finish();
                 }
 
@@ -265,7 +282,7 @@ public class OrderPayActivity extends BaseActivity {
             public void onSuccess(JsonElement result) {
                 LogUtil.i(result.toString());
                 showShortToastByString("支付成功");
-                setResult(RESULT_OK,getIntent());
+                setResult(RESULT_OK, getIntent());
                 finish();
             }
 
@@ -286,7 +303,8 @@ public class OrderPayActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         if (isAfterPay) {
-            setResult(RESULT_OK,getIntent());
+            setResult(RESULT_OK, getIntent());
+            System.out.println("Asdsad");
         }
         super.onBackPressed();
 

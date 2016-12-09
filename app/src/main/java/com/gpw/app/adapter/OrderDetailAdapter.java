@@ -29,12 +29,14 @@ import com.gpw.app.bean.OrderDetailInfo;
 public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.ViewHolder>  {
     private ArrayList<OrderDetailInfo.OrderAddressBean> orderAddressBeens;
     private Context mContext;
+    private OrderDetailInfo orderDetailInfo;
 
 
-    public OrderDetailAdapter(ArrayList<OrderDetailInfo.OrderAddressBean> orderAddressBeens,Context mContext) {
+    public OrderDetailAdapter(OrderDetailInfo orderDetailInfo,Context mContext) {
         super();
-        this.orderAddressBeens = orderAddressBeens;
+        this.orderAddressBeens = (ArrayList<OrderDetailInfo.OrderAddressBean>) orderDetailInfo.getOrderAddress();
         this.mContext = mContext;
+        this.orderDetailInfo = orderDetailInfo;
 
     }
 
@@ -68,22 +70,32 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
         }
         viewHolder.tv_address.setText(String.format("%s  %s  %s", orderAddressBean.getAddress(), orderAddressBean.getReceipter(), orderAddressBean.getTel()));
 
-        viewHolder.bt_location.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Button button = (Button) v;
-                String name = button.getText().toString();
-                mOnBtnClickListener.onBtnClick(position,name);
-            }
-        });
-        viewHolder.bt_confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Button button = (Button) v;
-                String name = button.getText().toString();
-                mOnBtnClickListener.onBtnClick(position,name);
-            }
-        });
+
+
+
+        if (orderDetailInfo.getOrderStatus() == 4) {
+            viewHolder.bt_confirm.setBackgroundResource(R.drawable.button_gray_bg);
+            viewHolder.bt_location.setBackgroundResource(R.drawable.button_gray_bg);
+            viewHolder.bt_location.setClickable(false);
+            viewHolder.bt_confirm.setClickable(false);
+        }else {
+            viewHolder.bt_location.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Button button = (Button) v;
+                    String name = button.getText().toString();
+                    mOnBtnClickListener.onBtnClick(position, name);
+                }
+            });
+            viewHolder.bt_confirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Button button = (Button) v;
+                    String name = button.getText().toString();
+                    mOnBtnClickListener.onBtnClick(position, name);
+                }
+            });
+        }
 
     }
 

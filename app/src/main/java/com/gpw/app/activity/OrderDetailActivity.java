@@ -147,7 +147,15 @@ public class OrderDetailActivity extends BaseActivity implements RatingBar.OnRat
                 tv_startState.setText(startState);
 
 
-                orderDetailAdapter = new OrderDetailAdapter((ArrayList<OrderDetailInfo.OrderAddressBean>) orderDetailInfo.getOrderAddress(), OrderDetailActivity.this);
+                if (orderDetailInfo.getOrderStatus() == 4) {
+                    bt_call.setBackgroundResource(R.drawable.button_gray_bg);
+                    bt_cancel.setBackgroundResource(R.drawable.button_gray_bg);
+                    bt_cancel.setClickable(false);
+                    bt_call.setClickable(false);
+                }
+
+
+                orderDetailAdapter = new OrderDetailAdapter(orderDetailInfo, OrderDetailActivity.this);
                 LinearLayoutManager layoutManager = new LinearLayoutManager(OrderDetailActivity.this);
                 layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                 rv_order_detail.setLayoutManager(layoutManager);
@@ -155,10 +163,6 @@ public class OrderDetailActivity extends BaseActivity implements RatingBar.OnRat
                 orderDetailAdapter.setOnBtnClickListener(new OrderDetailAdapter.OnBtnClickListener() {
                     @Override
                     public void onBtnClick(int position, String viewName) {
-                        if (orderDetailInfo.getOrderStatus() == 4) {
-                            showShortToastByString("订单已完成");
-                            return;
-                        }
                         switch (viewName) {
                             case "确认卸货":
                                 orderAddressBean = orderDetailInfo.getOrderAddress().get(position);
@@ -209,17 +213,9 @@ public class OrderDetailActivity extends BaseActivity implements RatingBar.OnRat
                 finish();
                 break;
             case R.id.bt_cancel:
-                if (orderDetailInfo.getOrderStatus() == 4) {
-                    showShortToastByString("订单已完成");
-                    return;
-                }
                 confirmCancel();
                 break;
             case R.id.bt_call:
-                if (orderDetailInfo.getOrderStatus() == 4) {
-                    showShortToastByString("订单已完成");
-                    return;
-                }
                 if (ContextCompat.checkSelfPermission(OrderDetailActivity.this, Manifest.permission.CALL_PHONE)
                         != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(OrderDetailActivity.this,
@@ -227,8 +223,6 @@ public class OrderDetailActivity extends BaseActivity implements RatingBar.OnRat
                 } else {
                     call();
                 }
-
-
                 break;
             case R.id.bt_keepConvey:
                 keepTransporter(orderDetailInfo.getTransporterId());

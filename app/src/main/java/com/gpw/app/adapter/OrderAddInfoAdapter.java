@@ -24,12 +24,14 @@ public class OrderAddInfoAdapter extends RecyclerView.Adapter<OrderAddInfoAdapte
     private ArrayList<OrderAddressBean> mOrderAddressInfos;
     private Context mContext;
     private int size;
+    private boolean color;
 
-    public OrderAddInfoAdapter(ArrayList<OrderAddressBean> mOrderAddressInfos, Context mContext) {
+    public OrderAddInfoAdapter(ArrayList<OrderAddressBean> mOrderAddressInfos, Context mContext,boolean color) {
         super();
         this.mOrderAddressInfos = mOrderAddressInfos;
         this.mContext = mContext;
         this.size = mOrderAddressInfos.size();
+        this.color = color;
         LogUtil.i("size" + size);
     }
 
@@ -42,13 +44,26 @@ public class OrderAddInfoAdapter extends RecyclerView.Adapter<OrderAddInfoAdapte
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         OrderAddressBean orderAddressInfo = mOrderAddressInfos.get(position);
-        if (position == 0) {
-            viewHolder.iv_state.setImageResource(R.mipmap.start);
-        } else if (position == size - 1) {
-            viewHolder.iv_state.setImageResource(R.mipmap.arrive);
+        if (color){
+            viewHolder.tv_address.setTextColor(ContextCompat.getColor(mContext, R.color.color_white_font));
+            viewHolder.tv_contact.setTextColor(ContextCompat.getColor(mContext, R.color.color_white_font));
+            if (position == 0) {
+                viewHolder.iv_state.setImageResource(R.mipmap.start_gray);
+            } else if (position == size - 1) {
+                viewHolder.iv_state.setImageResource(R.mipmap.arrive_gray);
 
-        } else {
-            viewHolder.iv_state.setImageResource(R.mipmap.pass);
+            } else {
+                viewHolder.iv_state.setImageResource(R.mipmap.pass_gray);
+            }
+        }else {
+            if (position == 0) {
+                viewHolder.iv_state.setImageResource(R.mipmap.start);
+            } else if (position == size - 1) {
+                viewHolder.iv_state.setImageResource(R.mipmap.arrive);
+
+            } else {
+                viewHolder.iv_state.setImageResource(R.mipmap.pass);
+            }
         }
         viewHolder.tv_address.setText(orderAddressInfo.getAddress());
         viewHolder.tv_contact.setText(String.format("%s %s", orderAddressInfo.getReceipter(), orderAddressInfo.getTel()));

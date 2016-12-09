@@ -80,11 +80,9 @@ public class PayActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-
         orderNo = getIntent().getStringExtra("orderNo");
         money = getIntent().getDoubleExtra("money", 0);
         type = getIntent().getIntExtra("type", 0);
-
     }
 
     @Override
@@ -94,6 +92,7 @@ public class PayActivity extends BaseActivity {
         if (type != 5) {
             tv_money.setText("金额");
         }
+
         DecimalFormat df = new DecimalFormat("#00.00");
         tv_money1.setText(String.format("¥%s", df.format(money)));
         tv_balance.setText(String.format("可用余额%s元", df.format(Contants.Balance)));
@@ -122,7 +121,6 @@ public class PayActivity extends BaseActivity {
             case R.id.bt_ok:
                 payOrder();
                 break;
-
             case R.id.rl_wallet:
             case R.id.cb_wallet:
                 initRadio();

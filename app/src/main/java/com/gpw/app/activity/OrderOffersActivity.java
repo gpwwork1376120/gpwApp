@@ -216,7 +216,7 @@ public class OrderOffersActivity extends BaseActivity {
             jsonObject.addProperty("Lat", location.getLatitude());
             jsonObject.addProperty("Lng", location.getLongitude());
             Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
-            HttpUtil.doPost(OrderOffersActivity.this, Contants.url_getOrderOffers, "getUserBalance", map, new VolleyInterface(OrderOffersActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
+            HttpUtil.doPost(OrderOffersActivity.this, Contants.url_getOrderOffers, "getOrderOffers", map, new VolleyInterface(OrderOffersActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
                 @Override
                 public void onSuccess(JsonElement result) {
                     LogUtil.i("offer" + result.toString());

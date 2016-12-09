@@ -202,10 +202,11 @@ public class OrderFragment extends Fragment implements MyOrderAdapter.OnBtnClick
                 } else {
                     double allMoney = orderInfo.getFreight()+orderInfo.getPremiums();
                     String money = String.format("¥%s", allMoney);
-
                     intent.setClass(getActivity(), OrderPayActivity.class);
                     intent.putExtra("orderId", orderInfo.getOrderNo());
                     intent.putExtra("type", orderInfo.getOrderType());
+                    intent.putExtra("freight", orderInfo.getFreight());
+                    intent.putExtra("premiums", orderInfo.getPremiums());
                     intent.putParcelableArrayListExtra("orderAddressBeen", orderAddressBeen);
                     intent.putExtra("money", money);
                     intent.putExtra("time", orderInfo.getPlanSendTime());

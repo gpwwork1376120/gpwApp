@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -353,7 +354,7 @@ public class MyDialog extends Dialog {
         final EditText et_account = (EditText) v.findViewById(R.id.et_account);
         final EditText et_password = (EditText) v.findViewById(R.id.et_password);
         final EditText et_validate_code = (EditText) v.findViewById(R.id.et_validate_code);
-        TextView tv_get_code = (TextView) v.findViewById(R.id.tv_get_code);
+        final TextView tv_get_code = (TextView) v.findViewById(R.id.tv_get_code);
         final Button bt_ok = (Button) v.findViewById(R.id.bt_ok);
         CheckBox cb_eye = (CheckBox) v.findViewById(R.id.cb_eye);
         ImageView iv_close = (ImageView) v.findViewById(R.id.iv_close);
@@ -410,7 +411,7 @@ public class MyDialog extends Dialog {
         tv_get_code.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                registerListener.onRegisterCode(et_account.getText().toString());
+                registerListener.onRegisterCode(et_account.getText().toString(),tv_get_code);
             }
         });
 
@@ -471,7 +472,7 @@ public class MyDialog extends Dialog {
 
     public interface RegisterListener {
         void onRegister(String name, String psd,String code);
-        void onRegisterCode(String name);
+        void onRegisterCode(String name,TextView textView);
         void onRegisterClose();
     }
 

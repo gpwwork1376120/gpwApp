@@ -1,21 +1,25 @@
 package com.gpw.app.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import com.gpw.app.R;
+import com.gpw.app.activity.MyOrderActivity;
 import com.gpw.app.bean.OrderAddressBean;
 import com.gpw.app.bean.OrderInfo;
 import com.gpw.app.util.LogUtil;
@@ -30,12 +34,14 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHold
     private ArrayList<OrderInfo> orderInfos;
 
     private Context context;
+    private DecimalFormat df;
 
 
     public MyOrderAdapter(Context context, ArrayList<OrderInfo> orderInfos) {
         super();
         this.orderInfos = orderInfos;
         this.context = context;
+        df = new DecimalFormat("#00.00");
     }
 
     @Override
@@ -54,13 +60,27 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHold
         ArrayList<OrderAddressBean> orderAddressBeen = gson.fromJson(orderInfo.getJsonElement(), listType);
 
         LogUtil.i(orderAddressBeen.toString());
-        OrderAddInfoAdapter addInfoAdapter = new OrderAddInfoAdapter(orderAddressBeen, context);
+        OrderAddInfoAdapter addInfoAdapter;
+
+        if (orderInfo.getOrderStatus()==4||orderInfo.getOrderStatus()==-1){
+            viewHolder.tv_time.setTextColor(ContextCompat.getColor(context, R.color.color_white_font));
+            viewHolder.tv_orderId.setTextColor(ContextCompat.getColor(context, R.color.color_white_font));
+            viewHolder.tv_money.setTextColor(ContextCompat.getColor(context, R.color.color_white_font));
+            viewHolder.tv_state.setTextColor(ContextCompat.getColor(context, R.color.color_white_font));
+            addInfoAdapter = new OrderAddInfoAdapter(orderAddressBeen, context,true);
+        }else {
+            viewHolder.tv_time.setTextColor(ContextCompat.getColor(context, R.color.color_gary_font));
+            viewHolder.tv_orderId.setTextColor(ContextCompat.getColor(context, R.color.color_gary_font));
+            viewHolder.tv_money.setTextColor(ContextCompat.getColor(context, R.color.color_red));
+            viewHolder.tv_state.setTextColor(ContextCompat.getColor(context, R.color.color_red));
+            addInfoAdapter = new OrderAddInfoAdapter(orderAddressBeen, context,false);
+        }
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         viewHolder.rv_order_address.setLayoutManager(layoutManager);
         viewHolder.rv_order_address.setAdapter(addInfoAdapter);
         double allMoney = orderInfo.getFreight() + orderInfo.getPremiums();
-        viewHolder.tv_money.setText(String.format("¥%s", allMoney));
+        viewHolder.tv_money.setText(String.format("¥%s", df.format(allMoney)));
         viewHolder.tv_orderId.setText(String.format("订单号：%s", orderInfo.getOrderNo()));
         viewHolder.tv_time.setText(orderInfo.getPlanSendTime());
 
@@ -70,7 +90,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHold
             viewHolder.bt_query.setVisibility(View.VISIBLE);
             viewHolder.tv_money.setVisibility(View.VISIBLE);
             viewHolder.bt_pay.setVisibility(View.VISIBLE);
-            viewHolder.tv_money.setText(String.format("¥%s", orderInfo.getCancelFee()));
+            viewHolder.tv_money.setText(String.format("¥%s", df.format(orderInfo.getCancelFee())));
             viewHolder.bt_query.setVisibility(View.GONE);
             viewHolder.tv_state.setText("违约金");
             viewHolder.tv_noDriver.setVisibility(View.GONE);
@@ -174,6 +194,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHold
         TextView tv_noDriver;
         TextView tv_addMoney;
         RecyclerView rv_order_address;
+        LinearLayout ll_order;
 
         public ViewHolder(View view) {
             super(view);
@@ -186,6 +207,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHold
             tv_state = (TextView) view.findViewById(R.id.tv_state);
             tv_noDriver = (TextView) view.findViewById(R.id.tv_noDriver);
             tv_addMoney = (TextView) view.findViewById(R.id.tv_addMoney);
+            ll_order = (LinearLayout) view.findViewById(R.id.ll_order);
         }
     }
 

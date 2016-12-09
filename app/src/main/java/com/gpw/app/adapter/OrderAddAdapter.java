@@ -64,10 +64,10 @@ public class OrderAddAdapter extends BaseAdapter {
         OrderAddressBean addressBean  =orderAddressBeen.get(position);
         if (position== 0) {
             viewHolder.iv_state.setImageResource(R.mipmap.start);
-        } else if (position== 2) {
-            viewHolder.iv_state.setImageResource(R.mipmap.pass);
-        } else {
+        } else if (position== size-1) {
             viewHolder.iv_state.setImageResource(R.mipmap.arrive);
+        } else {
+            viewHolder.iv_state.setImageResource(R.mipmap.pass);
         }
 
 

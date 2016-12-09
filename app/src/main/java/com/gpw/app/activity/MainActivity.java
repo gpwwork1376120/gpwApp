@@ -4,6 +4,7 @@ package com.gpw.app.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -141,7 +142,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     private boolean isRemove;
     private boolean isMove;
     private boolean isToPayFreight;
-    private boolean isCollectionPayment;
+
     private boolean isMyFleet;
     private boolean isSurcharge;
     private boolean isStart;
@@ -150,7 +151,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     private CheckBox cb_isMove;
     private CheckBox cb_isToPayFreight;
     private CheckBox cb_isSurcharge;
-    private CheckBox cb_isCollectionPayment;
     private CheckBox cb_isMyFleet;
     private CheckBox cb_insurance;
     private Button bt_ok;
@@ -167,11 +167,14 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
     private boolean isFirstLogin;
 
     private boolean isAgainLogin = false;
+    private TextView tv_getCode;
 
 
     private SharedPreferences prefs;
     private String password;
     private String account;
+
+    private  MyCountDownTimer myCountDownTimer;
 
 
     @Override
@@ -249,7 +252,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         cb_isRemove = (CheckBox) dialog_car.findViewById(R.id.cb_isRemove);
         cb_isMove = (CheckBox) dialog_car.findViewById(R.id.cb_isMove);
         cb_isToPayFreight = (CheckBox) dialog_car.findViewById(R.id.cb_isToPayFreight);
-        cb_isCollectionPayment = (CheckBox) dialog_car.findViewById(R.id.cb_isCollectionPayment);
         cb_isMyFleet = (CheckBox) dialog_car.findViewById(R.id.cb_isMyFleet);
         cb_isSurcharge = (CheckBox) dialog_car.findViewById(R.id.cb_isSurcharge);
         bt_ok = (Button) dialog_car.findViewById(R.id.bt_ok);
@@ -317,7 +319,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         isRemove = false;
         isMove = false;
         isToPayFreight = false;
-        isCollectionPayment = false;
         isMyFleet = false;
         isSurcharge = false;
     }
@@ -519,7 +520,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             @Override
             public void handle(String time) { // 回调接口，获得选中的时间
                 LogUtil.i(time);
-                if (cofirmTypeId == 1) {
+                if (cofirmTypeId == 0) {
                     publishCarpool(2, time);
                 } else {
                     sendOrder(2, time);
@@ -554,7 +555,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 startActivity(intent);
                 break;
             case R.id.bt_query:
-                if (vehideTypeId == 1) {
+                if (cofirmTypeId == 0) {
                     publishCarpool(3, DateUtil.getCurrentDates());
                 } else {
                     sendOrder(3, DateUtil.getCurrentDates());
@@ -590,7 +591,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 isRemove = cb_isRemove.isChecked();
                 isMove = cb_isMove.isChecked();
                 isToPayFreight = cb_isToPayFreight.isChecked();
-                isCollectionPayment = cb_isCollectionPayment.isChecked();
                 isMyFleet = cb_isMyFleet.isChecked();
                 isSurcharge = cb_isSurcharge.isChecked();
                 remark = et_remark.getText().toString();
@@ -613,7 +613,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 startActivity(intent);
                 break;
             case R.id.iv_confirm_order:
-                if (cofirmTypeId == 1) {
+                if (cofirmTypeId == 0) {
                     publishCarpool(1, DateUtil.getCurrentDates());
                 } else {
                     sendOrder(1, DateUtil.getCurrentDates());
@@ -628,7 +628,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                     cb_isRemove.setChecked(false);
                     cb_isMove.setChecked(false);
                     cb_isToPayFreight.setChecked(false);
-                    cb_isCollectionPayment.setChecked(false);
                     cb_isMyFleet.setChecked(false);
                     cb_isSurcharge.setChecked(false);
                     et_remark.setText("");
@@ -755,7 +754,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             cb_isRemove.setChecked(false);
             cb_isMove.setChecked(false);
             cb_isToPayFreight.setChecked(false);
-            cb_isCollectionPayment.setChecked(false);
             cb_isMyFleet.setChecked(false);
             cb_isSurcharge.setChecked(false);
             et_remark.setText("");
@@ -764,7 +762,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             cb_isRemove.setChecked(isRemove);
             cb_isMove.setChecked(isMove);
             cb_isToPayFreight.setChecked(isToPayFreight);
-            cb_isCollectionPayment.setChecked(isCollectionPayment);
             cb_isMyFleet.setChecked(isMyFleet);
             cb_isSurcharge.setChecked(isSurcharge);
             et_remark.setText(remark);
@@ -789,7 +786,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             cb_isRemove.setChecked(false);
             cb_isMove.setChecked(false);
             cb_isToPayFreight.setChecked(false);
-            cb_isCollectionPayment.setChecked(false);
             cb_isMyFleet.setChecked(false);
             cb_isSurcharge.setChecked(false);
             et_remark.setText("");
@@ -801,7 +797,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             cb_isRemove.setChecked(isRemove);
             cb_isMove.setChecked(isMove);
             cb_isToPayFreight.setChecked(isToPayFreight);
-            cb_isCollectionPayment.setChecked(isCollectionPayment);
             cb_isMyFleet.setChecked(isMyFleet);
             cb_isSurcharge.setChecked(isSurcharge);
             et_remark.setText(remark);
@@ -835,7 +830,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         jsonObject.addProperty("IsSurcharge", isSurcharge);
         jsonObject.addProperty("IsToPayFreight", isToPayFreight);
         jsonObject.addProperty("ToPayFreightTel", payFreightTel);
-        jsonObject.addProperty("IsCollectionPayment", isCollectionPayment);
         jsonObject.addProperty("Payment", payment);
         jsonObject.addProperty("IsMyFleet", isMyFleet);
         jsonObject.addProperty("OrderAddress", orderAddress);
@@ -877,6 +871,8 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             String money = tv_money.getText().toString();
             intent.putExtra("type", type);
             intent.putExtra("money", money);
+            intent.putExtra("freight", freight);
+            intent.putExtra("premiums", premiums);
             intent.putExtra("mapJson", mapJson);
             intent.putExtra("time", time);
             intent.putExtra("carType", 1);
@@ -905,7 +901,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         jsonObject.addProperty("IsSurcharge", isSurcharge);
         jsonObject.addProperty("IsToPayFreight", isToPayFreight);
         jsonObject.addProperty("ToPayFreightTel", payFreightTel);
-        jsonObject.addProperty("IsCollectionPayment", isCollectionPayment);
         jsonObject.addProperty("Payment", payment);
         jsonObject.addProperty("IsMyFleet", isMyFleet);
         jsonObject.addProperty("OrderAddress", orderAddress);
@@ -942,15 +937,22 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             });
         } else {
             String money = tv_money.getText().toString();
-            Intent intent = new Intent(MainActivity.this, ConfirmOrderActivity.class);
+            Intent intent;
+            if (isToPayFreight) {
+                intent = new Intent(MainActivity.this, ConfirmOrderActivity.class);
+            } else {
+                intent = new Intent(MainActivity.this, OrderPayActivity.class);
+            }
             intent.putExtra("type", type);
             intent.putExtra("mapJson", mapJson);
             intent.putExtra("money", money);
+            intent.putExtra("freight", freight);
+            intent.putExtra("premiums", premiums);
             intent.putExtra("time", time);
             intent.putExtra("carType", 2);
             intent.putExtra("isAfterPay", false);
             intent.putParcelableArrayListExtra("OrderAddressInfos", mOrderAddressInfos);
-            startActivity(intent);
+            startActivityForResult(intent, 5);
         }
     }
 
@@ -1179,6 +1181,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 jsonObject.addProperty("VehicleType", vehideTypeId);
                 jsonObject.addProperty("StartLatLng", startLatLng);
                 jsonObject.addProperty("EndLatLng", endLatLng);
+                LogUtil.i("CalculationFreight" + jsonObject.toString());
                 Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
                 HttpUtil.doPost(MainActivity.this, Contants.url_calculationFreight, "calculationFreight", map, new VolleyInterface(MainActivity.this, VolleyInterface.mListener, VolleyInterface.mErrorListener) {
                     @Override
@@ -1196,7 +1199,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
 
                     @Override
                     public void onError(VolleyError error) {
-
+                        LogUtil.i("CalculationFreight" + error.toString());
                         showShortToastByString(getString(R.string.timeoutError));
                     }
 
@@ -1349,13 +1352,17 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
                 }
 
                 @Override
-                public void onRegisterCode(String name) {
+                public void onRegisterCode(String name, TextView textView) {
                     getCheckCode(name);
+                    tv_getCode = textView;
                 }
 
                 @Override
                 public void onRegisterClose() {
                     registerDialog.dismiss();
+                    if (myCountDownTimer != null) {
+                        myCountDownTimer.cancel();
+                    }
                     new Handler().postDelayed(null, 500);
                     loginDialog.show();
                 }
@@ -1370,6 +1377,7 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             showShortToastByString("信息不完整");
             return;
         }
+
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("Tel", name);
         Map<String, String> map = EncryptUtil.encryptDES(jsonObject.toString());
@@ -1379,6 +1387,10 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             public void onSuccess(JsonElement result) {
                 showShortToastByString("获取成功");
                 LogUtil.i("register", result.toString());
+
+                myCountDownTimer = new MyCountDownTimer(120 * 1000, 1000);
+                myCountDownTimer.start();
+
             }
 
             @Override
@@ -1388,7 +1400,6 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
 
             @Override
             public void onStateError() {
-
             }
         });
 
@@ -1412,6 +1423,9 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
             public void onSuccess(JsonElement result) {
                 LogUtil.i(result.toString());
                 showShortToastByString("注册成功");
+                if (myCountDownTimer != null) {
+                    myCountDownTimer.cancel();
+                }
                 registerDialog.dismiss();
                 new Handler().postDelayed(null, 1000);
                 loginDialog.show();
@@ -1429,5 +1443,27 @@ public class MainActivity extends BaseActivity implements OrderAddressAdapter.On
         });
 
     }
+
+
+    class MyCountDownTimer extends CountDownTimer {
+
+        public MyCountDownTimer(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+
+        }
+
+        @Override
+        public void onFinish() {
+            tv_getCode.setText(R.string.get_validate_code);
+            tv_getCode.setClickable(true);
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            tv_getCode.setText(String.format("%ds", millisUntilFinished / 1000));
+            tv_getCode.setClickable(false);
+        }
+    }
+
 
 }

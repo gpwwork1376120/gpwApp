@@ -145,61 +145,6 @@ public class CarLocationActivity extends BaseActivity {
         });
     }
 
-    private BitmapDescriptor getBitmapDescriptor(int angle) {
-        int resource = 0;
-        switch (angle){
-            case 0:
-                resource=R.mipmap.r_vehicle0;
-                break;
-            case 22:
-                resource=R.mipmap.r_vehicle0_45;
-                break;
-            case 45:
-                resource=R.mipmap.r_vehicle45;
-                break;
-            case 67:
-                resource=R.mipmap.r_vehicle45_90;
-                break;
-            case 90:
-                resource=R.mipmap.r_vehicle90;
-                break;
-            case 112:
-                resource=R.mipmap.r_vehicle90_135;
-                break;
-            case 135:
-                resource=R.mipmap.r_vehicle135;
-                break;
-            case 157:
-                resource=R.mipmap.r_vehicle135_180;
-                break;
-            case 180:
-                resource=R.mipmap.r_vehicle180;
-                break;
-            case 202:
-                resource=R.mipmap.r_vehicle180_225;
-                break;
-            case 225:
-                resource=R.mipmap.r_vehicle225;
-                break;
-            case 247:
-                resource=R.mipmap.r_vehicle225_270;
-                break;
-            case 270:
-                resource=R.mipmap.r_vehicle270;
-                break;
-            case 292:
-                resource=R.mipmap.r_vehicle270_315;
-                break;
-            case 315:
-                resource=R.mipmap.r_vehicle315;
-                break;
-            case 337:
-                resource=R.mipmap.r_vehicle315_0;
-                break;
-        }
-        return BitmapDescriptorFactory.fromResource(resource);
-    }
-
 
     private int getBitmapId(int angle) {
         int resource = 0;
@@ -269,7 +214,6 @@ public class CarLocationActivity extends BaseActivity {
                 Intent intent = new Intent(CarLocationActivity.this, CommonAddressActivity.class);
                 startActivity(intent);
                 break;
-
         }
     }
 
@@ -285,8 +229,8 @@ public class CarLocationActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         mMapView.onPause();
-
     }
+
 
     @Override
     protected void onDestroy() {

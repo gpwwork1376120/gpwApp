@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">App</string>
+    <string name="app_name">同城配送</string>
     <string name="login">登录</string>
     <string name="hint_input_psd">请输入密码</string>
     <string name="hint_input_account">请输入手机号</string>
@@ -60,7 +60,7 @@
     <string name="volume">货物总体积(m³)</string>
     <string name="kg">货物总重量(Kg)</string>
     <string name="amount">货物总件数</string>
-    <string name="order_detail">发货订单详情</string>
+    <string name="order_detail">订单详情</string>
     <string name="order_detail1">收货订单详情</string>
     <string name="improve_disclosure">完善发货信息</string>
     <string name="confirm_order">确认订单</string>

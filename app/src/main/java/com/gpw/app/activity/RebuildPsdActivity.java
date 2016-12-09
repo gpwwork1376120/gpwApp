@@ -1,6 +1,7 @@
 package com.gpw.app.activity;
 
 
+import android.os.CountDownTimer;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -38,6 +39,7 @@ public class RebuildPsdActivity extends BaseActivity {
     private TextView get_validate_code;
     private EditText et_validate_code;
     private CheckBox cb_eye;
+    private MyCountDownTimer myCountDownTimer;
 
     @Override
     protected int getLayout() {
@@ -99,6 +101,8 @@ public class RebuildPsdActivity extends BaseActivity {
             public void onSuccess(JsonElement result) {
                 showShortToastByString("获取成功");
                 LogUtil.i("register",result.toString());
+                myCountDownTimer = new MyCountDownTimer(120 * 1000, 1000);
+                myCountDownTimer.start();
             }
 
             @Override
@@ -175,5 +179,33 @@ public class RebuildPsdActivity extends BaseActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (myCountDownTimer != null) {
+            myCountDownTimer.cancel();
+        }
+    }
+
+    class MyCountDownTimer extends CountDownTimer {
+
+        public MyCountDownTimer(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+
+        }
+
+        @Override
+        public void onFinish() {
+            get_validate_code.setText(R.string.get_validate_code);
+            get_validate_code.setClickable(true);
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            get_validate_code.setText(String.format("%ds", millisUntilFinished / 1000));
+            get_validate_code.setClickable(false);
+        }
     }
 }

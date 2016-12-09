@@ -55,12 +55,11 @@ public class ReceiptOrderAdapter extends RecyclerView.Adapter<ReceiptOrderAdapte
         ArrayList<OrderAddressBean> orderAddressBeen = gson.fromJson(receiptOrderInfo.getJsonElement(), listType);
 
         LogUtil.i(orderAddressBeen.toString());
-        OrderAddInfoAdapter addInfoAdapter = new OrderAddInfoAdapter(orderAddressBeen, context);
+        OrderAddInfoAdapter addInfoAdapter = new OrderAddInfoAdapter(orderAddressBeen, context,false);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         viewHolder.rv_order_address.setLayoutManager(layoutManager);
         viewHolder.rv_order_address.setAdapter(addInfoAdapter);
-        viewHolder.tv_money.setText(String.format("¥%s", receiptOrderInfo.getFreight()));
         viewHolder.tv_orderId.setText(String.format("订单号：%s", receiptOrderInfo.getOrderNo()));
         viewHolder.tv_time.setText(receiptOrderInfo.getPlanSendTime());
         viewHolder.bt_query.setText("查看详情");
@@ -87,7 +86,6 @@ public class ReceiptOrderAdapter extends RecyclerView.Adapter<ReceiptOrderAdapte
     //自定义的ViewHolder，持有每个Item的的所有界面元素
     public static class ViewHolder extends RecyclerView.ViewHolder {
         Button bt_query;
-        TextView tv_money;
         TextView tv_time;
         TextView tv_orderId;
         RecyclerView rv_order_address;
@@ -95,7 +93,6 @@ public class ReceiptOrderAdapter extends RecyclerView.Adapter<ReceiptOrderAdapte
         public ViewHolder(View view) {
             super(view);
             bt_query = (Button) view.findViewById(R.id.bt_query);
-            tv_money = (TextView) view.findViewById(R.id.tv_money);
             tv_time = (TextView) view.findViewById(R.id.tv_time);
             tv_orderId = (TextView) view.findViewById(R.id.tv_orderId);
             rv_order_address = (RecyclerView) view.findViewById(R.id.rv_order_address);
