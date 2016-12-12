@@ -26,17 +26,19 @@ import com.gpw.app.bean.OrderDetailInfo;
  * --加油
  */
 
-public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.ViewHolder>  {
+public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.ViewHolder> {
     private ArrayList<OrderDetailInfo.OrderAddressBean> orderAddressBeens;
     private Context mContext;
     private OrderDetailInfo orderDetailInfo;
+    private int size;
 
 
-    public OrderDetailAdapter(OrderDetailInfo orderDetailInfo,Context mContext) {
+    public OrderDetailAdapter(OrderDetailInfo orderDetailInfo, Context mContext) {
         super();
         this.orderAddressBeens = (ArrayList<OrderDetailInfo.OrderAddressBean>) orderDetailInfo.getOrderAddress();
         this.mContext = mContext;
         this.orderDetailInfo = orderDetailInfo;
+        this.size = orderDetailInfo.getOrderAddress().size();
 
     }
 
@@ -51,26 +53,88 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
         OrderDetailInfo.OrderAddressBean orderAddressBean = orderAddressBeens.get(position);
         int size = orderAddressBeens.size();
         if (position == 0) {
+            if (orderAddressBean.getDischargeTime().equals("")) {
+                if (!orderAddressBeens.get(1).getDischargeTime().equals("")) {
+                    viewHolder.iv_state.setImageResource(R.mipmap.start_gray);
+                } else {
+                    viewHolder.iv_state.setImageResource(R.mipmap.start);
+                }
+                viewHolder.bt_location.setBackgroundResource(R.drawable.button_gray_bg);
+                viewHolder.bt_location.setClickable(false);
+            } else {
+                viewHolder.iv_state.setImageResource(R.mipmap.start_red);
+                viewHolder.bt_location.setBackgroundResource(R.drawable.button_red_bg);
+                viewHolder.bt_location.setClickable(true);
+                viewHolder.bt_location.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Button button = (Button) v;
+                        String name = button.getText().toString();
+                        mOnBtnClickListener.onBtnClick(position, name);
+                    }
+                });
+
+            }
             viewHolder.tv_state.setText("到达起点，装货发车");
             viewHolder.tv_time.setText(orderAddressBean.getArriveTime());
-            viewHolder.iv_state.setImageResource(R.mipmap.start);
             viewHolder.bt_confirm.setVisibility(View.GONE);
         } else if (position == size - 1) {
+            if (!orderAddressBean.getDischargeTime().equals("")) {
+                viewHolder.iv_state.setImageResource(R.mipmap.arrive_red);
+                viewHolder.bt_location.setBackgroundResource(R.drawable.button_red_bg);
+                viewHolder.bt_location.setClickable(true);
+                viewHolder.bt_location.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Button button = (Button) v;
+                        String name = button.getText().toString();
+                        mOnBtnClickListener.onBtnClick(position, name);
+                    }
+                });
+            } else {
+                if (orderDetailInfo.getOrderStatus() == 4) {
+                    viewHolder.iv_state.setImageResource(R.mipmap.arrive_gray);
+                } else {
+                    viewHolder.iv_state.setImageResource(R.mipmap.arrive);
+                }
+                viewHolder.bt_confirm.setBackgroundResource(R.drawable.button_gray_bg);
+                viewHolder.bt_confirm.setClickable(false);
+                viewHolder.bt_location.setBackgroundResource(R.drawable.button_gray_bg);
+                viewHolder.bt_location.setClickable(false);
+            }
             viewHolder.tv_state.setText("到达终点，已卸货");
             viewHolder.tv_time.setText(orderAddressBean.getArriveTime());
             viewHolder.bt_confirm.setVisibility(View.VISIBLE);
-            viewHolder.iv_state.setImageResource(R.mipmap.arrive);
             viewHolder.bt_confirm.setText("确认收货");
+
         } else {
+            if (orderAddressBean.getDischargeTime().equals("")) {
+                if (orderAddressBeens.get(position - 1).getDischargeTime().equals("")) {
+                    viewHolder.iv_state.setImageResource(R.mipmap.pass);
+                } else {
+                    viewHolder.iv_state.setImageResource(R.mipmap.pass_gray);
+                }
+                viewHolder.bt_confirm.setBackgroundResource(R.drawable.button_gray_bg);
+                viewHolder.bt_confirm.setClickable(false);
+                viewHolder.bt_location.setBackgroundResource(R.drawable.button_gray_bg);
+                viewHolder.bt_location.setClickable(false);
+            } else {
+                viewHolder.iv_state.setImageResource(R.mipmap.pass_red);
+                viewHolder.bt_location.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Button button = (Button) v;
+                        String name = button.getText().toString();
+                        mOnBtnClickListener.onBtnClick(position, name);
+                    }
+                });
+            }
             viewHolder.tv_state.setText("到达中途点，卸货发车");
             viewHolder.tv_time.setText(orderAddressBean.getArriveTime());
-            viewHolder.iv_state.setImageResource(R.mipmap.pass);
             viewHolder.bt_confirm.setVisibility(View.VISIBLE);
             viewHolder.bt_confirm.setText("确认卸货");
         }
         viewHolder.tv_address.setText(String.format("%s  %s  %s", orderAddressBean.getAddress(), orderAddressBean.getReceipter(), orderAddressBean.getTel()));
-
-
 
 
         if (orderDetailInfo.getOrderStatus() == 4) {
@@ -78,25 +142,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
             viewHolder.bt_location.setBackgroundResource(R.drawable.button_gray_bg);
             viewHolder.bt_location.setClickable(false);
             viewHolder.bt_confirm.setClickable(false);
-        }else {
-            viewHolder.bt_location.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Button button = (Button) v;
-                    String name = button.getText().toString();
-                    mOnBtnClickListener.onBtnClick(position, name);
-                }
-            });
-            viewHolder.bt_confirm.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Button button = (Button) v;
-                    String name = button.getText().toString();
-                    mOnBtnClickListener.onBtnClick(position, name);
-                }
-            });
         }
-
     }
 
     @Override
@@ -132,10 +178,8 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
     }
 
 
-
-
     public interface OnBtnClickListener {
-        void onBtnClick(int position,String viewName);
+        void onBtnClick(int position, String viewName);
     }
 
     private OnBtnClickListener mOnBtnClickListener;

@@ -217,7 +217,7 @@ public class OrderFragment extends Fragment implements MyOrderAdapter.OnBtnClick
             case "查看详情":
                 intent = new Intent(getActivity(), OrderDetailActivity.class);
                 intent.putExtra("orderId", orderInfo.getOrderNo());
-                getActivity().startActivity(intent);
+                getActivity().startActivityForResult(intent,1);
                 break;
         }
 

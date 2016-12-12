@@ -39,6 +39,8 @@ public class OrderReceiptDetailActivity extends BaseActivity {
     private TextView tv_title;
     private TextView tv_right;
     private ImageView iv_left_white;
+    private ImageView iv_start;
+    private ImageView iv_arrive;
     private String orderId;
     private TextView tv_time;
     private TextView tv_time1;
@@ -71,6 +73,8 @@ public class OrderReceiptDetailActivity extends BaseActivity {
         tv_time1 = (TextView) findViewById(R.id.tv_time1);
         tv_address = (TextView) findViewById(R.id.tv_address);
         tv_address1 = (TextView) findViewById(R.id.tv_address1);
+        iv_start = (ImageView) findViewById(R.id.iv_start);
+        iv_arrive = (ImageView) findViewById(R.id.iv_arrive);
 
     }
 
@@ -104,6 +108,38 @@ public class OrderReceiptDetailActivity extends BaseActivity {
                 tv_address.setText(String.format("%s  %s  %s", orderAddressBeen.get(0).getAddress(), orderAddressBeen.get(0).getReceipter(), orderAddressBeen.get(0).getTel()));
                 tv_address1.setText(String.format("%s  %s  %s", orderAddressBeen.get(1).getAddress(), orderAddressBeen.get(1).getReceipter(), orderAddressBeen.get(1).getTel()));
                 System.out.println(OrderDetailInfos.size());
+                if (!orderAddressBeen.get(0).getDischargeTime().equals("")){
+                    iv_start.setImageResource(R.mipmap.start_red);
+                }else {
+                    iv_start.setImageResource(R.mipmap.start);
+                    bt_location.setBackgroundResource(R.drawable.button_gray_bg);
+                    bt_location.setClickable(false);
+
+                }
+
+                if (!orderAddressBeen.get(1).getDischargeTime().equals("")){
+                    iv_arrive.setImageResource(R.mipmap.arrive_red);
+                }else {
+                    iv_arrive.setImageResource(R.mipmap.arrive);
+                    bt_confirm.setBackgroundResource(R.drawable.button_gray_bg);
+                    bt_confirm.setClickable(false);
+                    bt_apliy.setBackgroundResource(R.drawable.button_gray_bg);
+                    bt_apliy.setClickable(false);
+
+                }
+
+
+                if (receiptOrderDetailInfo.getOrderStatus()==4){
+                    bt_call.setBackgroundResource(R.drawable.button_gray_bg);
+                    bt_location.setBackgroundResource(R.drawable.button_gray_bg);
+                    bt_confirm.setBackgroundResource(R.drawable.button_gray_bg);
+                    bt_apliy.setBackgroundResource(R.drawable.button_gray_bg);
+                    bt_confirm.setClickable(false);
+                    bt_location.setClickable(false);
+                    bt_call.setClickable(false);
+                    bt_apliy.setClickable(false);
+                }
+
 
             }
 
@@ -154,34 +190,24 @@ public class OrderReceiptDetailActivity extends BaseActivity {
                 }
 
                 if (receiptOrderDetailInfo.getIsToPay().equals("True") || receiptOrderDetailInfo.getIsCollectionPayment().equals("True")) {
-                    Intent intent = new Intent(OrderReceiptDetailActivity.this,PayActivity.class);
-                    intent.putExtra("money",money);
-                    intent.putExtra("orderNo",receiptOrderDetailInfo.getOrderNo());
-                    intent.putExtra("type",type);
-                    startActivity(intent);
+                    if (money>0) {
+                        Intent intent = new Intent(OrderReceiptDetailActivity.this, PayActivity.class);
+                        intent.putExtra("money", money);
+                        intent.putExtra("orderNo", receiptOrderDetailInfo.getOrderNo());
+                        intent.putExtra("type", type);
+                        startActivity(intent);
+                    }
                 } else {
                     showShortToastByString("无需支付");
                 }
                 break;
             case R.id.bt_confirm:
-                if (receiptOrderDetailInfo.getLogisticStatus()!=1){
-                    showShortToastByString("已经收过货");
-                    return;
-                }
                 updateOrder();
                 break;
             case R.id.bt_call:
-                if (receiptOrderDetailInfo.getOrderStatus()==4){
-                    showShortToastByString("订单已完成");
-                    return;
-                }
                 call();
                 break;
             case R.id.bt_location:
-                if (receiptOrderDetailInfo.getOrderStatus()==4){
-                    showShortToastByString("订单已完成");
-                    return;
-                }
                 Intent intent = new Intent(OrderReceiptDetailActivity.this, CarLocationActivity.class);
                 intent.putExtra("TransporterId", receiptOrderDetailInfo.getTransporterId());
                 intent.putExtra("TransporterName", receiptOrderDetailInfo.getTransporterName());

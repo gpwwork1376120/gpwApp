@@ -38,12 +38,6 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1">
 
-                    <ImageView
-                        android:id="@+id/iv_state"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_centerHorizontal="true"
-                        android:src="@mipmap/heart_gray" />
 
                     <ImageView
                         android:layout_width="20dp"
@@ -58,6 +52,12 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="12dp"
                         android:background="@color/color_line" />
+                    <ImageView
+                        android:id="@+id/iv_state"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerHorizontal="true"
+                        android:src="@mipmap/heart_red" />
 
                 </RelativeLayout>
 
@@ -118,6 +118,7 @@
                                 android:id="@+id/tv_money"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:textColor="@color/color_red"
                                 android:text="#22" />
 
                             <TextView
@@ -231,6 +232,7 @@
                     android:layout_weight="1">
 
                     <ImageView
+                        android:id="@+id/iv_comment"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_centerHorizontal="true"

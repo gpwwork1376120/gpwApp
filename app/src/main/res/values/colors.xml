@@ -13,6 +13,8 @@
     <color name="color_gary_bck">#ebebeb</color>
     <color name="color_line">#999999</color>
 
+    <color name="color_tr">#00000000</color>
+
     <color name="background">#FFFFFF</color>
     <color name="split_line">#11112233</color>
     <color name="text2">#333333</color>

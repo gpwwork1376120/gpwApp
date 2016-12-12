@@ -32,12 +32,23 @@
             android:screenOrientation="portrait"
             android:theme="@style/GrayTranslucentTheme"
             android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+        </activity>
+
+        <activity
+            android:name=".activity.SplashActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppSplash"
+            android:launchMode="standard"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+
         <activity
             android:name=".activity.SettingActivity"
             android:screenOrientation="portrait"

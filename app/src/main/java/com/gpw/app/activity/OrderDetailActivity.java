@@ -47,6 +47,8 @@ public class OrderDetailActivity extends BaseActivity implements RatingBar.OnRat
     private TextView tv_title;
     private TextView tv_right;
     private ImageView iv_left_white;
+    private ImageView iv_state;
+    private ImageView iv_comment;
     private String orderId;
     private RecyclerView rv_order_detail;
     private OrderDetailInfo orderDetailInfo;
@@ -91,6 +93,8 @@ public class OrderDetailActivity extends BaseActivity implements RatingBar.OnRat
         bt_call = (Button) findViewById(R.id.bt_call);
         bt_keepConvey = (Button) findViewById(R.id.bt_keepConvey);
         bt_cancel = (Button) findViewById(R.id.bt_cancel);
+        iv_state = (ImageView) findViewById(R.id.iv_state);
+        iv_comment = (ImageView) findViewById(R.id.iv_comment);
         rb_score1.setOnRatingBarChangeListener(this);
 
     }
@@ -125,9 +129,8 @@ public class OrderDetailActivity extends BaseActivity implements RatingBar.OnRat
                 rb_score.setProgress(orderDetailInfo.getTransporterScore());
                 tv_name1.setText(orderDetailInfo.getTransporterName());
                 tv_vehicleNo1.setText(orderDetailInfo.getVehicleNo());
-                double money = orderDetailInfo.getFreight()+orderDetailInfo.getPremium();
+                double money = orderDetailInfo.getFreight() + orderDetailInfo.getPremium();
                 tv_money.setText(String.format("¥ %s", money));
-
                 String startState = orderDetailInfo.getVehicleTypeName();
                 if (orderDetailInfo.getRemove().equals("True")) {
                     if (startState.equals("小型货车") || startState.equals("中型货车")) {
@@ -146,12 +149,28 @@ public class OrderDetailActivity extends BaseActivity implements RatingBar.OnRat
                 }
                 tv_startState.setText(startState);
 
+                if (!orderDetailInfo.getOrderAddress().get(0).getDischargeTime().equals("")) {
+                    iv_state.setImageResource(R.mipmap.heart_gray);
+                    bt_cancel.setBackgroundResource(R.drawable.button_gray_bg);
+                    bt_cancel.setClickable(false);
+                } else {
+                    iv_state.setImageResource(R.mipmap.heart_red);
+                }
+
+
+
 
                 if (orderDetailInfo.getOrderStatus() == 4) {
                     bt_call.setBackgroundResource(R.drawable.button_gray_bg);
                     bt_cancel.setBackgroundResource(R.drawable.button_gray_bg);
                     bt_cancel.setClickable(false);
                     bt_call.setClickable(false);
+
+                    iv_comment.setImageResource(R.mipmap.comment_red);
+                } else {
+                    iv_comment.setImageResource(R.mipmap.comment_gray);
+                    bt_keepConvey.setBackgroundResource(R.drawable.button_gray_bg);
+                    bt_keepConvey.setClickable(false);
                 }
 
 
@@ -188,8 +207,6 @@ public class OrderDetailActivity extends BaseActivity implements RatingBar.OnRat
             @Override
             public void onError(VolleyError error) {
                 showShortToastByString(getString(R.string.timeoutError));
-//                LogUtil.i("hint",error.networkResponse.headers.toString());
-//                LogUtil.i("hint",error.networkResponse.statusCode+"");
             }
 
             @Override
@@ -327,6 +344,8 @@ public class OrderDetailActivity extends BaseActivity implements RatingBar.OnRat
             @Override
             public void onSuccess(JsonElement result) {
                 endDialog.dismiss();
+                setResult(RESULT_OK,getIntent());
+                finish();
                 Toast.makeText(mContext, "取消成功", Toast.LENGTH_SHORT).show();
             }
 
