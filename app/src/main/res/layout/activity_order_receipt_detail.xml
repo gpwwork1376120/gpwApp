@@ -7,7 +7,7 @@
     android:background="@color/color_red"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.gpw.app.activity.OrderReceiptDetailActivity">
+    tools:context=".activity.OrderReceiptDetailActivity">
 
     <include
         android:id="@+id/in_head"
@@ -88,7 +88,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="货主已发货，正在路上" />
+                                android:text="到达起点，装货发车" />
 
                             <TextView
                                 android:id="@+id/tv_time"
@@ -216,7 +216,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="货物已到达，请查收" />
+                                android:text="到达终点，已卸货" />
 
                             <TextView
                                 android:id="@+id/tv_time1"

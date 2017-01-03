@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">同城配送</string>
+    <string name="app_name">货管家</string>
     <string name="login">登录</string>
     <string name="hint_input_psd">请输入密码</string>
     <string name="hint_input_account">请输入手机号</string>
@@ -124,7 +124,7 @@
     <string name="money_0">¥00.00</string>
     <string name="less_10000">≤1万</string>
     <string name="freight">运费</string>
-    <string name="tv_premiums">险保费</string>
+    <string name="premiums">险保费</string>
     <string name="protect">保单</string>
     <string name="hint_money_detail">----------------------------------------------------------------------------------------------------</string>
     <string name="allMoney">总计</string>
@@ -149,4 +149,8 @@
     <string name="order_have">已收货</string>
     <string name="order_wait">待收货</string>
     <string name="not_charge_schedule">暂无收支明细</string>
+    <string name="hint_know">知道了</string>
+    <string name="money_0_yuan">¥00.00元</string>
+    <string name="payment_fee">贷款金额</string>
+    <string name="surcharge_fee">回单费用</string>
 </resources>
